@@ -87,7 +87,6 @@
     </div>
 
     <div class="relative w-full aspect-[21/9] sm:aspect-[16/9] bg-gradient-to-b from-indigo-950 to-nexus-dark rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.1)] border border-white/10 overflow-hidden mb-4">
-      <button id="audioToggleBtn" style="position: absolute; top: 15px; right: 15px; z-index: 100; padding: 8px 14px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 6px; cursor: pointer; font-family: sans-serif; font-weight: bold; font-size: 13px; transition: all 0.2s;">🔊 Music: ON</button>
       <canvas id="gameCanvas_19" class="block w-full h-full cursor-pointer"></canvas>
       
       <!-- Overlays -->
@@ -111,7 +110,8 @@
           data-ad-slot="1111111111"></ins>
      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   
-    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+    <button id="audioToggleBtn" style="position: relative; display: block; margin: 15px auto 0 auto; width: fit-content; padding: 10px 16px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: all 0.2s;">🔊</button>
+      <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
         <h3 style="color: #fff; margin-top: 0;">Arcade Module 19 Operations Manual</h3>
         <p>Welcome to Arcade Room 19, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
     </div>
@@ -558,7 +558,7 @@
                 if(!audioCtx) initAudioEngine();
                 isMuted = !isMuted;
                 if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
-                audioBtn.textContent = isMuted ? '🔇 Music: OFF' : '🔊 Music: ON';
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
             });
             audioBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
@@ -566,7 +566,7 @@
                 if(!audioCtx) initAudioEngine();
                 isMuted = !isMuted;
                 if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
-                audioBtn.textContent = isMuted ? '🔇 Music: OFF' : '🔊 Music: ON';
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
             }, {passive: false});
         }
 

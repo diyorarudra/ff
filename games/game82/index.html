@@ -83,7 +83,6 @@
       </div>
       <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">New Game</button>
     </div>    <div class="w-full flex justify-center mb-6 mt-4">
-      <button id="audioToggleBtn" style="position: absolute; top: 15px; right: 15px; z-index: 100; padding: 8px 14px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 6px; cursor: pointer; font-family: sans-serif; font-weight: bold; font-size: 13px; transition: all 0.2s;">🔊 Music: ON</button>
       <canvas id="gameCanvas_82" width="800" height="500" class="w-full max-w-full bg-[#131a26] rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/10 touch-none select-none block"></canvas>
     </div>
 
@@ -257,7 +256,7 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
                 if(!audioCtx) initAudioEngine();
                 isMuted = !isMuted;
                 if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
-                audioBtn.textContent = isMuted ? '🔇 Music: OFF' : '🔊 Music: ON';
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
             });
             audioBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
@@ -265,7 +264,7 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
                 if(!audioCtx) initAudioEngine();
                 isMuted = !isMuted;
                 if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
-                audioBtn.textContent = isMuted ? '🔇 Music: OFF' : '🔊 Music: ON';
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
             }, {passive: false});
         }
 
@@ -280,7 +279,8 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
         });
 </script>
 
-    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+    <button id="audioToggleBtn" style="position: relative; display: block; margin: 15px auto 0 auto; width: fit-content; padding: 10px 16px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: all 0.2s;">🔊</button>
+      <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
         <h3 style="color: #fff; margin-top: 0;">How to Play Game Room 82</h3>
         <p>Welcome to Arcade Room 82, a premium browser module designed for instant gaming delivery. This interactive arcade viewport uses native engine loops to provide a responsive user experience on mobile and desktop layout configurations. Players use clean mouse and keyboard controls to navigate custom scenarios, track scoreboard metrics, and trigger win/fail state validations. Built using low-latency vanilla scripts and drawing contexts, this application runs at flat frame rates with zero plug-in steps. Dive into the mechanics to test your high scores and enjoy a refined browser gaming experience right here.</p>
     </div>
