@@ -78,7 +78,19 @@
       <button id="newGameBtn" class="game-btn">Restart Race</button>
     </div>
     
-    <div class="mt-4 w-full max-w-3xl"><canvas id="gameCanvas_46" width="800" height="600" class="w-full bg-[#030712] rounded-lg shadow-[0_0_50px_rgba(217,70,239,0.15)] border border-fuchsia-900/30"></canvas>
+    <div class="mt-4 w-full max-w-3xl relative">
+        <canvas id="gameCanvas_46" width="800" height="600" class="w-full bg-[#030712] rounded-lg shadow-[0_0_50px_rgba(217,70,239,0.15)] border border-fuchsia-900/30"></canvas>
+        <!-- Mobile On-Screen Buttons -->
+        <div class="absolute bottom-6 left-4 right-4 flex justify-between lg:hidden pointer-events-none select-none z-10">
+            <div class="flex gap-3 pointer-events-auto">
+                <button id="btnLeft" class="w-14 h-14 bg-white/10 active:bg-white/30 border border-white/20 rounded-full flex items-center justify-center text-2xl backdrop-blur-md select-none touch-none text-white shadow-lg">←</button>
+                <button id="btnRight" class="w-14 h-14 bg-white/10 active:bg-white/30 border border-white/20 rounded-full flex items-center justify-center text-2xl backdrop-blur-md select-none touch-none text-white shadow-lg">→</button>
+            </div>
+            <div class="flex gap-3 pointer-events-auto">
+                <button id="btnBrake" class="w-14 h-14 bg-white/10 active:bg-white/30 border border-white/20 rounded-full flex items-center justify-center font-bold text-xs backdrop-blur-md select-none touch-none text-white shadow-lg tracking-wider">BRK</button>
+                <button id="btnAccel" class="w-14 h-14 bg-white/10 active:bg-white/30 border border-white/20 rounded-full flex items-center justify-center font-bold text-xs backdrop-blur-md select-none touch-none text-white shadow-lg tracking-wider">GAS</button>
+            </div>
+        </div>
     </div>
     
     <div class="text-center mt-4 text-gray-400 text-sm">
@@ -149,6 +161,21 @@
     window.addEventListener('keyup', (e) => { 
         if(keys.hasOwnProperty(e.key)) { keys[e.key] = false; e.preventDefault(); }
     });
+    
+    // --- MOBILE BUTTON BINDINGS ---
+    const bindBtn = (id, keyName) => {
+        const btn = document.getElementById(id);
+        if(!btn) return;
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = true; }, {passive: false});
+        btn.addEventListener('touchend', (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = false; }, {passive: false});
+        btn.addEventListener('mousedown', (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = true; });
+        btn.addEventListener('mouseup', (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = false; });
+        btn.addEventListener('mouseleave', (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = false; });
+    };
+    bindBtn('btnLeft', 'ArrowLeft');
+    bindBtn('btnRight', 'ArrowRight');
+    bindBtn('btnBrake', 'ArrowDown');
+    bindBtn('btnAccel', 'ArrowUp');
     
     // --- MOBILE VIRTUAL JOYSTICK INJECTION ---
     let touchJoystick = { active: false, startX: 0, startY: 0, currX: 0, currY: 0 };
