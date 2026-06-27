@@ -150,6 +150,40 @@
         if(keys.hasOwnProperty(e.key)) { keys[e.key] = false; e.preventDefault(); }
     });
     
+    // --- MOBILE VIRTUAL JOYSTICK INJECTION ---
+    let touchJoystick = { active: false, startX: 0, startY: 0, currX: 0, currY: 0 };
+    canvas.addEventListener('touchstart', (e) => {
+        if(e.touches.length > 0) {
+            touchJoystick.active = true;
+            touchJoystick.startX = e.touches[0].clientX;
+            touchJoystick.startY = e.touches[0].clientY;
+            touchJoystick.currX = e.touches[0].clientX;
+            touchJoystick.currY = e.touches[0].clientY;
+        }
+    }, {passive: false});
+    canvas.addEventListener('touchmove', (e) => {
+        if(touchJoystick.active && e.touches.length > 0) {
+            touchJoystick.currX = e.touches[0].clientX;
+            touchJoystick.currY = e.touches[0].clientY;
+        }
+    }, {passive: false});
+    canvas.addEventListener('touchend', (e) => {
+        touchJoystick.active = false;
+    }, {passive: false});
+    
+    function getInput() {
+        let input = { up: keys.ArrowUp || keys.w, down: keys.ArrowDown || keys.s, left: keys.ArrowLeft || keys.a, right: keys.ArrowRight || keys.d };
+        if(touchJoystick.active) {
+            let dx = touchJoystick.currX - touchJoystick.startX;
+            let dy = touchJoystick.currY - touchJoystick.startY;
+            if(dy < -20) input.up = true;
+            if(dy > 20) input.down = true;
+            if(dx < -20) input.left = true;
+            if(dx > 20) input.right = true;
+        }
+        return input;
+    }
+    
     // Physics Car
     const car = {
         x: 400,
@@ -212,13 +246,14 @@
         lastTime = timestamp;
         
         // Acceleration
+        let input = getInput();
         let moving = false;
-        if(keys.ArrowUp || keys.w) {
+        if(input.up) {
             car.speed += car.accel * dt;
             moving = true;
             if(Math.random() > 0.5) spawnExhaust(car.x - Math.cos(car.angle)*car.length/2, car.y - Math.sin(car.angle)*car.length/2, car.angle);
         }
-        if(keys.ArrowDown || keys.s) {
+        if(input.down) {
             car.speed -= car.accel * dt;
             moving = true;
         }
@@ -226,8 +261,8 @@
         // Turning (only when moving)
         if(Math.abs(car.speed) > 10) {
             let turnDir = (car.speed > 0) ? 1 : -1;
-            if(keys.ArrowLeft || keys.a) car.angle -= car.turnSpeed * turnDir * dt;
-            if(keys.ArrowRight || keys.d) car.angle += car.turnSpeed * turnDir * dt;
+            if(input.left) car.angle -= car.turnSpeed * turnDir * dt;
+            if(input.right) car.angle += car.turnSpeed * turnDir * dt;
         }
         
         // Friction & Limits
