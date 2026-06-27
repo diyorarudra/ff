@@ -93,14 +93,14 @@ const audioEngineLogic = `
 let injectedCount = 0;
 
 for (let i = 1; i <= 100; i++) {
-    const fileLoc = path.join(gamesDir, \`game\${i}\`, 'index.html');
+    const fileLoc = path.join(gamesDir, 'game' + i, 'index.html');
     if (fs.existsSync(fileLoc)) {
         let content = fs.readFileSync(fileLoc, 'utf8');
         let original = content;
 
         // 1. Inject UI Element just before the canvas
         if (!content.includes('audioToggleBtn')) {
-            content = content.replace(/(<canvas[^>]*>)/, \`\${buttonTemplate}\\n      $1\`);
+            content = content.replace(/(<canvas[^>]*>)/, buttonTemplate + '\n      $1');
         }
 
         // 2. Inject Web Audio Engine into the main script boundary
@@ -120,5 +120,5 @@ for (let i = 1; i <= 100; i++) {
     }
 }
 
-console.log(\`[PASS]: Native Web Audio synthesizers successfully deployed across \${injectedCount} game matrices.\`);
+console.log('[PASS]: Native Web Audio synthesizers successfully deployed across ' + injectedCount + ' game matrices.');
 console.log("[Antigravity Final Status]: Audio architecture sweep completely stabilized.");

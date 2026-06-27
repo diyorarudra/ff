@@ -77,7 +77,8 @@
     <div class="mt-4 flex flex-col md:flex-row gap-4 w-full max-w-4xl">
        <div class="flex-1 bg-[#09090b] rounded-lg border border-white/10 p-2">
            <h3 class="text-center font-bold text-gray-400 mb-2 font-heading tracking-widest text-sm">SOURCE FILE</h3>
-           <canvas id="leftCanvas" width="400" height="400" class="w-full bg-[#111] rounded"></canvas>
+           <button id="audioToggleBtn" style="position: absolute; top: 15px; right: 15px; z-index: 100; padding: 8px 14px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 6px; cursor: pointer; font-family: sans-serif; font-weight: bold; font-size: 13px; transition: all 0.2s;">🔊 Music: ON</button>
+      <canvas id="leftCanvas" width="400" height="400" class="w-full bg-[#111] rounded"></canvas>
        </div>
        
        <div class="flex-1 bg-[#09090b] rounded-lg border border-red-900/50 p-2 shadow-[0_0_20px_rgba(220,38,38,0.1)]">
@@ -336,6 +337,86 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
     document.addEventListener('touchend', touchToMouse, {passive: false});
 })();
 
+
+        // --- NATIVE WEB AUDIO ENGINE ---
+        let audioCtx = null;
+        let bgmOsc = null;
+        let bgmGain = null;
+        let isMuted = false;
+
+        function initAudioEngine() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            bgmOsc = audioCtx.createOscillator();
+            bgmGain = audioCtx.createGain();
+            
+            bgmOsc.type = 'triangle';
+            bgmGain.gain.value = isMuted ? 0 : 0.03;
+            
+            bgmOsc.connect(bgmGain);
+            bgmGain.connect(audioCtx.destination);
+            
+            bgmOsc.start();
+            
+            let freqs = [130.81, 146.83, 164.81, 196.00];
+            let fIdx = 0;
+            setInterval(() => {
+                if(audioCtx && bgmOsc) {
+                    bgmOsc.frequency.setValueAtTime(freqs[fIdx], audioCtx.currentTime);
+                    fIdx = (fIdx + 1) % freqs.length;
+                }
+            }, 600);
+        }
+
+        function playClickSound() {
+            if (isMuted || !audioCtx) return;
+            let clickOsc = audioCtx.createOscillator();
+            let clickGain = audioCtx.createGain();
+            
+            clickOsc.type = 'sine';
+            clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            clickOsc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+            
+            clickGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            
+            clickOsc.connect(clickGain);
+            clickGain.connect(audioCtx.destination);
+            
+            clickOsc.start();
+            clickOsc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        const audioBtn = document.getElementById('audioToggleBtn');
+        if(audioBtn) {
+            audioBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if(!audioCtx) initAudioEngine();
+                isMuted = !isMuted;
+                if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
+                audioBtn.textContent = isMuted ? '🔇 Music: OFF' : '🔊 Music: ON';
+            });
+            audioBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if(!audioCtx) initAudioEngine();
+                isMuted = !isMuted;
+                if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
+                audioBtn.textContent = isMuted ? '🔇 Music: OFF' : '🔊 Music: ON';
+            }, {passive: false});
+        }
+
+        // Bind init and SFX to canvas interactions globally
+        document.addEventListener('mousedown', (e) => {
+            if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
+            if(e.target.tagName === 'CANVAS') playClickSound();
+        });
+        document.addEventListener('keydown', (e) => {
+            if(!audioCtx) initAudioEngine();
+            if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) playClickSound();
+        });
 </script>
 </body>
 </html>
