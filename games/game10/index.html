@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Space Invaders &mdash; ArcadeNexus</title>
+  <meta name="description" content="Defend the earth in this classic Space Invaders arcade clone.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Space Invaders",
+    "genre": "Action Arcade",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    #gameCanvas { touch-action: none; image-rendering: pixelated; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[800px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Lives</span>
+          <div id="lives" class="text-xl font-bold text-green-400 font-heading leading-tight flex gap-1 pt-1">
+            <span class="text-xs">©©©</span>
+          </div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button>
+    </div>
+
+    <div class="relative w-full aspect-[4/3] bg-[#000] rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.05)] border border-white/10 overflow-hidden mb-4">
+      <canvas id="gameCanvas_10" class="block w-full h-full cursor-crosshair"></canvas>
+      
+      <!-- Overlays -->
+      <div id="startOverlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-4xl font-bold font-heading text-green-400 drop-shadow-[0_0_15px_rgba(74,222,128,0.8)] animate-pulse mb-4">INVADERS</div>
+        <div class="text-gray-400 text-sm text-center">Desktop: A/D Move, Space Fire<br>Mobile: Use Controls Below</div>
+        <button id="beginBtn" class="mt-6 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-lg font-bold shadow-lg transition pointer-events-auto">Defend Earth</button>
+      </div>
+      
+      <div id="gameOver" class="absolute inset-0 bg-red-900/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-5xl font-bold mb-2 font-heading text-white drop-shadow-md">Game Over</div>
+        <p id="finalScore" class="text-gray-200 mb-6 text-xl">Score: 0</p>
+        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+    </div>
+
+    <!-- Mobile Controls -->
+    <div class="w-full grid grid-cols-2 gap-4 md:hidden opacity-70 px-4">
+      <div class="flex justify-start gap-4">
+        <button id="btnLeft" class="bg-nexus-card border border-white/10 w-16 h-16 rounded-lg flex items-center justify-center text-3xl active:bg-white/20">—€</button>
+        <button id="btnRight" class="bg-nexus-card border border-white/10 w-16 h-16 rounded-lg flex items-center justify-center text-3xl active:bg-white/20">–¶</button>
+      </div>
+      <div class="flex justify-end">
+        <button id="btnFire" class="bg-green-500/20 border border-green-500/50 text-green-400 w-full h-16 rounded-lg flex items-center justify-center text-xl font-bold tracking-widest active:bg-green-500/40">FIRE</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 10 Operations Manual</h3>
+        <p>Welcome to Arcade Room 10, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_10');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    
+    const startOverlay = document.getElementById('startOverlay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    // Low internal resolution for retro pixel feel, scaled up by CSS
+    canvas.width = 448;
+    canvas.height = 336;
+
+    let gameState = 'START';
+    let animFrame = null;
+    let score = 0;
+    let lives = 3;
+    let frames = 0;
+    let wave = 1;
+
+    let player = { x: canvas.width/2, y: canvas.height - 30, w: 26, h: 14, speed: 3 };
+    let bullets = []; // player bullets
+    let alienBullets = [];
+    let aliens = [];
+    let shields = [];
+    let ufo = null;
+    
+    let alienDir = 1;
+    let alienSpeed = 1;
+    let alienDrop = false;
+    let alienMoveTimer = 0;
+    let alienMoveThreshold = 60; // frames between alien movements (decreases as they die)
+
+    const keys = { left: false, right: false, space: false };
+
+    window.addEventListener('keydown', e => {
+      if(e.code === 'ArrowLeft' || e.code === 'KeyA' || e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+      if(e.code === 'ArrowRight' || e.code === 'KeyD' || e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+      if(e.code === 'Space' || e.key === ' ') { keys.space = true; e.preventDefault(); }
+    });
+    window.addEventListener('keyup', e => {
+      if(e.code === 'ArrowLeft' || e.code === 'KeyA' || e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+      if(e.code === 'ArrowRight' || e.code === 'KeyD' || e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+      if(e.code === 'Space' || e.key === ' ') { keys.space = false; e.preventDefault(); }
+    });
+
+    const bindBtn = (id, key) => {
+      const btn = document.getElementById(id);
+      if(!btn) return;
+      btn.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; });
+      btn.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; });
+      // Add mouse events for testing on desktop
+      btn.addEventListener('mousedown', e => { keys[key] = true; });
+      btn.addEventListener('mouseup', e => { keys[key] = false; });
+    };
+    bindBtn('btnLeft', 'left');
+    bindBtn('btnRight', 'right');
+    bindBtn('btnFire', 'space');
+
+    function updateLivesUI() {
+      let str = '';
+      for(let i=0; i<lives; i++) str += '©';
+      livesEl.innerHTML = `<span class="text-xs">${str}</span>`;
+    }
+
+    function init() {
+      score = 0;
+      lives = 3;
+      wave = 1;
+      scoreEl.textContent = score;
+      updateLivesUI();
+      
+      initWave();
+
+      gameState = 'START';
+      startOverlay.style.opacity = '1';
+      startOverlay.style.pointerEvents = 'auto';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+
+      if(animFrame) cancelAnimationFrame(animFrame);
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    function initWave() {
+      player.x = canvas.width/2;
+      bullets = [];
+      alienBullets = [];
+      ufo = null;
+      
+      // Init Aliens (5 rows x 11 cols)
+      aliens = [];
+      alienDir = 1;
+      alienMoveThreshold = Math.max(10, 60 - (wave * 5));
+      let startY = 40 + (wave > 1 ? 20 : 0);
+      
+      for(let r=0; r<5; r++) {
+        let type = r === 0 ? 3 : (r < 3 ? 2 : 1);
+        let pts = r === 0 ? 30 : (r < 3 ? 20 : 10);
+        let color = r === 0 ? '#ef4444' : (r < 3 ? '#eab308' : '#38bdf8'); // Red, Yellow, Cyan
+        for(let c=0; c<11; c++) {
+          aliens.push({
+            x: 50 + c * 24,
+            y: startY + r * 20,
+            w: 16, h: 12,
+            type: type,
+            pts: pts,
+            color: color,
+            active: true
+          });
+        }
+      }
+
+      // Init Shields (4 blocks)
+      if (wave === 1) { // recreate shields only on wave 1 or maybe every wave? Let's do every wave for arcade feel
+        shields = [];
+        let numShields = 4;
+        let spacing = canvas.width / numShields;
+        for(let s=0; s<numShields; s++) {
+          let sx = (spacing * s) + (spacing/2) - 20;
+          let sy = canvas.height - 65;
+          // Build shield out of 4x4 blocks
+          for(let r=0; r<4; r++) {
+            for(let c=0; c<10; c++) {
+              if (r < 2 || (c > 1 && c < 8)) { // arch shape
+                shields.push({ x: sx + c*4, y: sy + r*4, w: 4, h: 4, active: true });
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function startGame() {
+      gameState = 'PLAYING';
+      startOverlay.style.opacity = '0';
+      startOverlay.style.pointerEvents = 'none';
+    }
+
+    document.getElementById('beginBtn').addEventListener('click', startGame);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('click', init);
+
+    function update() {
+      if (gameState !== 'PLAYING') return;
+      frames++;
+
+      // Player Movement
+      if (keys.left && player.x > player.w/2) player.x -= player.speed;
+      if (keys.right && player.x < canvas.width - player.w/2) player.x += player.speed;
+
+      // Player Shooting
+      if (keys.space && bullets.length === 0) { // Only 1 bullet at a time
+        bullets.push({ x: player.x, y: player.y - 10, w: 2, h: 8, speed: -6 });
+      }
+
+      // UFO logic
+      if (!ufo && Math.random() < 0.001) {
+        let fromLeft = Math.random() > 0.5;
+        ufo = {
+          x: fromLeft ? -30 : canvas.width + 30,
+          y: 20, w: 30, h: 12,
+          speed: fromLeft ? 2 : -2,
+          pts: Math.floor(Math.random() * 4 + 1) * 50 // 50,100,150,200
+        };
+      }
+      if (ufo) {
+        ufo.x += ufo.speed;
+        if (ufo.x < -40 || ufo.x > canvas.width + 40) ufo = null;
+      }
+
+      // Alien Movement
+      let activeAliens = aliens.filter(a => a.active);
+      if (activeAliens.length === 0) {
+        wave++;
+        initWave();
+        return;
+      }
+      
+      // Speed up as aliens decrease
+      let currentThreshold = Math.max(2, Math.floor(alienMoveThreshold * (activeAliens.length / 55)));
+      
+      if (frames - alienMoveTimer > currentThreshold) {
+        alienMoveTimer = frames;
+        
+        let edgeReached = false;
+        if (!alienDrop) {
+          activeAliens.forEach(a => {
+            if ((a.x + a.w > canvas.width - 10 && alienDir === 1) || (a.x < 10 && alienDir === -1)) {
+              edgeReached = true;
+            }
+          });
+        }
+
+        if (edgeReached) {
+          alienDir *= -1;
+          alienDrop = true;
+        }
+
+        activeAliens.forEach(a => {
+          if (alienDrop) {
+            a.y += 10;
+          } else {
+            a.x += 8 * alienDir;
+          }
+          
+          // Alien reach bottom
+          if (a.y + a.h >= player.y) {
+            lives = 0;
+          }
+        });
+        
+        if (alienDrop) alienDrop = false;
+
+        // Alien Shooting
+        if (Math.random() < 0.3) {
+          // Find bottom-most aliens
+          let shooters = [];
+          for(let c=0; c<11; c++) {
+            let colAliens = activeAliens.filter(a => Math.abs(a.x - (50 + c*24 + (activeAliens[0].x - activeAliens[0].x))) < 5);
+            if (colAliens.length > 0) {
+              let bottom = colAliens.reduce((prev, curr) => (prev.y > curr.y) ? prev : curr);
+              shooters.push(bottom);
+            }
+          }
+          if (shooters.length > 0) {
+            let shooter = shooters[Math.floor(Math.random() * shooters.length)];
+            alienBullets.push({ x: shooter.x + shooter.w/2, y: shooter.y + shooter.h, w: 2, h: 6, speed: 4 });
+          }
+        }
+      }
+
+      // Physics / Collision Helper
+      const AABB = (r1, r2) => {
+        return r1.x < r2.x + r2.w && r1.x + r1.w > r2.x && r1.y < r2.y + r2.h && r1.y + r1.h > r2.y;
+      };
+      
+      // Map player to rect for collision
+      let pRect = { x: player.x - player.w/2, y: player.y - player.h/2, w: player.w, h: player.h };
+
+      // Update Player Bullets
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        let b = bullets[i];
+        b.y += b.speed;
+        let destroyed = false;
+
+        // hit top
+        if (b.y < 0) destroyed = true;
+        
+        // hit UFO
+        if (!destroyed && ufo && AABB(b, ufo)) {
+          score += ufo.pts;
+          scoreEl.textContent = score;
+          ufo = null;
+          destroyed = true;
+        }
+
+        // hit Alien
+        if (!destroyed) {
+          for (let j = 0; j < aliens.length; j++) {
+            let a = aliens[j];
+            if (a.active && AABB(b, a)) {
+              a.active = false;
+              score += a.pts;
+              scoreEl.textContent = score;
+              destroyed = true;
+              break;
+            }
+          }
+        }
+
+        // hit Shield
+        if (!destroyed) {
+          for (let j = 0; j < shields.length; j++) {
+            let s = shields[j];
+            if (s.active && AABB(b, s)) {
+              s.active = false;
+              destroyed = true;
+              break;
+            }
+          }
+        }
+
+        if (destroyed) bullets.splice(i, 1);
+      }
+
+      // Update Alien Bullets
+      for (let i = alienBullets.length - 1; i >= 0; i--) {
+        let b = alienBullets[i];
+        b.y += b.speed;
+        let destroyed = false;
+
+        if (b.y > canvas.height) destroyed = true;
+
+        // hit Player
+        if (!destroyed && AABB(b, pRect)) {
+          lives--;
+          updateLivesUI();
+          destroyed = true;
+          if (lives <= 0) {
+            // Trigger game over logic below
+          } else {
+            // Brief pause or clear bullets? Let's just keep going
+            alienBullets = []; // clear to give breather
+            break;
+          }
+        }
+
+        // hit Shield
+        if (!destroyed) {
+          for (let j = 0; j < shields.length; j++) {
+            let s = shields[j];
+            if (s.active && AABB(b, s)) {
+              s.active = false;
+              destroyed = true;
+              break;
+            }
+          }
+        }
+
+        if (destroyed) alienBullets.splice(i, 1);
+      }
+
+      // Check Game Over
+      if (lives <= 0) {
+        gameState = 'GAMEOVER';
+        document.getElementById('finalScore').textContent = `Score: ${score}`;
+        gameOverOverlay.style.opacity = '1';
+        gameOverOverlay.style.pointerEvents = 'auto';
+      }
+    }
+
+    function draw() {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Player
+      ctx.fillStyle = '#4ade80'; // green-400
+      let px = player.x;
+      let py = player.y;
+      // cannon base
+      ctx.fillRect(px - 13, py, 26, 8);
+      // cannon mid
+      ctx.fillRect(px - 10, py - 4, 20, 4);
+      // cannon tip
+      ctx.fillRect(px - 2, py - 8, 4, 4);
+
+      // Aliens (Simple rectangular representations to simulate pixels)
+      let animState = Math.floor(frames / 30) % 2; // toggle every 30 frames
+      
+      aliens.forEach(a => {
+        if (!a.active) return;
+        ctx.fillStyle = a.color;
+        
+        let ax = a.x;
+        let ay = a.y;
+        
+        // Base block
+        ctx.fillRect(ax, ay + 2, a.w, a.h - 4);
+        
+        // Top nubs
+        ctx.fillRect(ax + 2, ay, 4, 2);
+        ctx.fillRect(ax + a.w - 6, ay, 4, 2);
+        
+        // Eyes (black)
+        ctx.fillStyle = '#000';
+        ctx.fillRect(ax + 4, ay + 4, 2, 2);
+        ctx.fillRect(ax + 10, ay + 4, 2, 2);
+        
+        // Legs (animated)
+        ctx.fillStyle = a.color;
+        if (animState === 0) {
+          ctx.fillRect(ax, ay + a.h - 2, 4, 2);
+          ctx.fillRect(ax + a.w - 4, ay + a.h - 2, 4, 2);
+        } else {
+          ctx.fillRect(ax + 4, ay + a.h - 2, 2, 2);
+          ctx.fillRect(ax + 10, ay + a.h - 2, 2, 2);
+        }
+      });
+
+      // UFO
+      if (ufo) {
+        ctx.fillStyle = '#ef4444'; // Red
+        ctx.fillRect(ufo.x + 6, ufo.y, 18, 4);
+        ctx.fillRect(ufo.x, ufo.y + 4, 30, 4);
+        ctx.fillStyle = '#fff'; // lights
+        ctx.fillRect(ufo.x + 4, ufo.y + 4, 2, 2);
+        ctx.fillRect(ufo.x + 14, ufo.y + 4, 2, 2);
+        ctx.fillRect(ufo.x + 24, ufo.y + 4, 2, 2);
+      }
+
+      // Shields
+      ctx.fillStyle = '#4ade80';
+      shields.forEach(s => {
+        if(s.active) ctx.fillRect(s.x, s.y, s.w, s.h);
+      });
+
+      // Bullets
+      ctx.fillStyle = '#fff';
+      bullets.forEach(b => ctx.fillRect(b.x - b.w/2, b.y, b.w, b.h));
+      
+      // Alien Bullets
+      ctx.fillStyle = '#ef4444'; // red
+      alienBullets.forEach(b => {
+        // wavy bullet effect
+        let ox = Math.sin(b.y * 0.5) * 2;
+        ctx.fillRect(b.x - b.w/2 + ox, b.y, b.w, b.h);
+      });
+      
+      // Ground Line
+      ctx.fillStyle = '#4ade80';
+      ctx.fillRect(0, canvas.height - 2, canvas.width, 2);
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Director's Cut &mdash; ArcadeNexus</title>
+  <meta name="description" content="Repeat clapperboard sequences from memory, Simon-Says style.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Director's Cut",
+    "genre": "Memory Logic",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    
+    .clapper-zone {
+      transition: all 0.1s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      border: 4px solid #111125;
+    }
+    
+    .clapper-zone::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      transition: opacity 0.1s;
+    }
+
+    .clapper-zone.active::after, .clapper-zone:active::after {
+      opacity: 0.5;
+    }
+    
+    .clapper-zone.active {
+      transform: scale(0.95);
+      filter: brightness(1.5) drop-shadow(0 0 20px currentColor);
+    }
+    
+    /* Top Left - Red */
+    #zone-0 { background-color: #ef4444; color: #ef4444; border-top-left-radius: 1rem; }
+    /* Top Right - Blue */
+    #zone-1 { background-color: #3b82f6; color: #3b82f6; border-top-right-radius: 1rem; }
+    /* Bottom Left - Green */
+    #zone-2 { background-color: #22c55e; color: #22c55e; border-bottom-left-radius: 1rem; }
+    /* Bottom Right - Yellow */
+    #zone-3 { background-color: #eab308; color: #eab308; border-bottom-right-radius: 1rem; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-8 shadow-lg">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-4 py-2 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Scene</span>
+          <div id="round" class="text-2xl font-bold text-cyan-400 font-heading leading-tight drop-shadow-md">1</div>
+        </div>
+      </div>
+      <div id="statusText" class="text-lg font-bold font-heading text-purple-400 animate-pulse tracking-wide">Action!</div>
+    </div>
+
+    <!-- Clapperboard -->
+    <div class="relative w-full aspect-square max-w-[400px] mx-auto bg-nexus-elevated rounded-xl p-2 shadow-[0_0_50px_rgba(34,211,238,0.1)] border border-white/20">
+      
+      <!-- Clapper top hinge -->
+      <div class="w-full h-8 bg-gradient-to-r from-gray-800 to-gray-600 rounded-t-xl mb-2 border-b-2 border-black flex items-center justify-around overflow-hidden">
+        <div class="w-16 h-full bg-white/20 skew-x-12"></div>
+        <div class="w-16 h-full bg-white/20 skew-x-12"></div>
+        <div class="w-16 h-full bg-white/20 skew-x-12"></div>
+      </div>
+
+      <div class="w-full h-[calc(100%-2.5rem)] grid grid-cols-2 grid-rows-2">
+        <div id="zone-0" class="clapper-zone" data-id="0"></div>
+        <div id="zone-1" class="clapper-zone" data-id="1"></div>
+        <div id="zone-2" class="clapper-zone" data-id="2"></div>
+        <div id="zone-3" class="clapper-zone" data-id="3"></div>
+      </div>
+      
+      <!-- Center Circle -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-4 w-24 h-24 bg-nexus-dark rounded-full border-4 border-nexus-card flex items-center justify-center shadow-inner z-10">
+        <button id="startBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold font-heading text-lg rounded-full w-20 h-20 hover:scale-105 active:scale-95 transition shadow-lg">PLAY</button>
+      </div>
+    </div>
+
+    <!-- Overlays -->
+    <div id="gameOver" class="fixed inset-0 bg-red-900/90 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+      <div class="text-6xl font-bold mb-4 font-heading text-white drop-shadow-md">CUT!</div>
+      <p class="text-gray-200 mb-6 text-2xl">You remembered <span id="finalRound" class="font-bold text-cyan-300">0</span> scenes.</p>
+      <button id="tryAgainBtn" class="bg-white text-red-600 px-8 py-3 rounded-full font-bold text-xl shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Take Two</button>
+    </div>
+
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 20 Operations Manual</h3>
+        <p>Welcome to Arcade Room 20, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const roundEl = document.getElementById('round');
+    const statusText = document.getElementById('statusText');
+    const startBtn = document.getElementById('startBtn');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const clapperZones = document.querySelectorAll('.clapper-zone');
+    
+    let sequence = [];
+    let playerIndex = 0;
+    let state = 'IDLE'; // IDLE, WATCH, PLAY
+    
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    const FREQS = [329.63, 440.0, 261.63, 293.66]; // E4, A4, C4, D4
+
+    function playTone(index, duration) {
+      if(!audioCtx) audioCtx = new AudioContext();
+      
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(FREQS[index], audioCtx.currentTime);
+      
+      gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration/1000);
+      
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration/1000);
+    }
+
+    function initGame() {
+      if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      
+      sequence = [];
+      playerIndex = 0;
+      roundEl.textContent = '1';
+      
+      startBtn.style.display = 'none';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+      
+      nextRound();
+    }
+
+    function nextRound() {
+      sequence.push(Math.floor(Math.random() * 4));
+      playerIndex = 0;
+      roundEl.textContent = sequence.length;
+      
+      state = 'WATCH';
+      statusText.textContent = "Watch closely...";
+      statusText.style.color = '#eab308';
+      
+      let delay = Math.max(200, 800 - (sequence.length * 30)); 
+      
+      setTimeout(() => playSequence(delay), 1000);
+    }
+
+    function playSequence(delay) {
+      let i = 0;
+      let interval = setInterval(() => {
+        let btnId = sequence[i];
+        activateZone(btnId, delay - 50);
+        i++;
+        
+        if (i >= sequence.length) {
+          clearInterval(interval);
+          setTimeout(() => {
+            state = 'PLAY';
+            statusText.textContent = "Your turn!";
+            statusText.style.color = '#4ade80';
+          }, delay);
+        }
+      }, delay);
+    }
+
+    function activateZone(id, duration) {
+      const zone = document.getElementById(`zone-${id}`);
+      zone.classList.add('active');
+      playTone(id, duration);
+      
+      setTimeout(() => {
+        zone.classList.remove('active');
+      }, duration);
+    }
+
+    function handlePlayerInput(e) {
+      if(state !== 'PLAY') return;
+      
+      let id = parseInt(e.target.dataset.id);
+      activateZone(id, 300);
+      
+      if (id === sequence[playerIndex]) {
+        playerIndex++;
+        if (playerIndex === sequence.length) {
+          state = 'WAIT';
+          statusText.textContent = "Great job!";
+          statusText.style.color = '#22d3ee';
+          setTimeout(nextRound, 1000);
+        }
+      } else {
+        state = 'GAMEOVER';
+        if(audioCtx) {
+          const osc = audioCtx.createOscillator();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+          osc.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.5);
+        }
+        
+        document.body.style.backgroundColor = '#7f1d1d';
+        setTimeout(() => document.body.style.backgroundColor = '', 200);
+
+        document.getElementById('finalRound').textContent = sequence.length - 1;
+        startBtn.style.display = 'flex';
+        startBtn.textContent = 'RESTART';
+        
+        setTimeout(() => {
+          gameOverOverlay.style.opacity = '1';
+          gameOverOverlay.style.pointerEvents = 'auto';
+        }, 500);
+      }
+    }
+
+    startBtn.addEventListener('click', initGame);
+    document.getElementById('tryAgainBtn').addEventListener('click', initGame);
+    
+    // Robust event listeners for the colored clapperboard zones
+    clapperZones.forEach(zone => {
+      // Use pointerdown to seamlessly handle both mouse and touch without double-firing
+      zone.addEventListener('pointerdown', e => {
+        e.preventDefault(); // Prevents scroll/zoom on mobile
+        handlePlayerInput(e);
+      });
+      // Fallbacks just in case
+      zone.addEventListener('touchstart', e => {
+        e.preventDefault(); 
+      }, {passive: false});
+    });
+
+    document.body.addEventListener('click', () => {
+      if(!audioCtx) audioCtx = new AudioContext();
+    }, {once:true});
+  </script>
+</body>
+</html>

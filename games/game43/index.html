@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lip-Sync Editor — ArcadeNexus</title>
+  <meta name="description" content="Align the vocal track with the visual cues in this precision rhythm game.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Lip-Sync Editor",
+    "genre": "Rhythm",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-3xl">
+      <div class="flex gap-6">
+        <div>Score: <span id="scoreDisplay" class="font-bold text-violet-400">0</span></div>
+        <div>Combo: <span id="comboDisplay" class="font-bold text-white">x1</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">Restart Track</button>
+    </div>
+    
+    <div class="w-full max-w-3xl mt-8 relative">
+       <!-- Visualizer area above -->
+       <div class="h-32 bg-[#09090b] rounded-t-lg border-x border-t border-white/10 flex items-center justify-center overflow-hidden relative">
+          <div id="mouthTarget" class="text-6xl transition-transform duration-75">😐</div>
+          
+          <!-- Sync text overlay -->
+          <div id="syncText" class="absolute inset-0 flex items-center justify-center text-4xl font-black font-heading opacity-0 transition-opacity">PERFECT</div>
+       </div>
+       
+       <!-- Timeline track below -->
+       <canvas id="gameCanvas_43" width="800" height="150" class="w-full bg-[#18181b] border border-white/10 rounded-b-lg shadow-[0_20px_50px_rgba(139,92,246,0.2)]"></canvas>
+       
+       <div class="text-center mt-6 text-gray-400 text-sm">
+         Press <span class="text-white font-bold px-2 py-1 bg-gray-800 rounded">SPACE</span> or <span class="text-white font-bold px-2 py-1 bg-gray-800 rounded">TAP</span> exactly when the purple audio block enters the white target zone.
+       </div>
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-violet-600">
+        <h2 class="text-3xl font-bold font-heading mb-2 text-violet-500">TRACK FINISHED</h2>
+        <p class="text-gray-400 mb-6">Final Score: <span id="finalScore" class="text-violet-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full bg-violet-600 hover:bg-violet-700">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 43 Operations Manual</h3>
+        <p>Welcome to Arcade Room 43, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_43');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const comboDisplay = document.getElementById('comboDisplay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const mouthTarget = document.getElementById('mouthTarget');
+    const syncText = document.getElementById('syncText');
+    
+    let score = 0;
+    let combo = 1;
+    let isGameOver = false;
+    let animationId;
+    
+    // Track config
+    const TARGET_X = 150;
+    const TARGET_WIDTH = 40;
+    let SPEED = 300; // px per second
+    
+    let blocks = [];
+    let timeElapsed = 0;
+    let lastSpawn = 0;
+    let nextSpawnDelay = 1.0;
+    
+    let trackLength = 30; // seconds
+    
+    // Audio synthesis
+    let actx = null;
+    
+    function initAudio() {
+        if(!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    
+    function playNote(quality) {
+        if(!actx) return;
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        
+        if (quality === 'perfect') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, actx.currentTime); // C5
+            gain.gain.setValueAtTime(0.3, actx.currentTime);
+        } else if (quality === 'good') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(392.00, actx.currentTime); // G4
+            gain.gain.setValueAtTime(0.2, actx.currentTime);
+        } else {
+            // Miss
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(100, actx.currentTime); 
+            gain.gain.setValueAtTime(0.4, actx.currentTime);
+        }
+        
+        gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.2);
+        osc.connect(gain);
+        gain.connect(actx.destination);
+        osc.start();
+        osc.stop(actx.currentTime + 0.2);
+    }
+    
+    function spawnBlock() {
+        blocks.push({
+            x: canvas.width + 50,
+            width: 30,
+            active: true
+        });
+    }
+    
+    function showSyncText(text, color, mouth) {
+        syncText.textContent = text;
+        syncText.style.color = color;
+        syncText.style.opacity = '1';
+        syncText.style.transform = 'scale(1.2)';
+        
+        mouthTarget.textContent = mouth;
+        mouthTarget.style.transform = 'scale(1.5)';
+        
+        setTimeout(() => {
+            syncText.style.opacity = '0';
+            syncText.style.transform = 'scale(1)';
+            mouthTarget.textContent = '😐';
+            mouthTarget.style.transform = 'scale(1)';
+        }, 300);
+    }
+    
+    function handleInput() {
+        if(isGameOver) return;
+        initAudio();
+        
+        // Find closest active block
+        let closest = null;
+        let minDist = Infinity;
+        
+        for(let b of blocks) {
+            if (b.active) {
+                // Distance to center of target
+                let dist = Math.abs((b.x + b.width/2) - (TARGET_X + TARGET_WIDTH/2));
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = b;
+                }
+            }
+        }
+        
+        if (closest && minDist < 80) { // Within hittable range
+            closest.active = false; // Mark hit
+            
+            if (minDist <= 15) {
+                // Perfect
+                score += 100 * combo;
+                combo++;
+                showSyncText("PERFECT", "#a855f7", "🗣️");
+                playNote('perfect');
+            } else if (minDist <= 40) {
+                // Good
+                score += 50 * combo;
+                combo++;
+                showSyncText("GOOD", "#3b82f6", "😮");
+                playNote('good');
+            } else {
+                // Miss
+                combo = 1;
+                showSyncText("EARLY/LATE", "#ef4444", "😬");
+                playNote('miss');
+            }
+        } else {
+            // Phantom press (Miss)
+            combo = 1;
+            showSyncText("MISS", "#ef4444", "😬");
+            playNote('miss');
+        }
+        
+        scoreDisplay.textContent = score;
+        comboDisplay.textContent = `x${combo}`;
+    }
+    
+    window.addEventListener('keydown', (e) => {
+        if(e.code === 'Space') {
+            e.preventDefault();
+            handleInput();
+        }
+    });
+    
+    canvas.addEventListener('mousedown', handleInput);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleInput(); }, {passive: false});
+    
+    let lastTime = 0;
+    function loop(timestamp) {
+        if(isGameOver) return;
+        const dt = (timestamp - lastTime) / 1000;
+        lastTime = timestamp;
+        
+        timeElapsed += dt;
+        
+        // Speed up over time
+        SPEED = 300 + (timeElapsed * 10);
+        
+        // Spawning logic
+        if (timeElapsed < trackLength) {
+            lastSpawn += dt;
+            if (lastSpawn >= nextSpawnDelay) {
+                spawnBlock();
+                lastSpawn = 0;
+                // Randomize next spawn (make it rhythmic, e.g. 0.5s, 1s, 1.5s)
+                let r = Math.random();
+                if (r < 0.4) nextSpawnDelay = 0.5;
+                else if (r < 0.8) nextSpawnDelay = 1.0;
+                else nextSpawnDelay = 1.5;
+            }
+        }
+        
+        // Update blocks
+        for (let i = blocks.length - 1; i >= 0; i--) {
+            let b = blocks[i];
+            b.x -= SPEED * dt;
+            
+            // Missed block (passed target completely)
+            if (b.active && b.x + b.width < TARGET_X - 20) {
+                b.active = false;
+                combo = 1;
+                comboDisplay.textContent = `x${combo}`;
+                showSyncText("MISS", "#ef4444", "😬");
+                playNote('miss');
+            }
+            
+            // Remove offscreen
+            if (b.x + b.width < 0) {
+                blocks.splice(i, 1);
+            }
+        }
+        
+        // End condition
+        if (timeElapsed >= trackLength + 2 && blocks.length === 0) {
+            isGameOver = true;
+            document.getElementById('finalScore').textContent = score;
+            gameOverOverlay.style.display = 'flex';
+        }
+        
+        draw();
+        animationId = requestAnimationFrame(loop);
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Target Box
+        ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(TARGET_X, 20, TARGET_WIDTH, canvas.height - 40);
+        
+        // Target glow line
+        ctx.strokeStyle = '#a855f7';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(TARGET_X + TARGET_WIDTH/2, 0);
+        ctx.lineTo(TARGET_X + TARGET_WIDTH/2, canvas.height);
+        ctx.stroke();
+        
+        // Draw Blocks
+        blocks.forEach(b => {
+            if (b.active) {
+                // Audio waveform graphic inside block
+                ctx.fillStyle = '#8b5cf6'; // Violet
+                ctx.fillRect(b.x, 30, b.width, canvas.height - 60);
+                
+                // Draw some lines inside it to look like audio
+                ctx.strokeStyle = '#c4b5fd';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(b.x + b.width/2, 40);
+                ctx.lineTo(b.x + b.width/2, canvas.height - 40);
+                ctx.stroke();
+            } else {
+                // Hit or missed (faded out)
+                ctx.fillStyle = 'rgba(139, 92, 246, 0.2)';
+                ctx.fillRect(b.x, 40, b.width, canvas.height - 80);
+            }
+        });
+        
+        // Progress bar at bottom
+        let progress = timeElapsed / trackLength;
+        if(progress > 1) progress = 1;
+        ctx.fillStyle = '#3f3f46';
+        ctx.fillRect(0, canvas.height - 5, canvas.width, 5);
+        ctx.fillStyle = '#a855f7';
+        ctx.fillRect(0, canvas.height - 5, canvas.width * progress, 5);
+    }
+    
+    function init() {
+        score = 0;
+        combo = 1;
+        timeElapsed = 0;
+        lastSpawn = 0;
+        blocks = [];
+        isGameOver = false;
+        
+        scoreDisplay.textContent = score;
+        comboDisplay.textContent = `x${combo}`;
+        gameOverOverlay.style.display = 'none';
+        
+        lastTime = performance.now();
+        cancelAnimationFrame(animationId);
+        loop(lastTime);
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  </script>
+</body>
+</html>

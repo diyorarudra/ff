@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sudoku &mdash; ArcadeNexus</title>
+  <meta name="description" content="Play free online Sudoku logic puzzles with auto-validation and difficulty levels.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Sudoku",
+    "genre": "Logic Puzzle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; -webkit-user-select: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex flex-wrap justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg gap-4">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-2">
+          <span class="text-cyan-400 flex items-center justify-center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </span>
+          <div id="timer" class="text-xl font-bold text-white font-heading w-12 text-center">00:00</div>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <select id="difficulty" class="bg-nexus-elevated border border-white/20 text-sm text-gray-200 rounded-lg px-2 py-1 outline-none focus:border-cyan-400 cursor-pointer">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">New</button>
+      </div>
+    </div>
+
+    <div class="relative w-full aspect-square bg-white rounded-xl shadow-2xl overflow-hidden mb-4">
+      <canvas id="gameCanvas_3" width="450" height="450" class="block w-full h-full cursor-pointer touch-none"></canvas>
+      
+      <!-- Overlays -->
+      <div id="gameWon" class="absolute inset-0 bg-cyan-900/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 z-10">
+        <div class="text-5xl font-bold mb-2 font-heading text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">Solved!</div>
+        <p class="text-white font-medium mb-2 drop-shadow-md">You completed the puzzle.</p>
+        <p id="bestTimeMsg" class="text-purple-300 font-bold mb-6"></p>
+        <button id="playAgainBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-2 rounded-lg font-bold transition-transform pointer-events-auto active:scale-95 hover:scale-105">Play Again</button>
+      </div>
+    </div>
+
+    <!-- On-screen numpad -->
+    <div class="grid grid-cols-5 gap-2 w-full max-w-[320px]">
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="1">1</button>
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="2">2</button>
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="3">3</button>
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="4">4</button>
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="5">5</button>
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="6">6</button>
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="7">7</button>
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="8">8</button>
+      <button class="numpad-btn bg-nexus-card border border-white/10 hover:border-cyan-400 py-3 rounded-lg text-xl font-bold font-heading transition-colors" data-val="9">9</button>
+      <button class="numpad-btn bg-red-900/50 border border-red-500/30 hover:border-red-500 text-red-200 py-3 rounded-lg flex items-center justify-center transition-colors" data-val="0" aria-label="Delete">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg>
+      </button>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 3 Operations Manual</h3>
+        <p>Welcome to Arcade Room 3, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_3');
+    const ctx = canvas.getContext('2d');
+    const timerEl = document.getElementById('timer');
+    const restartBtn = document.getElementById('restartBtn');
+    const diffSelect = document.getElementById('difficulty');
+    const gameWonOverlay = document.getElementById('gameWon');
+    const bestTimeMsg = document.getElementById('bestTimeMsg');
+    
+    // Virtual internal resolution
+    canvas.width = 450;
+    canvas.height = 450;
+    const CELL_SIZE = 50;
+    
+    let board = [];
+    let initialBoard = [];
+    let selectedCell = null;
+    let timeElapsed = 0;
+    let timerInterval = null;
+    let state = 'IDLE'; // IDLE, PLAYING, WON
+
+    // Generator logic
+    function isValid(grid, r, c, k) {
+      for (let i = 0; i < 9; i++) {
+        if (grid[r][i] === k) return false;
+        if (grid[i][c] === k) return false;
+        if (grid[3 * Math.floor(r/3) + Math.floor(i/3)][3 * Math.floor(c/3) + i%3] === k) return false;
+      }
+      return true;
+    }
+
+    function fillBoard(grid) {
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (grid[r][c] === 0) {
+            let nums = [1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+            for (let num of nums) {
+              if (isValid(grid, r, c, num)) {
+                grid[r][c] = num;
+                if (fillBoard(grid)) return true;
+                grid[r][c] = 0;
+              }
+            }
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function init() {
+      // 1. Generate full board
+      let fullBoard = Array(9).fill().map(() => Array(9).fill(0));
+      fillBoard(fullBoard);
+
+      // 2. Remove elements based on difficulty
+      let toRemove = 45; // medium
+      if (diffSelect.value === 'easy') toRemove = 35;
+      if (diffSelect.value === 'hard') toRemove = 55;
+
+      board = JSON.parse(JSON.stringify(fullBoard));
+      let count = toRemove;
+      while (count > 0) {
+        let cellId = Math.floor(Math.random() * 81);
+        let r = Math.floor(cellId / 9);
+        let c = cellId % 9;
+        if (board[r][c] !== 0) {
+          board[r][c] = 0;
+          count--;
+        }
+      }
+
+      initialBoard = JSON.parse(JSON.stringify(board));
+      selectedCell = null;
+      state = 'PLAYING';
+      
+      timeElapsed = 0;
+      clearInterval(timerInterval);
+      startTimer();
+      
+      gameWonOverlay.style.opacity = '0';
+      gameWonOverlay.style.pointerEvents = 'none';
+
+      draw();
+    }
+
+    function startTimer() {
+      timerEl.textContent = '00:00';
+      timerInterval = setInterval(() => {
+        if(state === 'PLAYING') {
+          timeElapsed++;
+          let m = Math.floor(timeElapsed / 60).toString().padStart(2, '0');
+          let s = (timeElapsed % 60).toString().padStart(2, '0');
+          timerEl.textContent = `${m}:${s}`;
+        }
+      }, 1000);
+    }
+
+    // Checking current conflicts
+    function getConflicts() {
+      let conflicts = Array(9).fill().map(() => Array(9).fill(false));
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (board[r][c] === 0) continue;
+          let val = board[r][c];
+          // check row
+          for (let i = 0; i < 9; i++) {
+            if (i !== c && board[r][i] === val) { conflicts[r][c] = true; conflicts[r][i] = true; }
+          }
+          // check col
+          for (let i = 0; i < 9; i++) {
+            if (i !== r && board[i][c] === val) { conflicts[r][c] = true; conflicts[i][c] = true; }
+          }
+          // check box
+          let br = Math.floor(r/3)*3;
+          let bc = Math.floor(c/3)*3;
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              if ((br+i !== r || bc+j !== c) && board[br+i][bc+j] === val) {
+                conflicts[r][c] = true; conflicts[br+i][bc+j] = true;
+              }
+            }
+          }
+        }
+      }
+      return conflicts;
+    }
+
+    function checkWin() {
+      for (let r=0; r<9; r++) {
+        for (let c=0; c<9; c++) {
+          if (board[r][c] === 0) return false;
+        }
+      }
+      let conflicts = getConflicts();
+      for (let r=0; r<9; r++) {
+        for (let c=0; c<9; c++) {
+          if (conflicts[r][c]) return false;
+        }
+      }
+      return true;
+    }
+
+    function inputNum(num) {
+      if (state !== 'PLAYING' || !selectedCell) return;
+      let {r, c} = selectedCell;
+      if (initialBoard[r][c] !== 0) return; // Cannot edit given cells
+
+      board[r][c] = num;
+      if (num !== 0 && checkWin()) {
+        state = 'WON';
+        clearInterval(timerInterval);
+        
+        const key = `arcadenexus_game3_best_${diffSelect.value}`;
+        const best = parseInt(localStorage.getItem(key)) || Infinity;
+        if (timeElapsed < best) {
+          localStorage.setItem(key, timeElapsed);
+          bestTimeMsg.textContent = `New Best Time: ${formatTime(timeElapsed)}!`;
+        } else {
+          bestTimeMsg.textContent = `Time: ${formatTime(timeElapsed)} (Best: ${formatTime(best)})`;
+        }
+        gameWonOverlay.style.opacity = '1';
+        gameWonOverlay.style.pointerEvents = 'auto';
+      }
+      draw();
+    }
+
+    function formatTime(secs) {
+      let m = Math.floor(secs / 60).toString().padStart(2, '0');
+      let s = (secs % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    // Input Events
+    canvas.addEventListener('mousedown', e => {
+      if(state !== 'PLAYING') return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
+      
+      let c = Math.floor(x / CELL_SIZE);
+      let r = Math.floor(y / CELL_SIZE);
+      if (r >= 0 && r < 9 && c >= 0 && c < 9) {
+        selectedCell = {r, c};
+        draw();
+      }
+    });
+
+    window.addEventListener('keydown', e => {
+      if (['1','2','3','4','5','6','7','8','9'].includes(e.key)) {
+        inputNum(parseInt(e.key));
+      } else if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') {
+        inputNum(0);
+      } else if (selectedCell && state === 'PLAYING') {
+        let {r, c} = selectedCell;
+        if (e.key === 'ArrowUp') r = (r - 1 + 9) % 9;
+        if (e.key === 'ArrowDown') r = (r + 1) % 9;
+        if (e.key === 'ArrowLeft') c = (c - 1 + 9) % 9;
+        if (e.key === 'ArrowRight') c = (c + 1) % 9;
+        selectedCell = {r, c};
+        draw();
+      }
+    });
+
+    document.querySelectorAll('.numpad-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        inputNum(parseInt(btn.dataset.val));
+      });
+    });
+
+    diffSelect.addEventListener('change', init);
+    restartBtn.addEventListener('click', init);
+    document.getElementById('playAgainBtn').addEventListener('click', init);
+
+    // Rendering
+    function draw() {
+      // Background (dark theme grid inside a white card visually)
+      ctx.fillStyle = '#0f172a'; // slate 900
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      let conflicts = getConflicts();
+
+      // Draw Highlights
+      if (selectedCell) {
+        let {r, c} = selectedCell;
+        
+        // Highlight row, col, box
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.15)'; // light cyan
+        ctx.fillRect(0, r * CELL_SIZE, 9 * CELL_SIZE, CELL_SIZE);
+        ctx.fillRect(c * CELL_SIZE, 0, CELL_SIZE, 9 * CELL_SIZE);
+        
+        let br = Math.floor(r/3)*3, bc = Math.floor(c/3)*3;
+        ctx.fillRect(bc * CELL_SIZE, br * CELL_SIZE, 3 * CELL_SIZE, 3 * CELL_SIZE);
+
+        // Highlight selected cell strongly
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+        ctx.fillRect(c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+      }
+
+      // Draw Grid Lines
+      for (let i = 0; i <= 9; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * CELL_SIZE, 0);
+        ctx.lineTo(i * CELL_SIZE, 9 * CELL_SIZE);
+        ctx.moveTo(0, i * CELL_SIZE);
+        ctx.lineTo(9 * CELL_SIZE, i * CELL_SIZE);
+        
+        if (i % 3 === 0) {
+          ctx.strokeStyle = '#38bdf8'; // thick cyan lines for 3x3 boxes
+          ctx.lineWidth = 3;
+        } else {
+          ctx.strokeStyle = '#334155'; // thin slate lines
+          ctx.lineWidth = 1;
+        }
+        ctx.stroke();
+      }
+
+      // Draw Numbers
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (board[r][c] !== 0) {
+            let x = c * CELL_SIZE + CELL_SIZE/2;
+            let y = r * CELL_SIZE + CELL_SIZE/2 + 2;
+            
+            if (conflicts[r][c]) {
+              ctx.fillStyle = '#ef4444'; // red for conflict
+              ctx.fillRect(c * CELL_SIZE + 2, r * CELL_SIZE + 2, CELL_SIZE - 4, CELL_SIZE - 4);
+              ctx.fillStyle = '#fff';
+            } else if (initialBoard[r][c] !== 0) {
+              ctx.fillStyle = '#e2e8f0'; // Given numbers (light)
+            } else {
+              ctx.fillStyle = '#38bdf8'; // User numbers (cyan)
+            }
+            
+            ctx.font = initialBoard[r][c] !== 0 ? 'bold 26px Inter' : '30px Outfit';
+            ctx.fillText(board[r][c], x, y);
+          }
+        }
+      }
+    }
+
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

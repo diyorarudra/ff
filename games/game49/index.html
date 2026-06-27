@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laser Reflection Chamber — ArcadeNexus</title>
+  <meta name="description" content="Position the mirrors to reflect the energy beam into the receiver.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Laser Reflection Chamber",
+    "genre": "Puzzle",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-lg">
+      <div class="flex gap-6">
+        <div>Chamber: <span id="scoreDisplay" class="font-bold text-emerald-400">1</span></div>
+        <div>Mirrors: <span id="mirrorsDisplay" class="font-bold text-white">0</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">Reset Chamber</button>
+    </div>
+    
+    <div class="mt-4 p-4 bg-[#09090b] rounded-lg border border-white/10 shadow-[0_0_40px_rgba(16,185,129,0.1)]">
+        <canvas id="gameCanvas_49" width="500" height="500" class="cursor-pointer"></canvas>
+    </div>
+    
+    <div class="text-center mt-4 text-gray-400 text-sm">
+        Click empty grid cells to place a <span class="text-emerald-400 font-bold">Mirror</span>. Click a mirror to rotate it. Route the laser to the Goal!
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-emerald-600">
+        <h2 id="endTitle" class="text-3xl font-bold font-heading mb-2 text-emerald-500">CHAMBER SOLVED</h2>
+        <p class="text-gray-400 mb-6">Laser routed successfully.</p>
+        <button id="restartBtn" class="game-btn w-full bg-emerald-600 hover:bg-emerald-700">Next Chamber</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 49 Operations Manual</h3>
+        <p>Welcome to Arcade Room 49, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_49');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const mirrorsDisplay = document.getElementById('mirrorsDisplay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    let level = 1;
+    let isGameOver = false;
+    
+    const ROWS = 10;
+    const COLS = 10;
+    const CELL = canvas.width / COLS;
+    
+    let grid = [];
+    let start = { r: 0, c: 0, dir: 1 }; // dir: 0=up, 1=right, 2=down, 3=left
+    let goal = { r: 9, c: 9 };
+    
+    // Direction vectors
+    const DIRS = [
+        {r: -1, c: 0}, // 0: Up
+        {r: 0, c: 1},  // 1: Right
+        {r: 1, c: 0},  // 2: Down
+        {r: 0, c: -1}  // 3: Left
+    ];
+    
+    function generateLevel() {
+        grid = [];
+        for(let r=0; r<ROWS; r++) {
+            let row = [];
+            for(let c=0; c<COLS; c++) {
+                row.push({ type: 'empty' }); // empty, mirror, block
+            }
+            grid.push(row);
+        }
+        
+        // Random start and goal
+        start.r = Math.floor(Math.random() * ROWS);
+        start.c = 0;
+        start.dir = 1; // right
+        
+        goal.r = Math.floor(Math.random() * ROWS);
+        goal.c = COLS - 1;
+        
+        // Add random blocks (asteroids/walls)
+        let numBlocks = 10 + (level * 2);
+        for(let i=0; i<numBlocks; i++) {
+            let br = Math.floor(Math.random() * ROWS);
+            let bc = Math.floor(Math.random() * COLS);
+            if ((br !== start.r || bc !== start.c) && (br !== goal.r || bc !== goal.c)) {
+                grid[br][bc].type = 'block';
+            }
+        }
+    }
+    
+    // Returns array of points the laser travels
+    function traceLaser() {
+        let path = [];
+        let currR = start.r;
+        let currC = start.c;
+        let dir = start.dir;
+        
+        path.push({r: currR, c: currC, x: currC*CELL + CELL/2, y: currR*CELL + CELL/2});
+        
+        let steps = 0;
+        let hitGoal = false;
+        
+        while(steps < 100) {
+            steps++;
+            currR += DIRS[dir].r;
+            currC += DIRS[dir].c;
+            
+            // Out of bounds
+            if (currR < 0 || currR >= ROWS || currC < 0 || currC >= COLS) {
+                // Add a point at edge
+                let edgeC = currC - DIRS[dir].c + (DIRS[dir].c > 0 ? 0.5 : (DIRS[dir].c < 0 ? -0.5 : 0));
+                let edgeR = currR - DIRS[dir].r + (DIRS[dir].r > 0 ? 0.5 : (DIRS[dir].r < 0 ? -0.5 : 0));
+                path.push({r: currR, c: currC, x: edgeC*CELL + CELL/2, y: edgeR*CELL + CELL/2});
+                break;
+            }
+            
+            let cell = grid[currR][currC];
+            
+            path.push({r: currR, c: currC, x: currC*CELL + CELL/2, y: currR*CELL + CELL/2});
+            
+            if (currR === goal.r && currC === goal.c) {
+                hitGoal = true;
+                break;
+            }
+            
+            if (cell.type === 'block') {
+                break; // stop at block
+            } else if (cell.type === 'mirror') {
+                // Reflect based on mirror orientation
+                // Mirror orient: 0 = '\', 1 = '/'
+                if (cell.orient === 0) {
+                    // '\'
+                    if (dir === 0) dir = 3; // Up -> Left
+                    else if (dir === 1) dir = 2; // Right -> Down
+                    else if (dir === 2) dir = 1; // Down -> Right
+                    else if (dir === 3) dir = 0; // Left -> Up
+                } else {
+                    // '/'
+                    if (dir === 0) dir = 1; // Up -> Right
+                    else if (dir === 1) dir = 0; // Right -> Up
+                    else if (dir === 2) dir = 3; // Down -> Left
+                    else if (dir === 3) dir = 2; // Left -> Down
+                }
+            }
+        }
+        
+        return { path, hitGoal };
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Grid
+        ctx.strokeStyle = '#1e293b'; // slate-800
+        ctx.lineWidth = 1;
+        for(let i=0; i<=canvas.width; i+=CELL) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+        }
+        
+        // Draw Blocks
+        for(let r=0; r<ROWS; r++) {
+            for(let c=0; c<COLS; c++) {
+                let cell = grid[r][c];
+                let x = c * CELL;
+                let y = r * CELL;
+                
+                if (cell.type === 'block') {
+                    ctx.fillStyle = '#334155';
+                    ctx.fillRect(x + 2, y + 2, CELL - 4, CELL - 4);
+                } else if (cell.type === 'mirror') {
+                    ctx.strokeStyle = '#94a3b8'; // silver
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    if (cell.orient === 0) { // '\'
+                        ctx.moveTo(x + 10, y + 10);
+                        ctx.lineTo(x + CELL - 10, y + CELL - 10);
+                    } else { // '/'
+                        ctx.moveTo(x + CELL - 10, y + 10);
+                        ctx.lineTo(x + 10, y + CELL - 10);
+                    }
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        // Start Emitter
+        ctx.fillStyle = '#10b981'; // emerald-500
+        ctx.fillRect(start.c * CELL + 10, start.r * CELL + 10, CELL - 20, CELL - 20);
+        
+        // Goal Receiver
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(goal.c * CELL + CELL/2, goal.r * CELL + CELL/2, CELL/2 - 10, 0, Math.PI*2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(goal.c * CELL + CELL/2, goal.r * CELL + CELL/2, CELL/2 - 18, 0, Math.PI*2);
+        ctx.stroke();
+        
+        // Draw Laser
+        let result = traceLaser();
+        let path = result.path;
+        
+        if (path.length > 0) {
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#34d399'; // emerald-400
+            ctx.strokeStyle = '#6ee7b7'; // emerald-300
+            ctx.lineWidth = 4;
+            
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            for(let i=1; i<path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.stroke();
+            
+            // Core beam
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            for(let i=1; i<path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.stroke();
+        }
+        
+        if (result.hitGoal && !isGameOver) {
+            isGameOver = true;
+            // Goal pulse
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.5)';
+            ctx.fillRect(goal.c * CELL, goal.r * CELL, CELL, CELL);
+            
+            setTimeout(() => {
+                gameOverOverlay.style.display = 'flex';
+            }, 500);
+        }
+    }
+    
+    canvas.addEventListener('mousedown', (e) => {
+        if(isGameOver) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        
+        let c = Math.floor(x / CELL);
+        let r = Math.floor(y / CELL);
+        
+        // Don't interact with start, goal, or blocks
+        if ((r === start.r && c === start.c) || (r === goal.r && c === goal.c)) return;
+        
+        let cell = grid[r][c];
+        
+        if (cell.type === 'empty') {
+            cell.type = 'mirror';
+            cell.orient = 0; // default '\'
+        } else if (cell.type === 'mirror') {
+            if (cell.orient === 0) {
+                cell.orient = 1; // rotate to '/'
+            } else {
+                cell.type = 'empty'; // remove
+            }
+        }
+        
+        // Count mirrors
+        let mirrorCount = 0;
+        for(let row of grid) for(let cell of row) if(cell.type === 'mirror') mirrorCount++;
+        mirrorsDisplay.textContent = mirrorCount;
+        
+        draw();
+    });
+    
+    function init() {
+        isGameOver = false;
+        gameOverOverlay.style.display = 'none';
+        scoreDisplay.textContent = level;
+        mirrorsDisplay.textContent = 0;
+        
+        generateLevel();
+        draw();
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', () => {
+        level++;
+        init();
+    });
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

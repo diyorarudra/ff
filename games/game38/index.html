@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mansion Safe Cracker — ArcadeNexus</title>
+  <meta name="description" content="Feel for the vibration and listen for the click to crack the multi-dial safe.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Mansion Safe Cracker",
+    "genre": "Puzzle",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-md">
+      <div class="flex gap-6">
+        <div>Safes Cracked: <span id="scoreDisplay" class="font-bold text-amber-500">0</span></div>
+        <div>Pins: <span id="pinsDisplay" class="font-bold text-white">0/3</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">Reset</button>
+    </div>
+    
+    <div class="mt-8 relative flex items-center justify-center">
+       <!-- The Safe Body -->
+       <div class="w-80 h-80 bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl border-8 border-gray-600 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center relative">
+          
+          <!-- Pin Indicators -->
+          <div class="absolute top-4 left-0 w-full flex justify-center gap-4">
+             <div class="pin-light w-4 h-4 rounded-full bg-red-900 border border-gray-900 shadow-inner"></div>
+             <div class="pin-light w-4 h-4 rounded-full bg-red-900 border border-gray-900 shadow-inner"></div>
+             <div class="pin-light w-4 h-4 rounded-full bg-red-900 border border-gray-900 shadow-inner"></div>
+          </div>
+          
+          <!-- The Dial -->
+          <div id="dial" class="w-48 h-48 rounded-full bg-gradient-to-t from-gray-400 to-gray-200 border-4 border-gray-500 shadow-2xl relative cursor-grab active:cursor-grabbing flex items-center justify-center">
+             <!-- Notches -->
+             <div class="absolute inset-2 rounded-full border border-gray-400 opacity-50 pointer-events-none" style="background: repeating-conic-gradient(from 0deg, transparent 0deg 9deg, #6b7280 9deg 10deg);"></div>
+             
+             <!-- Handle / Indicator -->
+             <div class="absolute top-2 w-3 h-8 bg-red-600 rounded-sm shadow-md"></div>
+             
+             <!-- Center Knob -->
+             <div class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-300 to-gray-500 shadow-inner"></div>
+          </div>
+          
+       </div>
+    </div>
+    
+    <div class="text-center mt-6 text-gray-400 text-sm max-w-sm">
+        Drag to rotate the dial. Listen and watch closely for the <span class="text-amber-500 font-bold">subtle click</span>. Hold it exactly on that spot for 1 second to unlock a pin.
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-amber-600">
+        <h2 class="text-3xl font-bold font-heading mb-2 text-amber-500">SAFE UNLOCKED</h2>
+        <p class="text-gray-400 mb-6">Contents acquired.</p>
+        <button id="restartBtn" class="game-btn w-full bg-amber-600 hover:bg-amber-700">Next Safe</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 38 Operations Manual</h3>
+        <p>Welcome to Arcade Room 38, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const dial = document.getElementById('dial');
+    const lights = document.querySelectorAll('.pin-light');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const pinsDisplay = document.getElementById('pinsDisplay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    let score = 0;
+    let currentAngle = 0;
+    let targetAngle = 0;
+    let pinsUnlocked = 0;
+    let isGameOver = false;
+    
+    let isDragging = false;
+    let startAngle = 0;
+    let startRotation = 0;
+    
+    let clickTimeout = null;
+    let inSweetSpot = false;
+    
+    // Web Audio API Context
+    let actx = null;
+    
+    function initAudio() {
+        if(!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    
+    function playClickSound() {
+        if(!actx) return;
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(800, actx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, actx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.5, actx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(actx.destination);
+        osc.start();
+        osc.stop(actx.currentTime + 0.05);
+        
+        // Haptic feedback if supported
+        if(navigator.vibrate) navigator.vibrate(20);
+    }
+    
+    function playUnlockSound() {
+        if(!actx) return;
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, actx.currentTime);
+        osc.frequency.setValueAtTime(880, actx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.5, actx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, actx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(actx.destination);
+        osc.start();
+        osc.stop(actx.currentTime + 0.3);
+        
+        if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
+    }
+    
+    function setTarget() {
+        // Random angle between 0 and 360
+        targetAngle = Math.floor(Math.random() * 360);
+    }
+    
+    function getAngle(e) {
+        const rect = dial.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+        
+        if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        }
+        
+        return Math.atan2(clientY - cy, clientX - cx) * 180 / Math.PI;
+    }
+    
+    function startDrag(e) {
+        if (isGameOver) return;
+        initAudio(); // Initialize on first interaction
+        isDragging = true;
+        startAngle = getAngle(e);
+        startRotation = currentAngle;
+        if(e.type === 'touchstart') e.preventDefault();
+    }
+    
+    function doDrag(e) {
+        if (!isDragging || isGameOver) return;
+        
+        const angle = getAngle(e);
+        let delta = angle - startAngle;
+        
+        // Handle wraparound
+        if (delta > 180) delta -= 360;
+        if (delta < -180) delta += 360;
+        
+        currentAngle = startRotation + delta;
+        currentAngle = (currentAngle % 360 + 360) % 360; // normalize 0-360
+        
+        dial.style.transform = `rotate(${currentAngle}deg)`;
+        
+        checkSweetSpot();
+        
+        if(e.type === 'touchmove') e.preventDefault();
+    }
+    
+    function stopDrag() {
+        isDragging = false;
+        clearTimeout(clickTimeout);
+        inSweetSpot = false;
+        dial.style.boxShadow = "none";
+    }
+    
+    function checkSweetSpot() {
+        // Find shortest distance between current and target
+        let diff = Math.abs(currentAngle - targetAngle);
+        if (diff > 180) diff = 360 - diff;
+        
+        // 3 degree tolerance
+        if (diff <= 3) {
+            if (!inSweetSpot) {
+                inSweetSpot = true;
+                playClickSound();
+                dial.style.boxShadow = "0 0 30px rgba(245, 158, 11, 0.5)"; // Amber glow
+                
+                // Must hold for 0.8 seconds
+                clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(unlockPin, 800);
+            }
+        } else {
+            if (inSweetSpot) {
+                inSweetSpot = false;
+                dial.style.boxShadow = "none";
+                clearTimeout(clickTimeout);
+            }
+        }
+    }
+    
+    function unlockPin() {
+        if (isGameOver) return;
+        
+        playUnlockSound();
+        lights[pinsUnlocked].classList.remove('bg-red-900');
+        lights[pinsUnlocked].classList.add('bg-green-500', 'shadow-[0_0_15px_#22c55e]');
+        
+        pinsUnlocked++;
+        pinsDisplay.textContent = `${pinsUnlocked}/3`;
+        
+        inSweetSpot = false;
+        dial.style.boxShadow = "none";
+        
+        if (pinsUnlocked >= 3) {
+            score++;
+            scoreDisplay.textContent = score;
+            isGameOver = true;
+            gameOverOverlay.style.display = 'flex';
+        } else {
+            // New target for next pin
+            setTarget();
+        }
+    }
+    
+    // Mouse Events
+    dial.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', doDrag);
+    window.addEventListener('mouseup', stopDrag);
+    
+    // Touch Events
+    dial.addEventListener('touchstart', startDrag, {passive: false});
+    window.addEventListener('touchmove', doDrag, {passive: false});
+    window.addEventListener('touchend', stopDrag);
+    
+    function init() {
+        pinsUnlocked = 0;
+        pinsDisplay.textContent = `0/3`;
+        isGameOver = false;
+        gameOverOverlay.style.display = 'none';
+        
+        currentAngle = 0;
+        dial.style.transform = `rotate(0deg)`;
+        dial.style.boxShadow = "none";
+        
+        lights.forEach(l => {
+            l.classList.remove('bg-green-500', 'shadow-[0_0_15px_#22c55e]');
+            l.classList.add('bg-red-900');
+        });
+        
+        setTarget();
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', () => { score=0; scoreDisplay.textContent=score; init(); });
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  </script>
+</body>
+</html>

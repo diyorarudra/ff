@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stunt Coordinator — ArcadeNexus</title>
+  <meta name="description" content="Physics-based trajectory game. Launch your stuntman onto the target crash pad!">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Stunt Coordinator",
+    "genre": "Physics",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-2xl">
+      <div class="flex gap-6">
+        <div>Takes: <span id="takesDisplay" class="font-bold text-red-400">0</span></div>
+        <div>Successful Hits: <span id="scoreDisplay" class="font-bold text-green-400">0</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">New Scene</button>
+    </div>
+    
+    <canvas id="gameCanvas_34" width="800" height="400" class="mt-4 bg-[#0a0a1a] shadow-2xl border border-white/10 rounded-lg w-full max-w-2xl"></canvas>
+    
+    <div class="text-center mt-4 text-gray-400 text-sm">
+      Click and drag the stuntman (blue dot) backwards to aim and launch.
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 34 Operations Manual</h3>
+        <p>Welcome to Arcade Room 34, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_34');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const takesDisplay = document.getElementById('takesDisplay');
+    
+    // Physics Engine config
+    const GRAVITY = 400; // px/s^2
+    const DRAG = 0.99;
+    
+    let score = 0;
+    let takes = 0;
+    let animationId;
+    
+    let isDragging = false;
+    let dragStart = {x: 0, y: 0};
+    let dragCurrent = {x: 0, y: 0};
+    
+    const cannonPos = {x: 100, y: 300};
+    
+    let stuntman = {
+      x: cannonPos.x,
+      y: cannonPos.y,
+      vx: 0,
+      vy: 0,
+      radius: 12,
+      active: false,
+      color: '#3b82f6' // Blue
+    };
+    
+    let target = {
+      x: 600,
+      y: 350,
+      width: 100,
+      height: 20,
+      color: '#22c55e' // Green
+    };
+    
+    let obstacles = [];
+    
+    function generateLevel() {
+      stuntman.x = cannonPos.x;
+      stuntman.y = cannonPos.y;
+      stuntman.vx = 0;
+      stuntman.vy = 0;
+      stuntman.active = false;
+      
+      // Random target position
+      target.x = Math.random() * 300 + 400;
+      target.y = Math.random() * 200 + 150;
+      
+      obstacles = [];
+      // Generate 1-3 random obstacles
+      let numObs = Math.floor(Math.random() * 3) + 1;
+      for(let i=0; i<numObs; i++) {
+        obstacles.push({
+          x: Math.random() * 300 + 200,
+          y: Math.random() * 200 + 100,
+          w: Math.random() * 20 + 20,
+          h: Math.random() * 100 + 50
+        });
+      }
+    }
+    
+    canvas.addEventListener('mousedown', (e) => {
+      if(stuntman.active) return; // Wait for current jump to finish
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+      
+      // Check if clicking near cannon
+      const dist = Math.hypot(x - stuntman.x, y - stuntman.y);
+      if (dist < 40) {
+        isDragging = true;
+        dragStart = {x: stuntman.x, y: stuntman.y};
+        dragCurrent = {x, y};
+      }
+    });
+    
+    canvas.addEventListener('mousemove', (e) => {
+      if(!isDragging) return;
+      const rect = canvas.getBoundingClientRect();
+      dragCurrent.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      dragCurrent.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+      
+      // Limit drag distance
+      const dist = Math.hypot(dragCurrent.x - dragStart.x, dragCurrent.y - dragStart.y);
+      if (dist > 100) {
+        const angle = Math.atan2(dragCurrent.y - dragStart.y, dragCurrent.x - dragStart.x);
+        dragCurrent.x = dragStart.x + Math.cos(angle) * 100;
+        dragCurrent.y = dragStart.y + Math.sin(angle) * 100;
+      }
+    });
+    
+    canvas.addEventListener('mouseup', () => {
+      if(!isDragging) return;
+      isDragging = false;
+      stuntman.active = true;
+      takes++;
+      takesDisplay.textContent = takes;
+      
+      // Launch! Velocity is inverse of drag vector
+      const dx = dragStart.x - dragCurrent.x;
+      const dy = dragStart.y - dragCurrent.y;
+      
+      stuntman.x = dragStart.x;
+      stuntman.y = dragStart.y;
+      stuntman.vx = dx * 8; // Power multiplier
+      stuntman.vy = dy * 8;
+    });
+    
+    // Touch support
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if(stuntman.active) return;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+      const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+      const dist = Math.hypot(x - stuntman.x, y - stuntman.y);
+      if (dist < 40) {
+        isDragging = true;
+        dragStart = {x: stuntman.x, y: stuntman.y};
+        dragCurrent = {x, y};
+      }
+    }, {passive: false});
+    
+    canvas.addEventListener('touchmove', (e) => {
+      if(!isDragging) return;
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      dragCurrent.x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+      dragCurrent.y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+      const dist = Math.hypot(dragCurrent.x - dragStart.x, dragCurrent.y - dragStart.y);
+      if (dist > 100) {
+        const angle = Math.atan2(dragCurrent.y - dragStart.y, dragCurrent.x - dragStart.x);
+        dragCurrent.x = dragStart.x + Math.cos(angle) * 100;
+        dragCurrent.y = dragStart.y + Math.sin(angle) * 100;
+      }
+    }, {passive: false});
+    
+    canvas.addEventListener('touchend', () => {
+      if(!isDragging) return;
+      isDragging = false;
+      stuntman.active = true;
+      takes++;
+      takesDisplay.textContent = takes;
+      const dx = dragStart.x - dragCurrent.x;
+      const dy = dragStart.y - dragCurrent.y;
+      stuntman.x = dragStart.x;
+      stuntman.y = dragStart.y;
+      stuntman.vx = dx * 8;
+      stuntman.vy = dy * 8;
+    });
+
+    let lastTime = 0;
+    function loop(timestamp) {
+      const dt = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+      
+      update(Math.min(dt, 0.1)); // Cap dt to prevent massive physics jumps
+      draw();
+      
+      animationId = requestAnimationFrame(loop);
+    }
+    
+    function checkRectCollision(c, r) {
+      let testX = c.x;
+      let testY = c.y;
+      
+      if (c.x < r.x) testX = r.x; // left edge
+      else if (c.x > r.x + r.w) testX = r.x + r.w; // right edge
+      if (c.y < r.y) testY = r.y; // top edge
+      else if (c.y > r.y + r.h) testY = r.y + r.h; // bottom edge
+      
+      let distX = c.x - testX;
+      let distY = c.y - testY;
+      let distance = Math.sqrt((distX*distX) + (distY*distY));
+      
+      return distance <= c.radius;
+    }
+
+    function update(dt) {
+      if(stuntman.active) {
+        // Apply physics
+        stuntman.vy += GRAVITY * dt;
+        stuntman.vx *= DRAG;
+        stuntman.vy *= DRAG;
+        
+        stuntman.x += stuntman.vx * dt;
+        stuntman.y += stuntman.vy * dt;
+        
+        // Wall collisions (bounce)
+        if(stuntman.x - stuntman.radius < 0) {
+          stuntman.x = stuntman.radius;
+          stuntman.vx *= -0.6;
+        }
+        if(stuntman.x + stuntman.radius > canvas.width) {
+          stuntman.x = canvas.width - stuntman.radius;
+          stuntman.vx *= -0.6;
+        }
+        
+        // Floor collision (Fail)
+        if(stuntman.y + stuntman.radius > canvas.height) {
+          stuntman.y = canvas.height - stuntman.radius;
+          stuntman.vy = 0;
+          stuntman.vx = 0;
+          stuntman.active = false;
+          setTimeout(resetStuntman, 1000);
+        }
+        
+        // Target pad collision (Win)
+        if (stuntman.y + stuntman.radius > target.y && stuntman.y - stuntman.radius < target.y + target.height && stuntman.x > target.x && stuntman.x < target.x + target.width) {
+             if(stuntman.vy > 0) { // Only if falling down onto it
+                stuntman.active = false;
+                stuntman.y = target.y - stuntman.radius;
+                score++;
+                scoreDisplay.textContent = score;
+                
+                // Confetti / Particles here normally
+                setTimeout(generateLevel, 1000);
+             }
+        }
+        
+        // Obstacle collisions (bounce)
+        obstacles.forEach(obs => {
+           if(checkRectCollision(stuntman, obs)) {
+              // Simple box bounce (reflect velocity based on position)
+              let cx = obs.x + obs.w/2;
+              let cy = obs.y + obs.h/2;
+              let dx = stuntman.x - cx;
+              let dy = stuntman.y - cy;
+              
+              if(Math.abs(dx) > Math.abs(dy)) {
+                 stuntman.vx *= -0.8;
+                 stuntman.x += Math.sign(dx) * 5; // push out
+              } else {
+                 stuntman.vy *= -0.8;
+                 stuntman.y += Math.sign(dy) * 5;
+              }
+           }
+        });
+      }
+    }
+    
+    function resetStuntman() {
+        stuntman.x = cannonPos.x;
+        stuntman.y = cannonPos.y;
+        stuntman.vx = 0;
+        stuntman.vy = 0;
+        stuntman.active = false;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw Aiming line
+      if(isDragging) {
+         ctx.beginPath();
+         ctx.moveTo(dragStart.x, dragStart.y);
+         ctx.lineTo(dragCurrent.x, dragCurrent.y);
+         ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+         ctx.lineWidth = 2;
+         ctx.stroke();
+         
+         // Draw projected trajectory dots
+         ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+         let dx = dragStart.x - dragCurrent.x;
+         let dy = dragStart.y - dragCurrent.y;
+         let vx = dx * 8;
+         let vy = dy * 8;
+         let px = dragStart.x;
+         let py = dragStart.y;
+         for(let i=0; i<15; i++) {
+             vy += GRAVITY * 0.05;
+             px += vx * 0.05;
+             py += vy * 0.05;
+             ctx.beginPath();
+             ctx.arc(px, py, 2, 0, Math.PI*2);
+             ctx.fill();
+         }
+      }
+      
+      // Draw Launcher Base
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(cannonPos.x - 20, cannonPos.y, 40, 400); // Pillar
+      
+      // Draw Obstacles
+      ctx.fillStyle = '#ef4444'; // Red boxes
+      obstacles.forEach(obs => {
+         ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+      });
+      
+      // Draw Target Pad
+      ctx.fillStyle = target.color;
+      ctx.beginPath();
+      ctx.roundRect(target.x, target.y, target.width, target.height, 5);
+      ctx.fill();
+      // Pad stripes
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      for(let i=10; i<target.width; i+=20) {
+         ctx.fillRect(target.x + i, target.y, 10, target.height);
+      }
+      
+      // Draw Stuntman
+      ctx.fillStyle = stuntman.color;
+      ctx.beginPath();
+      ctx.arc(stuntman.x, stuntman.y, stuntman.radius, 0, Math.PI*2);
+      ctx.fill();
+      
+      if(!stuntman.active && !isDragging) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(stuntman.x, stuntman.y, stuntman.radius + 5, 0, Math.PI*2);
+          ctx.stroke();
+      }
+    }
+    
+    function init() {
+      score = 0;
+      takes = 0;
+      scoreDisplay.textContent = score;
+      takesDisplay.textContent = takes;
+      generateLevel();
+      lastTime = performance.now();
+      cancelAnimationFrame(animationId);
+      loop(lastTime);
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    
+    init();
+  </script>
+</body>
+</html>

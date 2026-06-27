@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VFX Particle Catcher — ArcadeNexus</title>
+  <meta name="description" content="Catch the correct visual effects layers before they hit the rendering floor!">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "VFX Particle Catcher",
+    "genre": "Action",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-2xl">
+      <div class="flex gap-6">
+        <div>Score: <span id="scoreDisplay" class="font-bold text-orange-400">0</span></div>
+        <div>Lives: <span id="livesDisplay" class="font-bold text-red-500">❤️❤️❤️</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">Restart Render</button>
+    </div>
+    
+    <div class="mt-4 w-full max-w-2xl relative">
+       <!-- Director's instruction -->
+       <div id="instructionBanner" class="absolute top-4 left-0 w-full text-center pointer-events-none z-10">
+          <div class="inline-block bg-black/80 backdrop-blur border border-white/20 px-6 py-2 rounded-full font-bold font-heading text-xl shadow-2xl">
+             Catch only: <span id="targetType" class="text-orange-500 uppercase tracking-wider">FIRE VFX</span>
+          </div>
+       </div>
+       
+       <canvas id="gameCanvas_44" width="600" height="400" class="w-full bg-[#030712] rounded-lg shadow-2xl border-b-4 border-gray-600"></canvas>
+    </div>
+    
+    <div class="text-center mt-3 text-gray-400 text-sm">
+        Use <span class="text-white font-bold">Left/Right Arrows</span> or <span class="text-white font-bold">Drag</span> the compositing layer. Catch the correct VFX, avoid the others!
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-orange-600">
+        <h2 class="text-3xl font-bold font-heading mb-2 text-orange-500">RENDER FAILED</h2>
+        <p class="text-gray-400 mb-6">Final Composite Score: <span id="finalScore" class="text-orange-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full bg-orange-600 hover:bg-orange-700">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 44 Operations Manual</h3>
+        <p>Welcome to Arcade Room 44, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_44');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const livesDisplay = document.getElementById('livesDisplay');
+    const targetTypeDisplay = document.getElementById('targetType');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    let score = 0;
+    let lives = 3;
+    let isGameOver = false;
+    let animationId;
+    
+    const CATCHER_WIDTH = 100;
+    const CATCHER_HEIGHT = 20;
+    let catcher = {
+        x: canvas.width/2 - CATCHER_WIDTH/2,
+        y: canvas.height - 30,
+        width: CATCHER_WIDTH,
+        height: CATCHER_HEIGHT,
+        speed: 400
+    };
+    
+    let particles = [];
+    let lastTime = 0;
+    let spawnTimer = 0;
+    let spawnRate = 1.0; // drops per second
+    let gameSpeed = 1.0;
+    
+    const VFX_TYPES = [
+        { id: 'fire', name: 'FIRE VFX', color: '#f97316', symbol: '🔥' },
+        { id: 'water', name: 'WATER VFX', color: '#3b82f6', symbol: '💧' },
+        { id: 'lightning', name: 'SPARK VFX', color: '#eab308', symbol: '⚡' },
+        { id: 'smoke', name: 'SMOKE VFX', color: '#9ca3af', symbol: '💨' }
+    ];
+    
+    let currentTarget = VFX_TYPES[0];
+    let instructionTimer = 0;
+    
+    const keys = { ArrowLeft: false, ArrowRight: false, a: false, d: false };
+    
+    window.addEventListener('keydown', (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key] = true; });
+    window.addEventListener('keyup', (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key] = false; });
+    
+    // Touch / Mouse controls
+    let isDragging = false;
+    canvas.addEventListener('mousedown', () => isDragging = true);
+    canvas.addEventListener('mouseup', () => isDragging = false);
+    canvas.addEventListener('mousemove', (e) => {
+        if(isDragging) {
+            const rect = canvas.getBoundingClientRect();
+            catcher.x = (e.clientX - rect.left) * (canvas.width / rect.width) - catcher.width/2;
+        }
+    });
+    
+    canvas.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        const rect = canvas.getBoundingClientRect();
+        catcher.x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width) - catcher.width/2;
+        e.preventDefault();
+    }, {passive: false});
+    canvas.addEventListener('touchmove', (e) => {
+        if(isDragging) {
+            const rect = canvas.getBoundingClientRect();
+            catcher.x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width) - catcher.width/2;
+        }
+        e.preventDefault();
+    }, {passive: false});
+    canvas.addEventListener('touchend', () => isDragging = false);
+    
+    function spawnParticle() {
+        // 50% chance to spawn the target type, 50% chance for random other
+        let type;
+        if (Math.random() > 0.5) {
+            type = currentTarget;
+        } else {
+            let others = VFX_TYPES.filter(t => t.id !== currentTarget.id);
+            type = others[Math.floor(Math.random() * others.length)];
+        }
+        
+        particles.push({
+            x: Math.random() * (canvas.width - 30) + 15,
+            y: -30,
+            radius: 15,
+            type: type,
+            speed: (Math.random() * 100 + 150) * gameSpeed
+        });
+    }
+    
+    function changeTarget() {
+        currentTarget = VFX_TYPES[Math.floor(Math.random() * VFX_TYPES.length)];
+        targetTypeDisplay.textContent = currentTarget.name;
+        targetTypeDisplay.style.color = currentTarget.color;
+        
+        // Visual flash
+        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+    }
+    
+    function updateLives() {
+        let hearts = '';
+        for(let i=0; i<lives; i++) hearts += '❤️';
+        livesDisplay.textContent = hearts;
+        if (lives <= 0) {
+            isGameOver = true;
+            document.getElementById('finalScore').textContent = score;
+            gameOverOverlay.style.display = 'flex';
+        }
+    }
+    
+    function loop(timestamp) {
+        if(isGameOver) return;
+        const dt = (timestamp - lastTime) / 1000;
+        lastTime = timestamp;
+        
+        // Movement
+        if(keys.ArrowLeft || keys.a) catcher.x -= catcher.speed * dt;
+        if(keys.ArrowRight || keys.d) catcher.x += catcher.speed * dt;
+        
+        if(catcher.x < 0) catcher.x = 0;
+        if(catcher.x + catcher.width > canvas.width) catcher.x = canvas.width - catcher.width;
+        
+        // Timers
+        instructionTimer += dt;
+        if (instructionTimer > 10) { // Change target every 10 seconds
+            changeTarget();
+            instructionTimer = 0;
+            gameSpeed += 0.1; // Speed up
+        }
+        
+        spawnTimer += dt;
+        if (spawnTimer > 1 / (spawnRate * gameSpeed)) {
+            spawnParticle();
+            spawnTimer = 0;
+        }
+        
+        // Update particles
+        for(let i=particles.length-1; i>=0; i--) {
+            let p = particles[i];
+            p.y += p.speed * dt;
+            
+            // Collision with catcher
+            if (p.y + p.radius > catcher.y && p.y - p.radius < catcher.y + catcher.height && 
+                p.x + p.radius > catcher.x && p.x - p.radius < catcher.x + catcher.width) {
+                
+                if (p.type.id === currentTarget.id) {
+                    score += 10; // Good catch
+                } else {
+                    lives--; // Bad catch
+                    updateLives();
+                    // Red flash
+                    ctx.fillStyle = 'rgba(239,68,68,0.3)';
+                    ctx.fillRect(0,0,canvas.width, canvas.height);
+                }
+                scoreDisplay.textContent = score;
+                particles.splice(i, 1);
+                continue;
+            }
+            
+            // Hit bottom
+            if (p.y - p.radius > canvas.height) {
+                if (p.type.id === currentTarget.id) {
+                    // Missed a target!
+                    lives--;
+                    updateLives();
+                }
+                particles.splice(i, 1);
+            }
+        }
+        
+        draw();
+        animationId = requestAnimationFrame(loop);
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Grid background
+        ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+        ctx.lineWidth = 1;
+        for(let i=0; i<canvas.height; i+=20) {
+            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+        }
+        
+        // Draw Catcher (Compositing layer)
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.fillRect(catcher.x, catcher.y, catcher.width, catcher.height);
+        ctx.strokeStyle = currentTarget.color;
+        ctx.lineWidth = 3;
+        ctx.strokeRect(catcher.x, catcher.y, catcher.width, catcher.height);
+        
+        // Draw Particles
+        particles.forEach(p => {
+            // Glow
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = p.type.color;
+            
+            ctx.fillStyle = p.type.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+            ctx.fill();
+            
+            ctx.shadowBlur = 0; // reset
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(p.type.symbol, p.x, p.y);
+        });
+    }
+    
+    function init() {
+        score = 0;
+        lives = 3;
+        gameSpeed = 1.0;
+        particles = [];
+        instructionTimer = 0;
+        isGameOver = false;
+        
+        scoreDisplay.textContent = score;
+        updateLives();
+        gameOverOverlay.style.display = 'none';
+        
+        changeTarget();
+        
+        lastTime = performance.now();
+        cancelAnimationFrame(animationId);
+        loop(lastTime);
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  </script>
+</body>
+</html>

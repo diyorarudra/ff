@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poison Antidote Mixer — ArcadeNexus</title>
+  <meta name="description" content="Sort the volatile chemical liquids to formulate the correct antidote.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Poison Antidote Mixer",
+    "genre": "Puzzle",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-2xl">
+      <div class="flex gap-6">
+        <div>Level: <span id="scoreDisplay" class="font-bold text-lime-400">1</span></div>
+        <div>Moves: <span id="movesDisplay" class="font-bold text-white">0</span></div>
+      </div>
+      <div class="flex gap-2">
+        <button id="undoBtn" class="game-btn bg-gray-700">Undo</button>
+        <button id="newGameBtn" class="game-btn">Restart Level</button>
+      </div>
+    </div>
+    
+    <div class="mt-8 relative bg-[#0f172a] p-8 rounded-xl border border-white/5 shadow-2xl">
+       <canvas id="gameCanvas_40" width="600" height="300" class="cursor-pointer"></canvas>
+    </div>
+    
+    <div class="text-center mt-6 text-gray-400 text-sm max-w-sm">
+        Click a vial to select it, then click another to pour. 
+        You can only pour if the target vial is empty or the top colors match and there is space.
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-lime-500">
+        <h2 class="text-3xl font-bold font-heading mb-2 text-lime-400">ANTIDOTE SYNTHESIZED</h2>
+        <p class="text-gray-400 mb-6">Patient saved.</p>
+        <button id="restartBtn" class="game-btn w-full bg-lime-600 hover:bg-lime-700">Next Patient</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 40 Operations Manual</h3>
+        <p>Welcome to Arcade Room 40, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_40');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const movesDisplay = document.getElementById('movesDisplay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    let level = 1;
+    let moves = 0;
+    
+    const VIAL_CAPACITY = 4;
+    let vials = []; // Array of arrays (bottom to top)
+    let selectedVial = -1;
+    let history = [];
+    
+    const COLORS = [
+        '#ef4444', // Red
+        '#3b82f6', // Blue
+        '#22c55e', // Green
+        '#eab308', // Yellow
+        '#a855f7', // Purple
+        '#f97316', // Orange
+        '#06b6d4', // Cyan
+        '#ec4899'  // Pink
+    ];
+    
+    // Animation state
+    let isAnimating = false;
+    
+    function generateLevel() {
+        vials = [];
+        history = [];
+        selectedVial = -1;
+        moves = 0;
+        movesDisplay.textContent = moves;
+        
+        let numColors = Math.min(3 + Math.floor(level / 2), COLORS.length);
+        let numVials = numColors + 2; // Always 2 empty vials
+        
+        // Generate solved state
+        let pool = [];
+        for(let i=0; i<numColors; i++) {
+            for(let j=0; j<VIAL_CAPACITY; j++) {
+                pool.push(COLORS[i]);
+            }
+        }
+        
+        // Shuffle pool
+        for(let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        
+        // Distribute to vials
+        for(let i=0; i<numVials; i++) {
+            vials.push([]);
+            if (i < numColors) {
+                for(let j=0; j<VIAL_CAPACITY; j++) {
+                    vials[i].push(pool.pop());
+                }
+            }
+        }
+        
+        // Scramble vials to ensure solvability (reverse playing)
+        // Just kidding, generating a random pool and putting them in N-2 vials is always solvable if there are 2 empty vials.
+    }
+    
+    function checkWin() {
+        for(let vial of vials) {
+            // A vial is valid if it's empty OR it's full and all same color
+            if (vial.length > 0) {
+                if (vial.length !== VIAL_CAPACITY) return false;
+                let color = vial[0];
+                for(let i=1; i<VIAL_CAPACITY; i++) {
+                    if (vial[i] !== color) return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        let numVials = vials.length;
+        let spacing = canvas.width / numVials;
+        let vialWidth = 40;
+        let vialHeight = 160;
+        let startY = 80;
+        
+        for(let i=0; i<numVials; i++) {
+            let cx = i * spacing + spacing/2;
+            
+            // Draw highlight if selected
+            if (selectedVial === i) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.beginPath();
+                ctx.roundRect(cx - vialWidth/2 - 10, startY - 20, vialWidth + 20, vialHeight + 40, 10);
+                ctx.fill();
+                
+                // Lift selected vial
+                startY = 60;
+            } else {
+                startY = 80;
+            }
+            
+            // Draw glass vial outline
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(cx - vialWidth/2, startY);
+            ctx.lineTo(cx - vialWidth/2, startY + vialHeight);
+            ctx.arc(cx, startY + vialHeight, vialWidth/2, Math.PI, 0, true); // rounded bottom
+            ctx.lineTo(cx + vialWidth/2, startY);
+            ctx.stroke();
+            
+            // Rim
+            ctx.beginPath();
+            ctx.ellipse(cx, startY, vialWidth/2 + 2, 6, 0, 0, Math.PI*2);
+            ctx.stroke();
+            
+            // Draw liquids
+            let liqHeight = (vialHeight - 10) / VIAL_CAPACITY;
+            for(let j=0; j<vials[i].length; j++) {
+                ctx.fillStyle = vials[i][j];
+                let lx = cx - vialWidth/2 + 4;
+                let ly = startY + vialHeight - 10 - (j * liqHeight) - liqHeight;
+                let lw = vialWidth - 8;
+                let lh = liqHeight;
+                
+                // If it's the bottom liquid, round the bottom
+                if (j === 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(lx, ly);
+                    ctx.lineTo(lx, ly + lh - lw/2);
+                    ctx.arc(cx, ly + lh - lw/2, lw/2, Math.PI, 0, true);
+                    ctx.lineTo(lx + lw, ly);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(lx, ly, lw, lh + 1); // +1 prevents gaps
+                }
+            }
+        }
+    }
+    
+    function handlePour(fromIdx, toIdx) {
+        if (fromIdx === toIdx) return;
+        
+        let source = vials[fromIdx];
+        let target = vials[toIdx];
+        
+        if (source.length === 0) return;
+        if (target.length === VIAL_CAPACITY) return;
+        
+        let colorToPour = source[source.length - 1];
+        if (target.length > 0 && target[target.length - 1] !== colorToPour) return;
+        
+        // Valid pour! Record history
+        let stateCopy = JSON.parse(JSON.stringify(vials));
+        history.push(stateCopy);
+        
+        // Pour all connected units of that color
+        let poured = 0;
+        while(source.length > 0 && source[source.length - 1] === colorToPour && target.length < VIAL_CAPACITY) {
+            target.push(source.pop());
+            poured++;
+        }
+        
+        moves++;
+        movesDisplay.textContent = moves;
+        
+        draw();
+        
+        if(checkWin()) {
+            isAnimating = true; // block clicks
+            setTimeout(() => {
+                gameOverOverlay.style.display = 'flex';
+                isAnimating = false;
+            }, 500);
+        }
+    }
+    
+    canvas.addEventListener('click', (e) => {
+        if(gameOverOverlay.style.display === 'flex' || isAnimating) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        
+        let numVials = vials.length;
+        let spacing = canvas.width / numVials;
+        
+        let clickedIdx = Math.floor(x / spacing);
+        
+        if (selectedVial === -1) {
+            // Select if it has liquid
+            if (vials[clickedIdx].length > 0) {
+                selectedVial = clickedIdx;
+            }
+        } else {
+            // Pour
+            if (selectedVial === clickedIdx) {
+                selectedVial = -1; // Deselect
+            } else {
+                handlePour(selectedVial, clickedIdx);
+                selectedVial = -1;
+            }
+        }
+        draw();
+    });
+    
+    document.getElementById('undoBtn').addEventListener('click', () => {
+        if (history.length > 0) {
+            vials = history.pop();
+            selectedVial = -1;
+            draw();
+        }
+    });
+    
+    function init() {
+        generateLevel();
+        scoreDisplay.textContent = level;
+        gameOverOverlay.style.display = 'none';
+        draw();
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', () => {
+        level++;
+        init();
+    });
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

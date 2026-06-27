@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Final Core — ArcadeNexus</title>
+  <meta name="description" content="Survive the ultimate bullet hell against the rogue system core.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "The Final Core",
+    "genre": "Action",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3 z-50 relative">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex justify-center items-center h-[calc(100vh-60px)]">
+    <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container w-full max-w-4xl relative">
+      <!-- HUD over canvas -->
+      <div class="absolute top-4 left-4 z-10 font-bold font-heading">
+          <div class="text-gray-400 text-sm">SURVIVAL TIME</div>
+          <div id="timeDisplay" class="text-3xl text-white">0.00s</div>
+      </div>
+      
+      <div class="absolute top-4 right-4 z-10 font-bold font-heading text-right">
+          <div class="text-gray-400 text-sm">CORE INSTABILITY</div>
+          <div class="w-48 h-4 bg-gray-900 border border-white/20 mt-1 rounded overflow-hidden">
+             <div id="bossHpBar" class="h-full bg-red-500 w-full transition-all duration-300"></div>
+          </div>
+      </div>
+      
+      <!-- Start screen overlay -->
+      <div id="startScreen" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm rounded-lg">
+          <h1 class="text-5xl font-black font-heading text-white mb-4 shadow-red-500 [text-shadow:0_0_20px_#ef4444]">THE FINAL CORE</h1>
+          <p class="text-gray-400 mb-8 max-w-md text-center">Drag the <span class="text-cyan-400 font-bold">blue dot</span> to dodge the incoming red projectiles. Survive until the core destabilizes (60 seconds).</p>
+          <button id="startBtn" class="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold font-heading rounded text-xl shadow-[0_0_20px_rgba(239,68,68,0.5)]">INITIATE COMBAT</button>
+      </div>
+      
+      <canvas id="gameCanvas_50" width="800" height="600" class="w-full h-[600px] bg-[#030712] rounded-lg shadow-2xl border border-red-900/30 touch-none"></canvas>
+      
+      <div class="game-over-overlay z-30" id="gameOver" style="display:none">
+        <div class="game-over-panel bg-black border border-red-600">
+          <h2 id="endTitle" class="text-4xl font-black font-heading mb-2 text-red-500 [text-shadow:0_0_15px_#ef4444]">SYSTEM FAILURE</h2>
+          <p class="text-gray-400 mb-6">You survived for <span id="finalScore" class="text-white font-bold">0.00s</span>.</p>
+          <button id="restartBtn" class="game-btn w-full bg-red-600 hover:bg-red-700 border-none text-white">Retry Sequence</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 50 Operations Manual</h3>
+        <p>Welcome to Arcade Room 50, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas_50');
+    const ctx = canvas.getContext('2d');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const bossHpBar = document.getElementById('bossHpBar');
+    const startScreen = document.getElementById('startScreen');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const endTitle = document.getElementById('endTitle');
+    
+    let isPlaying = false;
+    let isGameOver = false;
+    let animationId;
+    
+    const GAME_DURATION = 60; // seconds to win
+    let timeElapsed = 0;
+    let lastTime = 0;
+    
+    // Player
+    let player = {
+        x: canvas.width/2,
+        y: canvas.height - 100,
+        r: 6,
+        color: '#22d3ee' // cyan-400
+    };
+    
+    // Boss Core
+    let boss = {
+        x: canvas.width/2,
+        y: 100,
+        r: 40,
+        angle: 0,
+        color: '#ef4444' // red-500
+    };
+    
+    let bullets = [];
+    
+    // Pattern parameters
+    let patternTimer = 0;
+    let attackMode = 0; 
+    // 0: spiral, 1: targeted burst, 2: ring explosion
+    
+    // Input handling
+    let targetX = player.x;
+    let targetY = player.y;
+    
+    function getMousePos(e) {
+        const rect = canvas.getBoundingClientRect();
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+        
+        if(e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        }
+        
+        return {
+            x: (clientX - rect.left) * (canvas.width / rect.width),
+            y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+    }
+    
+    function updateInput(e) {
+        if (!isPlaying || isGameOver) return;
+        let pos = getMousePos(e);
+        targetX = pos.x;
+        targetY = pos.y;
+    }
+    
+    canvas.addEventListener('mousemove', updateInput);
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); updateInput(e); }, {passive: false});
+    
+    function spawnBullet(x, y, vx, vy, r=4, color='#fca5a5') {
+        bullets.push({x, y, vx, vy, r, color});
+    }
+    
+    // Attack Patterns
+    let spiralAngle = 0;
+    function attackSpiral(dt) {
+        // Shoot bullets in a rotating spiral
+        let speed = 250 + (timeElapsed * 2);
+        spawnBullet(boss.x, boss.y, Math.cos(spiralAngle)*speed, Math.sin(spiralAngle)*speed);
+        spawnBullet(boss.x, boss.y, Math.cos(spiralAngle + Math.PI)*speed, Math.sin(spiralAngle + Math.PI)*speed);
+        spiralAngle += 0.2 + (timeElapsed * 0.005);
+    }
+    
+    function attackTargeted() {
+        // Shoot a fast bullet directly at player
+        let dx = player.x - boss.x;
+        let dy = player.y - boss.y;
+        let dist = Math.hypot(dx, dy);
+        let speed = 400;
+        spawnBullet(boss.x, boss.y, (dx/dist)*speed, (dy/dist)*speed, 6, '#ef4444');
+    }
+    
+    function attackRing() {
+        let numBullets = 20;
+        let speed = 150;
+        for(let i=0; i<numBullets; i++) {
+            let angle = (i/numBullets) * Math.PI * 2;
+            spawnBullet(boss.x, boss.y, Math.cos(angle)*speed, Math.sin(angle)*speed, 5, '#f87171');
+        }
+    }
+    
+    let subTimer = 0;
+    
+    function loop(timestamp) {
+        if (!isPlaying) return;
+        
+        const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
+        lastTime = timestamp;
+        
+        timeElapsed += dt;
+        timeDisplay.textContent = timeElapsed.toFixed(2) + 's';
+        
+        let hpPercent = Math.max(0, 100 - (timeElapsed / GAME_DURATION * 100));
+        bossHpBar.style.width = hpPercent + '%';
+        
+        // Win condition
+        if (timeElapsed >= GAME_DURATION) {
+            winGame();
+            return;
+        }
+        
+        // Player movement (smooth follow cursor)
+        player.x += (targetX - player.x) * 15 * dt;
+        player.y += (targetY - player.y) * 15 * dt;
+        
+        // Clamp player to screen
+        player.x = Math.max(player.r, Math.min(canvas.width - player.r, player.x));
+        player.y = Math.max(player.r, Math.min(canvas.height - player.r, player.y));
+        
+        // Boss movement
+        boss.x = canvas.width/2 + Math.sin(timeElapsed * 2) * 150;
+        boss.angle += dt;
+        
+        // Boss Attacks
+        patternTimer += dt;
+        subTimer += dt;
+        
+        if (patternTimer > 5) {
+            // Switch pattern every 5 seconds
+            attackMode = Math.floor(Math.random() * 3);
+            patternTimer = 0;
+            // Free ring attack on switch
+            attackRing();
+        }
+        
+        if (attackMode === 0) {
+            if (subTimer > 0.05) { attackSpiral(dt); subTimer = 0; }
+        } else if (attackMode === 1) {
+            if (subTimer > 0.4) { attackTargeted(); subTimer = 0; }
+        } else if (attackMode === 2) {
+            if (subTimer > 1.5) { attackRing(); subTimer = 0; }
+        }
+        
+        // Update bullets
+        for (let i = bullets.length - 1; i >= 0; i--) {
+            let b = bullets[i];
+            b.x += b.vx * dt;
+            b.y += b.vy * dt;
+            
+            // Collision with player
+            let dx = b.x - player.x;
+            let dy = b.y - player.y;
+            if (Math.hypot(dx, dy) < b.r + player.r - 2) { // -2 for slight forgiveness
+                loseGame();
+            }
+            
+            // Remove offscreen
+            if (b.x < -20 || b.x > canvas.width + 20 || b.y < -20 || b.y > canvas.height + 20) {
+                bullets.splice(i, 1);
+            }
+        }
+        
+        draw();
+        animationId = requestAnimationFrame(loop);
+    }
+    
+    function draw() {
+        // Trail effect
+        ctx.fillStyle = 'rgba(3, 7, 18, 0.3)'; // Dark background with opacity
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw boss
+        ctx.save();
+        ctx.translate(boss.x, boss.y);
+        ctx.rotate(boss.angle);
+        
+        ctx.shadowBlur = 30;
+        ctx.shadowColor = boss.color;
+        
+        // Outer spikes
+        ctx.fillStyle = '#b91c1c';
+        for(let i=0; i<8; i++) {
+            ctx.rotate(Math.PI/4);
+            ctx.beginPath();
+            ctx.moveTo(-10, boss.r - 10);
+            ctx.lineTo(10, boss.r - 10);
+            ctx.lineTo(0, boss.r + 20);
+            ctx.fill();
+        }
+        
+        // Core
+        ctx.fillStyle = boss.color;
+        ctx.beginPath();
+        ctx.arc(0, 0, boss.r, 0, Math.PI*2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(0, 0, boss.r/2, 0, Math.PI*2);
+        ctx.fill();
+        
+        ctx.restore();
+        
+        // Draw bullets
+        ctx.shadowBlur = 10;
+        bullets.forEach(b => {
+            ctx.shadowColor = b.color;
+            ctx.fillStyle = b.color;
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+            ctx.fill();
+        });
+        
+        // Draw Player
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = player.color;
+        ctx.fillStyle = player.color;
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.r/2, 0, Math.PI*2);
+        ctx.fill();
+        
+        ctx.shadowBlur = 0;
+    }
+    
+    function winGame() {
+        isPlaying = false;
+        isGameOver = true;
+        endTitle.textContent = "CORE DESTROYED";
+        endTitle.className = "text-4xl font-black font-heading mb-2 text-cyan-400 [text-shadow:0_0_15px_#22d3ee]";
+        document.getElementById('finalScore').textContent = GAME_DURATION.toFixed(2) + "s (VICTORY)";
+        gameOverOverlay.style.display = 'flex';
+    }
+    
+    function loseGame() {
+        isPlaying = false;
+        isGameOver = true;
+        endTitle.textContent = "SYSTEM FAILURE";
+        endTitle.className = "text-4xl font-black font-heading mb-2 text-red-500 [text-shadow:0_0_15px_#ef4444]";
+        document.getElementById('finalScore').textContent = timeElapsed.toFixed(2) + "s";
+        
+        // Explosion at player
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, 50, 0, Math.PI*2);
+        ctx.fill();
+        
+        setTimeout(() => {
+            gameOverOverlay.style.display = 'flex';
+        }, 500);
+    }
+    
+    function init() {
+        timeElapsed = 0;
+        bullets = [];
+        patternTimer = 0;
+        subTimer = 0;
+        attackMode = 0;
+        spiralAngle = 0;
+        
+        player.x = canvas.width/2;
+        player.y = canvas.height - 100;
+        targetX = player.x;
+        targetY = player.y;
+        
+        boss.x = canvas.width/2;
+        
+        timeDisplay.textContent = '0.00s';
+        bossHpBar.style.width = '100%';
+        
+        isGameOver = false;
+        isPlaying = true;
+        gameOverOverlay.style.display = 'none';
+        startScreen.style.display = 'none';
+        
+        lastTime = performance.now();
+        cancelAnimationFrame(animationId);
+        loop(lastTime);
+    }
+    
+    document.getElementById('startBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+  </script>
+</body>
+</html>

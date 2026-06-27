@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Render Pipeline Plumber — ArcadeNexus</title>
+  <meta name="description" content="Rotate server nodes to complete the render farm pipeline.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Render Pipeline Plumber",
+    "genre": "Puzzle",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-lg">
+      <div class="flex gap-6">
+        <div>Renders Completed: <span id="scoreDisplay" class="font-bold text-blue-400">0</span></div>
+        <div>Server Load: <span id="timeDisplay" class="font-bold text-white">0%</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">Reboot Servers</button>
+    </div>
+    
+    <div class="mt-4 p-4 bg-[#09090b] rounded-lg border border-white/10 shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+        <canvas id="gameCanvas_42" width="400" height="400" class="cursor-pointer"></canvas>
+    </div>
+    
+    <div class="text-center mt-3 text-gray-400 text-sm">
+        Click nodes to rotate them. Connect the <span class="text-green-500 font-bold">Input (Bottom Left)</span> to the <span class="text-purple-500 font-bold">Output (Top Right)</span>.
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-blue-600">
+        <h2 id="endTitle" class="text-3xl font-bold font-heading mb-2 text-blue-500">RENDER CRASHED</h2>
+        <p class="text-gray-400 mb-6">Total Renders: <span id="finalScore" class="text-blue-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full bg-blue-600 hover:bg-blue-700">Restart Farm</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 42 Operations Manual</h3>
+        <p>Welcome to Arcade Room 42, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_42');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const finalScore = document.getElementById('finalScore');
+    
+    let score = 0;
+    let load = 0; // 0 to 100
+    let loadInterval;
+    let isGameOver = false;
+    
+    const ROWS = 6;
+    const COLS = 6;
+    let cellSize = canvas.width / COLS;
+    
+    let grid = [];
+    
+    // 0: straight, 1: corner, 2: T-junction, 3: cross
+    const TYPES = [
+        [1, 0, 1, 0], // |
+        [1, 1, 0, 0], // L (Top, Right)
+        [1, 1, 1, 0], // T (Top, Right, Bottom)
+        [1, 1, 1, 1]  // +
+    ];
+    
+    function generateGrid() {
+        grid = [];
+        for(let r=0; r<ROWS; r++) {
+            let row = [];
+            for(let c=0; c<COLS; c++) {
+                row.push({
+                    type: Math.floor(Math.random() * 3), // mostly straight, corners, Ts
+                    rotation: Math.floor(Math.random() * 4),
+                    power: false
+                });
+            }
+            grid.push(row);
+        }
+        
+        // Ensure start and end are straight lines
+        grid[ROWS-1][0].type = 0; // Input
+        grid[ROWS-1][0].rotation = 0;
+        
+        grid[0][COLS-1].type = 0; // Output
+        grid[0][COLS-1].rotation = 0;
+    }
+    
+    function getConnections(r, c) {
+        let node = grid[r][c];
+        let base = [...TYPES[node.type]];
+        // Rotate
+        for(let i=0; i < node.rotation; i++) {
+            base.unshift(base.pop());
+        }
+        return base; // [Top, Right, Bottom, Left]
+    }
+    
+    function checkPower() {
+        // Reset power
+        for(let r=0; r<ROWS; r++) {
+            for(let c=0; c<COLS; c++) {
+                grid[r][c].power = false;
+            }
+        }
+        
+        // Start node is bottom-left, entering from BOTTOM
+        let startR = ROWS-1;
+        let startC = 0;
+        let startConns = getConnections(startR, startC);
+        
+        // Only power if bottom port is open
+        if (!startConns[2]) return false;
+        
+        grid[startR][startC].power = true;
+        let stack = [{r: startR, c: startC}];
+        
+        while(stack.length > 0) {
+            let curr = stack.pop();
+            let conns = getConnections(curr.r, curr.c);
+            
+            // Top
+            if (conns[0] && curr.r > 0) {
+                let nR = curr.r - 1; let nC = curr.c;
+                if (!grid[nR][nC].power && getConnections(nR, nC)[2]) {
+                    grid[nR][nC].power = true;
+                    stack.push({r: nR, c: nC});
+                }
+            }
+            // Right
+            if (conns[1] && curr.c < COLS - 1) {
+                let nR = curr.r; let nC = curr.c + 1;
+                if (!grid[nR][nC].power && getConnections(nR, nC)[3]) {
+                    grid[nR][nC].power = true;
+                    stack.push({r: nR, c: nC});
+                }
+            }
+            // Bottom
+            if (conns[2] && curr.r < ROWS - 1) {
+                let nR = curr.r + 1; let nC = curr.c;
+                if (!grid[nR][nC].power && getConnections(nR, nC)[0]) {
+                    grid[nR][nC].power = true;
+                    stack.push({r: nR, c: nC});
+                }
+            }
+            // Left
+            if (conns[3] && curr.c > 0) {
+                let nR = curr.r; let nC = curr.c - 1;
+                if (!grid[nR][nC].power && getConnections(nR, nC)[1]) {
+                    grid[nR][nC].power = true;
+                    stack.push({r: nR, c: nC});
+                }
+            }
+        }
+        
+        // Check if output is powered AND exits top
+        let endNode = grid[0][COLS-1];
+        if (endNode.power && getConnections(0, COLS-1)[0]) {
+            return true; // WIN!
+        }
+        return false;
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.lineWidth = 1;
+        for(let i=0; i<=canvas.width; i+=cellSize) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+        }
+        
+        // Draw Nodes
+        for(let r=0; r<ROWS; r++) {
+            for(let c=0; c<COLS; c++) {
+                let node = grid[r][c];
+                let cx = c * cellSize + cellSize/2;
+                let cy = r * cellSize + cellSize/2;
+                
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(node.rotation * Math.PI / 2);
+                
+                // Base node box
+                ctx.fillStyle = node.power ? '#1e3a8a' : '#18181b';
+                ctx.fillRect(-cellSize/2 + 2, -cellSize/2 + 2, cellSize - 4, cellSize - 4);
+                
+                // Data lines
+                ctx.strokeStyle = node.power ? '#3b82f6' : '#52525b';
+                ctx.lineWidth = 8;
+                ctx.lineCap = 'round';
+                
+                let base = TYPES[node.type];
+                ctx.beginPath();
+                if(base[0]) { ctx.moveTo(0, 0); ctx.lineTo(0, -cellSize/2); }
+                if(base[1]) { ctx.moveTo(0, 0); ctx.lineTo(cellSize/2, 0); }
+                if(base[2]) { ctx.moveTo(0, 0); ctx.lineTo(0, cellSize/2); }
+                if(base[3]) { ctx.moveTo(0, 0); ctx.lineTo(-cellSize/2, 0); }
+                ctx.stroke();
+                
+                // Center hub
+                ctx.fillStyle = node.power ? '#60a5fa' : '#71717a';
+                ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI*2); ctx.fill();
+                
+                ctx.restore();
+                
+                // Start / End indicators
+                if (r === ROWS-1 && c === 0) {
+                    ctx.fillStyle = 'rgba(34, 197, 94, 0.2)';
+                    ctx.fillRect(c*cellSize, r*cellSize, cellSize, cellSize);
+                    ctx.fillStyle = '#22c55e';
+                    ctx.font = '10px Arial';
+                    ctx.fillText("DATA IN", c*cellSize+4, r*cellSize+cellSize-4);
+                }
+                if (r === 0 && c === COLS-1) {
+                    ctx.fillStyle = 'rgba(168, 85, 247, 0.2)';
+                    ctx.fillRect(c*cellSize, r*cellSize, cellSize, cellSize);
+                    ctx.fillStyle = '#a855f7';
+                    ctx.font = '10px Arial';
+                    ctx.fillText("OUT", c*cellSize+4, r*cellSize+12);
+                }
+            }
+        }
+    }
+    
+    canvas.addEventListener('mousedown', (e) => {
+        if(isGameOver) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const c = Math.floor(x / cellSize);
+        const r = Math.floor(y / cellSize);
+        
+        if (r>=0 && r<ROWS && c>=0 && c<COLS) {
+            grid[r][c].rotation = (grid[r][c].rotation + 1) % 4;
+            let win = checkPower();
+            draw();
+            
+            if (win) {
+                // Success!
+                setTimeout(() => {
+                    score++;
+                    scoreDisplay.textContent = score;
+                    load -= 30; // Reduce load
+                    if (load < 0) load = 0;
+                    generateGrid();
+                    checkPower();
+                    draw();
+                }, 300);
+            }
+        }
+    });
+    
+    function startTimer() {
+        clearInterval(loadInterval);
+        loadInterval = setInterval(() => {
+            if(isGameOver) return;
+            load += 2; // load increases by 2% per second
+            
+            // Color code load
+            if (load > 80) timeDisplay.className = "font-bold text-red-500 animate-pulse";
+            else if (load > 50) timeDisplay.className = "font-bold text-yellow-500";
+            else timeDisplay.className = "font-bold text-white";
+            
+            timeDisplay.textContent = load + '%';
+            
+            if (load >= 100) {
+                isGameOver = true;
+                clearInterval(loadInterval);
+                finalScore.textContent = score;
+                gameOverOverlay.style.display = 'flex';
+            }
+        }, 1000);
+    }
+    
+    function init() {
+        score = 0;
+        load = 0;
+        isGameOver = false;
+        scoreDisplay.textContent = score;
+        timeDisplay.textContent = load + '%';
+        timeDisplay.className = "font-bold text-white";
+        gameOverOverlay.style.display = 'none';
+        
+        generateGrid();
+        checkPower();
+        draw();
+        startTimer();
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Spot the Pattern &mdash; ArcadeNexus</title>
+  <meta name="description" content="Test your memory. Memorize the pattern and spot the difference!">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Spot the Pattern",
+    "genre": "Memory Puzzle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg gap-4">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Level</span>
+          <div id="level" class="text-xl font-bold text-cyan-400 font-heading leading-tight">1</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center w-full mb-2 h-8 flex items-center justify-center">
+      <h2 id="instruction" class="text-lg font-bold text-white tracking-wide">Memorize the pattern...</h2>
+    </div>
+
+    <div class="relative w-full aspect-square bg-nexus-elevated rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.05)] border border-white/10 overflow-hidden mb-4 p-4 flex flex-col">
+      <canvas id="gameCanvas_13" class="block w-full h-full cursor-pointer touch-none"></canvas>
+      
+      <!-- Overlays -->
+      <div id="gameOver" class="absolute inset-0 bg-red-900/90 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-5xl font-bold mb-4 font-heading text-white drop-shadow-md">Wrong!</div>
+        <p class="text-gray-200 mb-6 text-xl">You reached Level <span id="finalLevel"></span></p>
+        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Play Again</button>
+      </div>
+
+      <div id="startScreen" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 z-10">
+        <div class="text-3xl font-bold font-heading text-cyan-400 drop-shadow-md mb-2">Spot the Difference</div>
+        <p class="text-gray-300 text-sm mb-6 text-center px-6">Memorize the tiles.<br>When they return, click the ONE tile that changed.</p>
+        <button id="beginBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Start</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 13 Operations Manual</h3>
+        <p>Welcome to Arcade Room 13, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas_13');
+    const ctx = canvas.getContext('2d');
+    const levelEl = document.getElementById('level');
+    const scoreEl = document.getElementById('score');
+    const instructionEl = document.getElementById('instruction');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const startScreen = document.getElementById('startScreen');
+    
+    canvas.width = 400;
+    canvas.height = 400;
+
+    const COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#a855f7', '#06b6d4', '#f43f5e', '#f97316'];
+    
+    let state = 'START'; // START, MEMORIZE, BLANK, GUESS, GAMEOVER
+    let level = 1;
+    let score = 0;
+    let gridSize = 3;
+    let tiles = [];
+    let changedTileIndex = -1;
+    
+    let timer = 0;
+    let animFrame;
+
+    function initGame() {
+      level = 1;
+      score = 0;
+      levelEl.textContent = level;
+      scoreEl.textContent = score;
+      startScreen.style.opacity = '0';
+      startScreen.style.pointerEvents = 'none';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+      
+      startLevel();
+    }
+
+    function startLevel() {
+      gridSize = Math.min(6, 2 + Math.floor(level / 3)); // 3x3 to 6x6 max
+      tiles = [];
+      
+      // Generate initial pattern
+      for(let i = 0; i < gridSize * gridSize; i++) {
+        tiles.push({
+          color: COLORS[Math.floor(Math.random() * COLORS.length)]
+        });
+      }
+
+      state = 'MEMORIZE';
+      instructionEl.textContent = 'Memorize the pattern...';
+      instructionEl.className = 'text-lg font-bold text-white tracking-wide animate-pulse';
+      
+      draw();
+      
+      // Memorize time decreases as level increases (min 1 second)
+      let memTime = Math.max(1000, 3000 - (level * 150));
+      
+      setTimeout(() => {
+        if(state === 'MEMORIZE') {
+          state = 'BLANK';
+          instructionEl.textContent = '';
+          draw();
+          
+          setTimeout(() => {
+            if(state === 'BLANK') {
+              setupGuessPhase();
+            }
+          }, 500); // 0.5s blank
+        }
+      }, memTime);
+    }
+
+    function setupGuessPhase() {
+      // Pick one tile to change
+      changedTileIndex = Math.floor(Math.random() * tiles.length);
+      let oldColor = tiles[changedTileIndex].color;
+      let newColor = oldColor;
+      while(newColor === oldColor) {
+        newColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+      }
+      tiles[changedTileIndex].color = newColor;
+
+      state = 'GUESS';
+      instructionEl.textContent = 'Which tile changed?';
+      instructionEl.className = 'text-lg font-bold text-cyan-400 tracking-wide';
+      draw();
+    }
+
+    function handleGuess(r, c) {
+      if (state !== 'GUESS') return;
+      let idx = r * gridSize + c;
+      
+      if (idx === changedTileIndex) {
+        // Correct
+        score += level * 10;
+        level++;
+        scoreEl.textContent = score;
+        levelEl.textContent = level;
+        
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.4)'; // green flash
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        state = 'TRANSITION';
+        instructionEl.textContent = 'Correct!';
+        instructionEl.className = 'text-lg font-bold text-green-400 tracking-wide';
+        
+        setTimeout(startLevel, 1000);
+      } else {
+        // Wrong
+        state = 'GAMEOVER';
+        document.getElementById('finalLevel').textContent = level;
+        gameOverOverlay.style.opacity = '1';
+        gameOverOverlay.style.pointerEvents = 'auto';
+        
+        instructionEl.textContent = 'Game Over';
+        instructionEl.className = 'text-lg font-bold text-red-500 tracking-wide';
+        
+        // Highlight correct one
+        draw();
+        let padding = 10;
+        let w = (canvas.width - padding * (gridSize + 1)) / gridSize;
+        let cr = Math.floor(changedTileIndex / gridSize);
+        let cc = changedTileIndex % gridSize;
+        let x = padding + cc * (w + padding);
+        let y = padding + cr * (w + padding);
+        
+        ctx.strokeStyle = '#22c55e'; // green border around correct
+        ctx.lineWidth = 6;
+        ctx.strokeRect(x, y, w, w);
+      }
+    }
+
+    // Input
+    canvas.addEventListener('mousedown', e => {
+      if(state !== 'GUESS') return;
+      const rect = canvas.getBoundingClientRect();
+      const scale = canvas.width / rect.width;
+      const x = (e.clientX - rect.left) * scale;
+      const y = (e.clientY - rect.top) * scale;
+      
+      let padding = 10;
+      let w = (canvas.width - padding * (gridSize + 1)) / gridSize;
+      
+      let c = Math.floor(x / (w + padding));
+      let r = Math.floor(y / (w + padding));
+      
+      if (r >= 0 && r < gridSize && c >= 0 && c < gridSize) {
+        handleGuess(r, c);
+      }
+    });
+
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      if(state !== 'GUESS') return;
+      const rect = canvas.getBoundingClientRect();
+      const scale = canvas.width / rect.width;
+      const x = (e.changedTouches[0].clientX - rect.left) * scale;
+      const y = (e.changedTouches[0].clientY - rect.top) * scale;
+      
+      let padding = 10;
+      let w = (canvas.width - padding * (gridSize + 1)) / gridSize;
+      let c = Math.floor(x / (w + padding));
+      let r = Math.floor(y / (w + padding));
+      if (r >= 0 && r < gridSize && c >= 0 && c < gridSize) handleGuess(r, c);
+    }, {passive: false});
+
+    document.getElementById('beginBtn').addEventListener('click', initGame);
+    document.getElementById('tryAgainBtn').addEventListener('click', initGame);
+
+    function draw() {
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (state === 'BLANK') return; // Draw nothing but bg
+
+      let padding = 10;
+      let w = (canvas.width - padding * (gridSize + 1)) / gridSize;
+      
+      for(let r = 0; r < gridSize; r++) {
+        for(let c = 0; c < gridSize; c++) {
+          let idx = r * gridSize + c;
+          let x = padding + c * (w + padding);
+          let y = padding + r * (w + padding);
+          
+          ctx.fillStyle = tiles[idx].color;
+          
+          ctx.beginPath();
+          ctx.roundRect(x, y, w, w, 8);
+          ctx.fill();
+          
+          // Glossy highlight
+          ctx.fillStyle = 'rgba(255,255,255,0.15)';
+          ctx.beginPath();
+          ctx.roundRect(x, y, w, w*0.4, 8);
+          ctx.fill();
+        }
+      }
+    }
+
+    // Initial draw for background
+    draw();
+  </script>
+</body>
+</html>

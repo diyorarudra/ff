@@ -1,0 +1,508 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Asteroids &mdash; ArcadeNexus</title>
+  <meta name="description" content="Play the retro classic Asteroids space shooter online.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Asteroids",
+    "genre": "Action Arcade",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    #gameCanvas { touch-action: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[800px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Lives</span>
+          <div id="lives" class="text-xl font-bold text-red-400 font-heading leading-tight flex gap-1 pt-1">
+            <span class="text-xs"></span>
+          </div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button>
+    </div>
+
+    <div class="relative w-full aspect-square md:aspect-[4/3] bg-[#06060e] rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.05)] border border-white/10 overflow-hidden mb-4">
+      <canvas id="gameCanvas_9" class="block w-full h-full cursor-crosshair"></canvas>
+      
+      <!-- Overlays -->
+      <div id="startOverlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-4xl font-bold font-heading text-white drop-shadow-[0_0_15px_rgba(34,211,238,0.8)] animate-pulse mb-4">ASTEROIDS</div>
+        <div class="text-gray-400 text-sm text-center">Desktop: Arrows to Move, Space to Fire<br>Mobile: Use On-Screen Controls</div>
+        <button id="beginBtn" class="mt-6 bg-cyan-500 hover:bg-cyan-400 text-black px-6 py-2 rounded-lg font-bold shadow-lg transition pointer-events-auto">Start Game</button>
+      </div>
+      
+      <div id="gameOver" class="absolute inset-0 bg-red-900/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-5xl font-bold mb-2 font-heading text-white drop-shadow-md">Game Over</div>
+        <p id="finalScore" class="text-gray-200 mb-6 text-xl">Score: 0</p>
+        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+    </div>
+
+    <!-- Mobile Controls -->
+    <div class="w-full grid grid-cols-2 gap-4 md:hidden opacity-70">
+      <div class="flex justify-start gap-2">
+        <button id="btnLeft" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">†º</button>
+        <button id="btnRight" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">†»</button>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button id="btnThrust" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20"></button>
+        <button id="btnFire" class="bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-cyan-500/40">”¥</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 9 Operations Manual</h3>
+        <p>Welcome to Arcade Room 9, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_9');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    
+    const startOverlay = document.getElementById('startOverlay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    canvas.width = 800;
+    canvas.height = 600;
+
+    let gameState = 'START'; // START, PLAYING, GAMEOVER
+    let animFrame = null;
+    let score = 0;
+    let lives = 3;
+    let wave = 1;
+
+    let ship = {};
+    let bullets = [];
+    let asteroids = [];
+    let particles = [];
+
+    const keys = { left: false, right: false, up: false, space: false };
+    
+    // Setup inputs
+    window.addEventListener('keydown', e => {
+      if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+      if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+      if(e.code === 'ArrowUp' || e.code === 'KeyW') keys.up = true;
+      if(e.code === 'Space') { keys.space = true; e.preventDefault(); }
+    });
+    window.addEventListener('keyup', e => {
+      if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+      if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+      if(e.code === 'ArrowUp' || e.code === 'KeyW') keys.up = false;
+      if(e.code === 'Space') { keys.space = false; ship.canShoot = true; }
+    });
+
+    // Mobile buttons
+    const bindBtn = (id, key) => {
+      const btn = document.getElementById(id);
+      if(!btn) return;
+      btn.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; });
+      btn.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; if(key === 'space') ship.canShoot = true; });
+    };
+    bindBtn('btnLeft', 'left');
+    bindBtn('btnRight', 'right');
+    bindBtn('btnThrust', 'up');
+    bindBtn('btnFire', 'space');
+
+    function updateLivesUI() {
+      let str = '';
+      for(let i=0; i<lives; i++) str += '';
+      livesEl.innerHTML = `<span class="text-xs">${str}</span>`;
+    }
+
+    function init() {
+      score = 0;
+      lives = 3;
+      wave = 1;
+      scoreEl.textContent = score;
+      updateLivesUI();
+      
+      resetShip();
+      ship.invulnerable = 0; // Not invulnerable on start screen, but we don't collide anyway
+      
+      asteroids = [];
+      bullets = [];
+      particles = [];
+      
+      spawnWave();
+
+      gameState = 'START';
+      startOverlay.style.opacity = '1';
+      startOverlay.style.pointerEvents = 'auto';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+
+      if(animFrame) cancelAnimationFrame(animFrame);
+      requestAnimationFrame(gameLoop);
+    }
+
+    function startGame() {
+      gameState = 'PLAYING';
+      startOverlay.style.opacity = '0';
+      startOverlay.style.pointerEvents = 'none';
+      resetShip();
+    }
+
+    document.getElementById('beginBtn').addEventListener('click', startGame);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('click', init);
+
+    function resetShip() {
+      ship = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        r: 10,
+        a: -Math.PI / 2, // angle (facing up)
+        rotation: 0,
+        thrust: { x: 0, y: 0 },
+        canShoot: true,
+        invulnerable: 120 // 2 seconds at 60fps
+      };
+    }
+
+    function spawnWave() {
+      asteroids = [];
+      let numAsteroids = 3 + wave;
+      for(let i=0; i<numAsteroids; i++) {
+        let x, y;
+        do {
+          x = Math.random() * canvas.width;
+          y = Math.random() * canvas.height;
+        } while (Math.hypot(x - ship.x, y - ship.y) < 100); // keep away from ship
+        
+        createAsteroid(x, y, Math.ceil(3)); // Size 3 (large)
+      }
+    }
+
+    function createAsteroid(x, y, size) {
+      let roff = [];
+      let vert = Math.floor(Math.random() * (10) + 7);
+      for(let i=0; i<vert; i++) {
+        roff.push(Math.random() * 0.4 + 0.8);
+      }
+      
+      let speedMult = size === 3 ? 1 : (size === 2 ? 1.5 : 2.5);
+      
+      asteroids.push({
+        x: x, y: y,
+        xv: (Math.random() - 0.5) * speedMult * (wave * 0.2 + 1),
+        yv: (Math.random() - 0.5) * speedMult * (wave * 0.2 + 1),
+        r: size * 15,
+        a: Math.random() * Math.PI * 2,
+        vert: vert,
+        roff: roff,
+        size: size // 3=large, 2=med, 1=small
+      });
+    }
+
+    function shoot() {
+      if (ship.canShoot && bullets.length < 5) {
+        bullets.push({
+          x: ship.x + Math.cos(ship.a) * ship.r,
+          y: ship.y + Math.sin(ship.a) * ship.r,
+          xv: Math.cos(ship.a) * 8,
+          yv: Math.sin(ship.a) * 8,
+          life: 60 // frames
+        });
+        ship.canShoot = false;
+      }
+    }
+
+    function createExplosion(x, y, color, count) {
+      for(let i=0; i<count; i++) {
+        particles.push({
+          x: x, y: y,
+          xv: (Math.random() - 0.5) * (Math.random() * 6),
+          yv: (Math.random() - 0.5) * (Math.random() * 6),
+          life: Math.random() * 30 + 10,
+          color: color
+        });
+      }
+    }
+
+    function update() {
+      if (gameState !== 'PLAYING') return;
+
+      // Ship turn
+      ship.rotation = 0;
+      if (keys.left) ship.rotation = -0.1;
+      if (keys.right) ship.rotation = 0.1;
+      ship.a += ship.rotation;
+
+      // Ship thrust
+      if (keys.up) {
+        ship.thrust.x += Math.cos(ship.a) * 0.1;
+        ship.thrust.y += Math.sin(ship.a) * 0.1;
+        // Flame particles
+        if(Math.random() < 0.5) {
+          particles.push({
+            x: ship.x - Math.cos(ship.a) * ship.r,
+            y: ship.y - Math.sin(ship.a) * ship.r,
+            xv: -Math.cos(ship.a) * 2 + (Math.random()-0.5),
+            yv: -Math.sin(ship.a) * 2 + (Math.random()-0.5),
+            life: 15,
+            color: '#f97316' // orange
+          });
+        }
+      } else {
+        // Friction
+        ship.thrust.x -= ship.thrust.x * 0.02;
+        ship.thrust.y -= ship.thrust.y * 0.02;
+      }
+
+      // Max speed
+      let speed = Math.hypot(ship.thrust.x, ship.thrust.y);
+      if (speed > 7) {
+        ship.thrust.x = (ship.thrust.x / speed) * 7;
+        ship.thrust.y = (ship.thrust.y / speed) * 7;
+      }
+
+      ship.x += ship.thrust.x;
+      ship.y += ship.thrust.y;
+
+      // Shoot
+      if (keys.space) shoot();
+      
+      if (ship.invulnerable > 0) ship.invulnerable--;
+
+      // Screen wrap (all objects)
+      const wrap = (obj, r) => {
+        if (obj.x < -r) obj.x = canvas.width + r;
+        else if (obj.x > canvas.width + r) obj.x = -r;
+        if (obj.y < -r) obj.y = canvas.height + r;
+        else if (obj.y > canvas.height + r) obj.y = -r;
+      };
+      wrap(ship, ship.r);
+
+      // Bullets
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        let b = bullets[i];
+        b.x += b.xv;
+        b.y += b.yv;
+        wrap(b, 0);
+        b.life--;
+        if (b.life <= 0) bullets.splice(i, 1);
+      }
+
+      // Asteroids
+      for (let i = asteroids.length - 1; i >= 0; i--) {
+        let a = asteroids[i];
+        a.x += a.xv;
+        a.y += a.yv;
+        wrap(a, a.r);
+
+        // Asteroid-Bullet Collision
+        let asteroidDestroyed = false;
+        for (let j = bullets.length - 1; j >= 0; j--) {
+          let b = bullets[j];
+          if (Math.hypot(a.x - b.x, a.y - b.y) < a.r) {
+            bullets.splice(j, 1);
+            asteroidDestroyed = true;
+            break;
+          }
+        }
+
+        // Asteroid-Ship Collision
+        if (ship.invulnerable === 0 && !asteroidDestroyed) {
+          if (Math.hypot(a.x - ship.x, a.y - ship.y) < a.r + ship.r * 0.8) {
+            // Ship Hit
+            createExplosion(ship.x, ship.y, '#22d3ee', 30);
+            lives--;
+            updateLivesUI();
+            if (lives <= 0) {
+              gameState = 'GAMEOVER';
+              document.getElementById('finalScore').textContent = `Score: ${score}`;
+              gameOverOverlay.style.opacity = '1';
+              gameOverOverlay.style.pointerEvents = 'auto';
+            } else {
+              resetShip();
+            }
+          }
+        }
+
+        if (asteroidDestroyed) {
+          createExplosion(a.x, a.y, '#94a3b8', a.size * 5);
+          
+          if (a.size === 3) score += 20;
+          else if (a.size === 2) score += 50;
+          else if (a.size === 1) score += 100;
+          scoreEl.textContent = score;
+
+          if (a.size > 1) {
+            createAsteroid(a.x, a.y, a.size - 1);
+            createAsteroid(a.x, a.y, a.size - 1);
+          }
+          asteroids.splice(i, 1);
+        }
+      }
+
+      // Next wave
+      if (asteroids.length === 0) {
+        wave++;
+        spawnWave();
+        ship.invulnerable = 60;
+      }
+
+      // Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        let p = particles[i];
+        p.x += p.xv;
+        p.y += p.yv;
+        p.life--;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    function draw() {
+      ctx.fillStyle = '#06060e';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.lineWidth = 1.5;
+      
+      // Draw Ship
+      if (gameState === 'PLAYING') {
+        if (ship.invulnerable === 0 || Math.floor(Date.now() / 100) % 2 === 0) {
+          ctx.strokeStyle = '#22d3ee'; // cyan
+          ctx.beginPath();
+          ctx.moveTo(ship.x + Math.cos(ship.a) * ship.r * 1.5, ship.y + Math.sin(ship.a) * ship.r * 1.5); // Nose
+          ctx.lineTo(ship.x - Math.cos(ship.a) * ship.r + Math.sin(ship.a) * ship.r, ship.y - Math.sin(ship.a) * ship.r - Math.cos(ship.a) * ship.r); // Left rear
+          ctx.lineTo(ship.x - Math.cos(ship.a) * ship.r * 0.5, ship.y - Math.sin(ship.a) * ship.r * 0.5); // Rear center
+          ctx.lineTo(ship.x - Math.cos(ship.a) * ship.r - Math.sin(ship.a) * ship.r, ship.y - Math.sin(ship.a) * ship.r + Math.cos(ship.a) * ship.r); // Right rear
+          ctx.closePath();
+          ctx.stroke();
+        }
+      }
+
+      // Draw Asteroids
+      ctx.strokeStyle = '#94a3b8'; // slate 400
+      asteroids.forEach(a => {
+        ctx.beginPath();
+        for (let j = 0; j < a.vert; j++) {
+          let r = a.r * a.roff[j];
+          let angle = a.a + (j * Math.PI * 2) / a.vert;
+          ctx.lineTo(a.x + Math.cos(angle) * r, a.y + Math.sin(angle) * r);
+        }
+        ctx.closePath();
+        ctx.stroke();
+      });
+
+      // Draw Bullets
+      ctx.fillStyle = '#fff';
+      bullets.forEach(b => {
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, 2, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      // Draw Particles
+      particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.life / 30;
+        ctx.fillRect(p.x, p.y, 2, 2);
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  </script>
+</body>
+</html>

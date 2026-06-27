@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crime Board Connector — ArcadeNexus</title>
+  <meta name="description" content="Untangle the strings on the detective's crime board.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Crime Board Connector",
+    "genre": "Puzzle",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-lg">
+      <div class="flex gap-6">
+        <div>Level: <span id="scoreDisplay" class="font-bold text-red-500">1</span></div>
+        <div>Crossings: <span id="crossDisplay" class="font-bold text-white">0</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">Reset Board</button>
+    </div>
+    
+    <canvas id="gameCanvas_37" width="500" height="500" class="mt-4 bg-[#d4d4d8] shadow-2xl border-8 border-[#78350f] rounded-sm cursor-pointer"></canvas>
+    <div class="text-center mt-3 text-gray-400 text-sm">
+        Drag the <span class="text-red-500 font-bold">pins</span> so that NO strings overlap.
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel">
+        <h2 id="endTitle" class="text-3xl font-bold font-heading mb-2 text-white">CASE SOLVED!</h2>
+        <p class="text-gray-400 mb-6">Moving to next board...</p>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 37 Operations Manual</h3>
+        <p>Welcome to Arcade Room 37, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_37');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const crossDisplay = document.getElementById('crossDisplay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    let level = 1;
+    let points = [];
+    let lines = [];
+    let draggingPoint = null;
+    let isGameOver = false;
+    
+    // Geometry math to check line intersection
+    function ccw(A, B, C) {
+        return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x);
+    }
+
+    function intersect(p1, p2, p3, p4) {
+        // If segments share an endpoint, they don't "cross" in this context
+        if (p1 === p3 || p1 === p4 || p2 === p3 || p2 === p4) return false;
+        
+        return ccw(p1, p3, p4) !== ccw(p2, p3, p4) && ccw(p1, p2, p3) !== ccw(p1, p2, p4);
+    }
+    
+    function generateGraph() {
+        points = [];
+        lines = [];
+        
+        const numPoints = Math.min(5 + (level * 2), 15);
+        
+        // Generate a random planar graph via triangulation
+        // To ensure it's solvable and tangled:
+        // 1. Generate points in a circle (so we can easily make a non-intersecting polygon)
+        // 2. Connect them to form a planar graph
+        // 3. Scramble their positions
+        
+        const radius = 200;
+        const cx = 250, cy = 250;
+        
+        // Original "Solved" positions
+        for(let i=0; i<numPoints; i++) {
+            let angle = (i / numPoints) * Math.PI * 2;
+            points.push({
+                x: cx + Math.cos(angle) * radius,
+                y: cy + Math.sin(angle) * radius,
+                id: i
+            });
+        }
+        
+        // Connect outer ring
+        for(let i=0; i<numPoints; i++) {
+            lines.push([i, (i+1)%numPoints]);
+        }
+        
+        // Add random internal non-crossing diagonals
+        for(let i=0; i<numPoints; i++) {
+            if(Math.random() > 0.5) {
+                let target = (i + 2 + Math.floor(Math.random() * (numPoints-4))) % numPoints;
+                // Check if this new line crosses existing ones in the ideal state
+                let pA = points[i], pB = points[target];
+                let crosses = false;
+                for(let line of lines) {
+                    if (intersect(pA, pB, points[line[0]], points[line[1]])) {
+                        crosses = true; break;
+                    }
+                }
+                if(!crosses) {
+                    lines.push([i, target]);
+                }
+            }
+        }
+        
+        // Scramble positions
+        points.forEach(p => {
+            p.x = 50 + Math.random() * 400;
+            p.y = 50 + Math.random() * 400;
+        });
+    }
+    
+    function countCrossings() {
+        let crossings = 0;
+        for(let i=0; i<lines.length; i++) {
+            for(let j=i+1; j<lines.length; j++) {
+                let l1 = lines[i];
+                let l2 = lines[j];
+                if(intersect(points[l1[0]], points[l1[1]], points[l2[0]], points[l2[1]])) {
+                    crossings++;
+                }
+            }
+        }
+        return crossings;
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Corkboard texture (subtle grid)
+        ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+        for(let i=0; i<500; i+=20) {
+           ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 500); ctx.stroke();
+           ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(500, i); ctx.stroke();
+        }
+        
+        // Draw Strings
+        for(let i=0; i<lines.length; i++) {
+            let l = lines[i];
+            let p1 = points[l[0]];
+            let p2 = points[l[1]];
+            
+            // Check if this specific line crosses ANY other
+            let isCrossing = false;
+            for(let j=0; j<lines.length; j++) {
+                if (i===j) continue;
+                let l2 = lines[j];
+                if(intersect(p1, p2, points[l2[0]], points[l2[1]])) {
+                    isCrossing = true;
+                    break;
+                }
+            }
+            
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineWidth = 3;
+            // Red string if crossing, faded beige string if clear
+            ctx.strokeStyle = isCrossing ? 'rgba(239, 68, 68, 0.8)' : 'rgba(212, 212, 216, 0.8)';
+            ctx.stroke();
+        }
+        
+        // Draw Pins
+        points.forEach(p => {
+            // Shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.arc(p.x + 3, p.y + 3, 8, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Pin head
+            ctx.fillStyle = (p === draggingPoint) ? '#fbbf24' : '#ef4444'; // Yellow if dragging, red otherwise
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 8, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Pin highlight
+            ctx.fillStyle = 'rgba(255,255,255,0.4)';
+            ctx.beginPath();
+            ctx.arc(p.x - 2, p.y - 2, 3, 0, Math.PI*2);
+            ctx.fill();
+        });
+        
+        let crosses = countCrossings();
+        crossDisplay.textContent = crosses;
+        
+        if (crosses === 0 && !isGameOver) {
+            winLevel();
+        }
+    }
+    
+    function winLevel() {
+        isGameOver = true;
+        gameOverOverlay.style.display = 'flex';
+        setTimeout(() => {
+            level++;
+            scoreDisplay.textContent = level;
+            generateGraph();
+            isGameOver = false;
+            gameOverOverlay.style.display = 'none';
+            draw();
+        }, 2000);
+    }
+    
+    // Mouse Events
+    function getMousePos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+        
+        if(e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        }
+        
+        return {
+            x: (clientX - rect.left) * scaleX,
+            y: (clientY - rect.top) * scaleY
+        };
+    }
+    
+    function onDown(e) {
+        if (isGameOver) return;
+        const pos = getMousePos(e);
+        // Find clicked pin
+        for(let p of points) {
+            if (Math.hypot(p.x - pos.x, p.y - pos.y) < 15) {
+                draggingPoint = p;
+                break;
+            }
+        }
+        if(e.type === 'touchstart') e.preventDefault();
+    }
+    
+    function onMove(e) {
+        if(draggingPoint) {
+            const pos = getMousePos(e);
+            draggingPoint.x = Math.max(10, Math.min(canvas.width - 10, pos.x));
+            draggingPoint.y = Math.max(10, Math.min(canvas.height - 10, pos.y));
+            draw();
+            if(e.type === 'touchmove') e.preventDefault();
+        }
+    }
+    
+    function onUp() {
+        draggingPoint = null;
+        draw();
+    }
+    
+    canvas.addEventListener('mousedown', onDown);
+    canvas.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    
+    canvas.addEventListener('touchstart', onDown, {passive: false});
+    canvas.addEventListener('touchmove', onMove, {passive: false});
+    window.addEventListener('touchend', onUp);
+    
+    function init() {
+        level = 1;
+        scoreDisplay.textContent = level;
+        isGameOver = false;
+        gameOverOverlay.style.display = 'none';
+        generateGraph();
+        draw();
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    
+    init();
+  </script>
+</body>
+</html>

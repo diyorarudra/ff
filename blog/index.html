@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Blog — ArcadeNexus</title>
+  <meta name="description" content="Read the ArcadeNexus developer blog. Insights into web game architecture, game design, monetization, narrative design, and the future of HTML5 gaming.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .blog-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .blog-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 255, 255, 0.1), 0 8px 10px -6px rgba(0, 255, 255, 0.1);
+    }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body class="font-body bg-nexus-dark text-gray-300 min-h-screen flex flex-col">
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <nav class="navbar px-4 py-4 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-xl">ArcadeNexus</span>
+      </a>
+      <div class="flex gap-6 items-center">
+        <a href="../index.html" class="text-gray-300 hover:text-white transition">Games</a>
+        <a href="index.html" class="text-cyan-400 font-bold border-b-2 border-cyan-400">Blog</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-7xl mx-auto px-4 py-12 w-full">
+    
+    <header class="text-center mb-16">
+      <h1 class="text-4xl md:text-6xl font-extrabold font-heading text-white mb-4">Developer <span class="gradient-text">Blog</span></h1>
+      <p class="text-gray-400 max-w-2xl mx-auto text-lg">Insights on architecture, game design, psychology, and the future of web gaming.</p>
+    </header>
+
+    <div class="my-12 ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[120px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+      <!-- AdSense: ca-pub-XXXXXXXXXXXXXXXX -->
+      <span class="opacity-50">Advertisement</span>
+    </div>
+
+    <!-- Category Filters (Visual only for layout structure) -->
+    <div class="flex flex-wrap justify-center gap-4 mb-12">
+      <span class="px-4 py-2 bg-cyan-900/40 text-cyan-400 rounded-full text-sm font-semibold border border-cyan-500/30">Architecture</span>
+      <span class="px-4 py-2 bg-orange-900/40 text-orange-400 rounded-full text-sm font-semibold border border-orange-500/30">Game Design</span>
+      <span class="px-4 py-2 bg-purple-900/40 text-purple-400 rounded-full text-sm font-semibold border border-purple-500/30">Optimization</span>
+      <span class="px-4 py-2 bg-green-900/40 text-green-400 rounded-full text-sm font-semibold border border-green-500/30">Monetization</span>
+      <span class="px-4 py-2 bg-rose-900/40 text-rose-400 rounded-full text-sm font-semibold border border-rose-500/30">Marketing</span>
+      <span class="px-4 py-2 bg-emerald-900/40 text-emerald-400 rounded-full text-sm font-semibold border border-emerald-500/30">Narrative</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      
+      <!-- Phase 1: Web Gaming Architecture -->
+      <a href="/blog/post1.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">Architecture</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The HTML5 Canvas Revolution</h2>
+        <p class="text-gray-400 text-sm flex-1">Why modern browsers have become the ultimate cross-platform gaming consoles.</p>
+      </a>
+      <a href="/blog/post2.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">Architecture</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">requestAnimationFrame vs. setInterval</h2>
+        <p class="text-gray-400 text-sm flex-1">The fundamental architecture of a smooth, 60fps JavaScript game loop.</p>
+      </a>
+      <a href="/blog/post3.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">Architecture</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Managing Game State in JS</h2>
+        <p class="text-gray-400 text-sm flex-1">How to structure your entities, handle inputs, and avoid spaghetti code.</p>
+      </a>
+      <a href="/blog/post4.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">Architecture</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Collision Detection Algorithms</h2>
+        <p class="text-gray-400 text-sm flex-1">From AABB to Circle-Circle: the math behind objects interacting on the canvas.</p>
+      </a>
+      <a href="/blog/post5.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">Architecture</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Asset Preloading Strategies</h2>
+        <p class="text-gray-400 text-sm flex-1">Ensuring your images and sounds are ready before the game loop starts.</p>
+      </a>
+
+      <!-- Phase 2: Game Design Principles -->
+      <a href="/blog/post6.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-orange-400 text-xs font-bold uppercase tracking-wider mb-2">Game Design</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Core Gameplay Loop</h2>
+        <p class="text-gray-400 text-sm flex-1">How to identify and polish the microscopic actions that make games fun.</p>
+      </a>
+      <a href="/blog/post7.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-orange-400 text-xs font-bold uppercase tracking-wider mb-2">Game Design</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Juice it or Lose it</h2>
+        <p class="text-gray-400 text-sm flex-1">Adding screen shake, particles, and hit-stop to make actions feel impactful.</p>
+      </a>
+      <a href="/blog/post8.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-orange-400 text-xs font-bold uppercase tracking-wider mb-2">Game Design</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Difficulty Curves that Work</h2>
+        <p class="text-gray-400 text-sm flex-1">Balancing frustration and boredom using the theory of Flow.</p>
+      </a>
+      <a href="/blog/post9.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-orange-400 text-xs font-bold uppercase tracking-wider mb-2">Game Design</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Reward Schedules in Games</h2>
+        <p class="text-gray-400 text-sm flex-1">Why variable ratio rewards keep players engaged longer than predictable loot.</p>
+      </a>
+      <a href="/blog/post10.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-orange-400 text-xs font-bold uppercase tracking-wider mb-2">Game Design</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Importance of Fail States</h2>
+        <p class="text-gray-400 text-sm flex-1">Designing deaths that teach the player without making them rage-quit.</p>
+      </a>
+
+      <!-- Phase 3: HTML5 Canvas Optimization -->
+      <a href="/blog/post11.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">Optimization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Object Pooling in JavaScript</h2>
+        <p class="text-gray-400 text-sm flex-1">Eliminating garbage collection stutters by recycling game entities.</p>
+      </a>
+      <a href="/blog/post12.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">Optimization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Offscreen Canvas Rendering</h2>
+        <p class="text-gray-400 text-sm flex-1">Pre-rendering static backgrounds to drastically reduce main loop overhead.</p>
+      </a>
+      <a href="/blog/post13.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">Optimization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Spatial Partitioning</h2>
+        <p class="text-gray-400 text-sm flex-1">Using quadtrees to optimize collision checks in games with thousands of objects.</p>
+      </a>
+      <a href="/blog/post14.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">Optimization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Minimizing Draw Calls</h2>
+        <p class="text-gray-400 text-sm flex-1">Why you should batch rendering operations and avoid state changes.</p>
+      </a>
+      <a href="/blog/post15.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">Optimization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Profiling Game Performance</h2>
+        <p class="text-gray-400 text-sm flex-1">How to use Chrome DevTools to find the bottlenecks in your game loop.</p>
+      </a>
+
+      <!-- Phase 4: Monetization & AdSense -->
+      <a href="/blog/post16.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Monetization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Economics of Web Games</h2>
+        <p class="text-gray-400 text-sm flex-1">A realistic look at RPMs, traffic volume, and making a living from arcade portals.</p>
+      </a>
+      <a href="/blog/post17.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Monetization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Ad Placement Best Practices</h2>
+        <p class="text-gray-400 text-sm flex-1">How to integrate AdSense without destroying the player's UX.</p>
+      </a>
+      <a href="/blog/post18.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Monetization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Rewarded Video Ads in HTML5</h2>
+        <p class="text-gray-400 text-sm flex-1">Designing ethical opt-in mechanics for extra lives or premium currency.</p>
+      </a>
+      <a href="/blog/post19.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Monetization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Problem with Intrusive Interstitials</h2>
+        <p class="text-gray-400 text-sm flex-1">Why pop-ups hurt your long-term retention and SEO rankings.</p>
+      </a>
+      <a href="/blog/post20.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Monetization</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">In-App Purchases vs Ads</h2>
+        <p class="text-gray-400 text-sm flex-1">When to build a paywall and when to rely on high-volume impressions.</p>
+      </a>
+
+      <!-- Phase 5: Indie Game Marketing -->
+      <a href="/blog/post21.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-rose-400 text-xs font-bold uppercase tracking-wider mb-2">Marketing</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Zero-Budget Game Marketing</h2>
+        <p class="text-gray-400 text-sm flex-1">How to build an audience organically without spending thousands on ads.</p>
+      </a>
+      <a href="/blog/post22.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-rose-400 text-xs font-bold uppercase tracking-wider mb-2">Marketing</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Power of GIF Marketing</h2>
+        <p class="text-gray-400 text-sm flex-1">Why a perfectly looping 5-second animation is your best marketing tool.</p>
+      </a>
+      <a href="/blog/post23.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-rose-400 text-xs font-bold uppercase tracking-wider mb-2">Marketing</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Building a Community on Discord</h2>
+        <p class="text-gray-400 text-sm flex-1">Turning casual players into evangelists for your indie studio.</p>
+      </a>
+      <a href="/blog/post24.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-rose-400 text-xs font-bold uppercase tracking-wider mb-2">Marketing</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Writing a Press Kit that Works</h2>
+        <p class="text-gray-400 text-sm flex-1">How to pitch gaming journalists without getting ignored.</p>
+      </a>
+      <a href="/blog/post25.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-rose-400 text-xs font-bold uppercase tracking-wider mb-2">Marketing</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">SEO for HTML5 Game Portals</h2>
+        <p class="text-gray-400 text-sm flex-1">Dominating search rankings with Schema.org markup and fast load times.</p>
+      </a>
+
+      <!-- Batch 6 - Pt 1: Cinematic Aesthetics -->
+      <a href="/blog/post26.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Aesthetics</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Color Theory in Game UI</h2>
+        <p class="text-gray-400 text-sm flex-1">Using analogous and complementary palettes to guide the player's eye.</p>
+      </a>
+      <a href="/blog/post27.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Aesthetics</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Lighting and Atmosphere</h2>
+        <p class="text-gray-400 text-sm flex-1">Faking volumetric lighting and bloom in a 2D HTML5 Canvas.</p>
+      </a>
+      <a href="/blog/post28.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Aesthetics</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Art of Pixel Perfect</h2>
+        <p class="text-gray-400 text-sm flex-1">Mastering pixel art scaling without blurring or anti-aliasing artifacts.</p>
+      </a>
+      <a href="/blog/post29.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Aesthetics</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Typography as UI</h2>
+        <p class="text-gray-400 text-sm flex-1">Why your font choices matter as much as your character sprites.</p>
+      </a>
+      <a href="/blog/post30.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Aesthetics</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Parallax Scrolling Secrets</h2>
+        <p class="text-gray-400 text-sm flex-1">Creating infinite depth using layered backgrounds and relative speeds.</p>
+      </a>
+
+      <!-- Batch 6 - Pt 2: Psychology -->
+      <a href="/blog/post31.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-pink-400 text-xs font-bold uppercase tracking-wider mb-2">Psychology</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Illusion of Choice</h2>
+        <p class="text-gray-400 text-sm flex-1">How branching narratives trick players into feeling agency.</p>
+      </a>
+      <a href="/blog/post32.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-pink-400 text-xs font-bold uppercase tracking-wider mb-2">Psychology</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Zeigarnik Effect</h2>
+        <p class="text-gray-400 text-sm flex-1">Why uncompleted quests dominate player psychology.</p>
+      </a>
+      <a href="/blog/post33.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-pink-400 text-xs font-bold uppercase tracking-wider mb-2">Psychology</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Escapism vs. Empowerment</h2>
+        <p class="text-gray-400 text-sm flex-1">Understanding why players attach so strongly to digital avatars.</p>
+      </a>
+      <a href="/blog/post34.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-pink-400 text-xs font-bold uppercase tracking-wider mb-2">Psychology</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Sunk Cost Fallacy</h2>
+        <p class="text-gray-400 text-sm flex-1">The dangerous psychological hook behind MMOs and Gacha mechanics.</p>
+      </a>
+      <a href="/blog/post35.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-pink-400 text-xs font-bold uppercase tracking-wider mb-2">Psychology</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Why We Love Horror Games</h2>
+        <p class="text-gray-400 text-sm flex-1">The neuroscience behind the "safe scare" and adrenaline rushes.</p>
+      </a>
+
+      <!-- Batch 6 - Pt 3: Narrative -->
+      <a href="/blog/post36.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Narrative</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Environmental Storytelling</h2>
+        <p class="text-gray-400 text-sm flex-1">Show, Don't Tell: communicating deep lore without walls of text.</p>
+      </a>
+      <a href="/blog/post37.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Narrative</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Lore vs. The Plot</h2>
+        <p class="text-gray-400 text-sm flex-1">Why worldbuilding is not storytelling, and how to avoid exposition dumps.</p>
+      </a>
+      <a href="/blog/post38.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Narrative</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Writing Compelling Dialogue</h2>
+        <p class="text-gray-400 text-sm flex-1">Stop writing boring quest-givers. Master subtext and character voices.</p>
+      </a>
+      <a href="/blog/post39.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Narrative</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Ludonarrative Harmony</h2>
+        <p class="text-gray-400 text-sm flex-1">Aligning your gameplay mechanics perfectly with your story's themes.</p>
+      </a>
+      <a href="/blog/post40.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-green-400 text-xs font-bold uppercase tracking-wider mb-2">Narrative</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Art of the Twist Ending</h2>
+        <p class="text-gray-400 text-sm flex-1">How to write mind-bending reveals that feel earned and inevitable.</p>
+      </a>
+
+      <!-- Batch 6 - Pt 4: Audio -->
+      <a href="/blog/post41.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Audio</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Psychology of Game Music</h2>
+        <p class="text-gray-400 text-sm flex-1">Hacking player emotions using BPM, tempo, and leitmotifs.</p>
+      </a>
+      <a href="/blog/post42.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Audio</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Designing "Juicy" SFX</h2>
+        <p class="text-gray-400 text-sm flex-1">Layering, pitch-shifting, and compression for satisfying interactions.</p>
+      </a>
+      <a href="/blog/post43.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Audio</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Spatial Audio in Web Games</h2>
+        <p class="text-gray-400 text-sm flex-1">Using the Web Audio API PannerNode for 3D positional sound.</p>
+      </a>
+      <a href="/blog/post44.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Audio</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">The Importance of Silence</h2>
+        <p class="text-gray-400 text-sm flex-1">Avoiding audio fatigue and building tension through strategic quiet.</p>
+      </a>
+      <a href="/blog/post45.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Audio</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Adaptive Soundtracks</h2>
+        <p class="text-gray-400 text-sm flex-1">Building dynamic, real-time music engines using Web Audio API stems.</p>
+      </a>
+
+      <!-- Batch 6 - Pt 5: The Future -->
+      <a href="/blog/post46.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">The Future</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Wasm and the End of Apps</h2>
+        <p class="text-gray-400 text-sm flex-1">How WebAssembly brings native performance to the browser.</p>
+      </a>
+      <a href="/blog/post47.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">The Future</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">WebGPU: Desktop Power</h2>
+        <p class="text-gray-400 text-sm flex-1">Unleashing raw graphics card potential directly in the browser.</p>
+      </a>
+      <a href="/blog/post48.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">The Future</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Cloud vs Local Execution</h2>
+        <p class="text-gray-400 text-sm flex-1">The battle for latency: streaming video vs HTML5 engines.</p>
+      </a>
+      <a href="/blog/post49.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">The Future</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Web3 Gaming Reality Check</h2>
+        <p class="text-gray-400 text-sm flex-1">Cutting through the hype of decentralized, blockchain-based gaming.</p>
+      </a>
+      <a href="/blog/post50.html" class="blog-card bg-nexus-card border border-white/10 rounded-xl p-6 flex flex-col block">
+        <span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">The Future</span>
+        <h2 class="text-xl font-heading font-bold text-white mb-3">Why HTML5 Will Outlive Us All</h2>
+        <p class="text-gray-400 text-sm flex-1">The resilience of the open web against proprietary hardware cycles.</p>
+      </a>
+
+    </div>
+  </main>
+
+  <footer class="bg-nexus-card border-t border-white/10 mt-12 py-12 text-center text-gray-500">
+    <p>&copy; 2026 ArcadeNexus. All rights reserved.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

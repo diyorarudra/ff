@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Slider Puzzle &mdash; ArcadeNexus</title>
+  <meta name="description" content="Play the classic 15-Puzzle slider game online.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Slider Puzzle",
+    "genre": "Brain Game",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-6 shadow-lg">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Moves</span>
+          <div id="movesCount" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Best</span>
+          <div id="bestMoves" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Shuffle</button>
+    </div>
+
+    <div class="relative w-full aspect-square bg-[#0f172a] rounded-xl p-3 shadow-2xl border border-white/10 overflow-hidden mb-4">
+      <canvas id="gameCanvas_5" class="block w-full h-full cursor-pointer touch-none"></canvas>
+      
+      <!-- Overlay -->
+      <div id="gameWon" class="absolute inset-0 bg-cyan-900/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 z-10 rounded-xl">
+        <div class="text-5xl font-bold mb-2 font-heading text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">Solved!</div>
+        <p class="text-white font-medium mb-6 drop-shadow-md">You ordered the tiles.</p>
+        <button id="playAgainBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 5 Operations Manual</h3>
+        <p>Welcome to Arcade Room 5, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_5');
+    const ctx = canvas.getContext('2d');
+    const movesEl = document.getElementById('movesCount');
+    const bestEl = document.getElementById('bestMoves');
+    const gameWonOverlay = document.getElementById('gameWon');
+    const restartBtn = document.getElementById('restartBtn');
+    
+    canvas.width = 400;
+    canvas.height = 400;
+    const SIZE = 4;
+    const PADDING = 8;
+    const CELL_SIZE = (canvas.width - PADDING * (SIZE + 1)) / SIZE;
+    
+    let tiles = []; // array of {val, currR, currC, targetR, targetC}
+    let emptyPos = {r: 3, c: 3};
+    let moves = 0;
+    let isPlaying = false;
+    let animFrame = null;
+
+    function init() {
+      tiles = [];
+      moves = 0;
+      movesEl.textContent = moves;
+      
+      const key = 'arcadenexus_game5_best';
+      bestEl.textContent = localStorage.getItem(key) || '-';
+
+      gameWonOverlay.style.opacity = '0';
+      gameWonOverlay.style.pointerEvents = 'none';
+
+      // Setup solved state
+      let val = 1;
+      for(let r=0; r<SIZE; r++) {
+        for(let c=0; c<SIZE; c++) {
+          if (r === SIZE-1 && c === SIZE-1) {
+            emptyPos = {r, c};
+          } else {
+            tiles.push({ val: val++, currR: r, currC: c, targetR: r, targetC: c });
+          }
+        }
+      }
+
+      // Shuffle (valid moves)
+      shuffle(200);
+      
+      isPlaying = true;
+      if (animFrame) cancelAnimationFrame(animFrame);
+      requestAnimationFrame(gameLoop);
+    }
+
+    function shuffle(numMoves) {
+      for(let i=0; i<numMoves; i++) {
+        let neighbors = [];
+        if (emptyPos.r > 0) neighbors.push({r: emptyPos.r-1, c: emptyPos.c});
+        if (emptyPos.r < SIZE-1) neighbors.push({r: emptyPos.r+1, c: emptyPos.c});
+        if (emptyPos.c > 0) neighbors.push({r: emptyPos.r, c: emptyPos.c-1});
+        if (emptyPos.c < SIZE-1) neighbors.push({r: emptyPos.r, c: emptyPos.c+1});
+        
+        let move = neighbors[Math.floor(Math.random() * neighbors.length)];
+        
+        let tile = tiles.find(t => t.targetR === move.r && t.targetC === move.c);
+        if (tile) {
+          tile.targetR = emptyPos.r;
+          tile.targetC = emptyPos.c;
+          tile.currR = tile.targetR; // snap immediately for shuffle
+          tile.currC = tile.targetC;
+          emptyPos = move;
+        }
+      }
+    }
+
+    function moveTileAt(r, c) {
+      if(!isPlaying) return;
+      
+      let dr = Math.abs(r - emptyPos.r);
+      let dc = Math.abs(c - emptyPos.c);
+      
+      // Must be adjacent
+      if ((dr === 1 && dc === 0) || (dr === 0 && dc === 1)) {
+        let tile = tiles.find(t => t.targetR === r && t.targetC === c);
+        if (tile) {
+          tile.targetR = emptyPos.r;
+          tile.targetC = emptyPos.c;
+          emptyPos = {r, c};
+          moves++;
+          movesEl.textContent = moves;
+          checkWin();
+        }
+      }
+    }
+
+    function checkWin() {
+      let isSolved = true;
+      let expected = 1;
+      for(let r=0; r<SIZE; r++) {
+        for(let c=0; c<SIZE; c++) {
+          if (r === SIZE-1 && c === SIZE-1) continue;
+          let tile = tiles.find(t => t.targetR === r && t.targetC === c);
+          if (!tile || tile.val !== expected) {
+            isSolved = false;
+            break;
+          }
+          expected++;
+        }
+      }
+      if(isSolved) {
+        isPlaying = false;
+        const key = 'arcadenexus_game5_best';
+        const best = parseInt(localStorage.getItem(key)) || Infinity;
+        if (moves < best) {
+          localStorage.setItem(key, moves);
+          bestEl.textContent = moves;
+        }
+        setTimeout(() => {
+          gameWonOverlay.style.opacity = '1';
+          gameWonOverlay.style.pointerEvents = 'auto';
+        }, 300); // Wait for anim
+      }
+    }
+
+    // Input Handling
+    canvas.addEventListener('mousedown', e => {
+      const rect = canvas.getBoundingClientRect();
+      const scale = canvas.width / rect.width;
+      let c = Math.floor((e.clientX - rect.left) * scale / (CELL_SIZE + PADDING));
+      let r = Math.floor((e.clientY - rect.top) * scale / (CELL_SIZE + PADDING));
+      if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) moveTileAt(r, c);
+    });
+
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const scale = canvas.width / rect.width;
+      let c = Math.floor((e.changedTouches[0].clientX - rect.left) * scale / (CELL_SIZE + PADDING));
+      let r = Math.floor((e.changedTouches[0].clientY - rect.top) * scale / (CELL_SIZE + PADDING));
+      if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) moveTileAt(r, c);
+    }, {passive: false});
+
+    window.addEventListener('keydown', e => {
+      if(!isPlaying) return;
+      // Arrows move tile FROM that direction into the empty space
+      if (e.key === 'ArrowUp' && emptyPos.r < SIZE-1) moveTileAt(emptyPos.r+1, emptyPos.c);
+      if (e.key === 'ArrowDown' && emptyPos.r > 0) moveTileAt(emptyPos.r-1, emptyPos.c);
+      if (e.key === 'ArrowLeft' && emptyPos.c < SIZE-1) moveTileAt(emptyPos.r, emptyPos.c+1);
+      if (e.key === 'ArrowRight' && emptyPos.c > 0) moveTileAt(emptyPos.r, emptyPos.c-1);
+    });
+
+    restartBtn.addEventListener('click', init);
+    document.getElementById('playAgainBtn').addEventListener('click', init);
+
+    // Render
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw empty grid slot
+      ctx.fillStyle = '#1e293b'; // slate 800
+      let ex = PADDING + emptyPos.c * (CELL_SIZE + PADDING);
+      let ey = PADDING + emptyPos.r * (CELL_SIZE + PADDING);
+      roundRect(ctx, ex, ey, CELL_SIZE, CELL_SIZE, 8);
+      ctx.fill();
+
+      // Draw tiles
+      tiles.forEach(t => {
+        // Lerp position for animation
+        t.currR += (t.targetR - t.currR) * 0.3;
+        t.currC += (t.targetC - t.currC) * 0.3;
+
+        let x = PADDING + t.currC * (CELL_SIZE + PADDING);
+        let y = PADDING + t.currR * (CELL_SIZE + PADDING);
+
+        // Gradient based on value
+        let hue = 190 + (t.val * 4); // Cyan to Purple
+        let gradient = ctx.createLinearGradient(x, y, x, y + CELL_SIZE);
+        gradient.addColorStop(0, `hsl(${hue}, 80%, 45%)`);
+        gradient.addColorStop(1, `hsl(${hue}, 90%, 30%)`);
+        
+        ctx.fillStyle = gradient;
+        roundRect(ctx, x, y, CELL_SIZE, CELL_SIZE, 8);
+        ctx.fill();
+        
+        // Highlights for 3D effect
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 36px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetY = 2;
+        ctx.fillText(t.val, x + CELL_SIZE/2, y + CELL_SIZE/2 + 3);
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+      });
+
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  </script>
+</body>
+</html>

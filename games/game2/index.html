@@ -1,0 +1,470 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Minesweeper &mdash; ArcadeNexus</title>
+  <meta name="description" content="Play the classic Minesweeper logic puzzle game online for free.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Minesweeper",
+    "genre": "Logic Puzzle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; -webkit-user-select: none; }
+    canvas { touch-action: none; } /* Handle our own touch logic */
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[600px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex flex-wrap justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg gap-4">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-2">
+          <span class="text-red-500 text-lg">š©</span>
+          <div id="mineCount" class="text-xl font-bold text-white font-heading w-8 text-center">40</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-2">
+          <span class="text-cyan-400 text-lg">±¸</span>
+          <div id="timer" class="text-xl font-bold text-white font-heading w-12 text-center">000</div>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <select id="difficulty" class="bg-nexus-elevated border border-white/20 text-sm text-gray-200 rounded-lg px-2 py-1 outline-none focus:border-cyan-400 cursor-pointer">
+          <option value="easy">Easy (9x9)</option>
+          <option value="medium" selected>Med (16x16)</option>
+          <option value="hard">Hard (24x20)</option>
+        </select>
+        <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">˜Š Restart</button>
+      </div>
+    </div>
+
+    <div class="text-xs text-gray-400 mb-2 w-full text-center">Desktop: Left/Right click | Mobile: Tap to reveal, Long-press to flag</div>
+
+    <div class="relative w-full bg-nexus-elevated border border-white/10 rounded-xl p-2 shadow-2xl overflow-hidden">
+      <!-- Scroll container for hard mode on mobile -->
+      <div class="overflow-auto w-full h-full custom-scroll" id="canvasContainer">
+        <canvas id="gameCanvas_2" class="block mx-auto rounded"></canvas>
+      </div>
+      
+      <!-- Overlays -->
+      <div id="gameOver" class="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-4xl font-bold mb-2 font-heading text-red-500 drop-shadow-md">Game Over</div>
+        <p class="text-gray-200 mb-6">You hit a mine!</p>
+        <button id="tryAgainBtn" class="bg-red-600 hover:bg-red-500 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+
+      <div id="gameWon" class="absolute inset-0 bg-cyan-900/60 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 z-10">
+        <div class="text-5xl font-bold mb-2 font-heading text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">Cleared!</div>
+        <p class="text-white font-medium mb-2 drop-shadow-md">All mines swept successfully.</p>
+        <p id="bestTimeMsg" class="text-purple-300 font-bold mb-6"></p>
+        <button id="playAgainBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-2 rounded-lg font-bold transition-transform pointer-events-auto active:scale-95 hover:scale-105">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 2 Operations Manual</h3>
+        <p>Welcome to Arcade Room 2, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_2');
+    const ctx = canvas.getContext('2d');
+    const mineCountEl = document.getElementById('mineCount');
+    const timerEl = document.getElementById('timer');
+    const restartBtn = document.getElementById('restartBtn');
+    const diffSelect = document.getElementById('difficulty');
+    
+    const gameOverOverlay = document.getElementById('gameOver');
+    const gameWonOverlay = document.getElementById('gameWon');
+    const bestTimeMsg = document.getElementById('bestTimeMsg');
+    
+    let ROWS = 16;
+    let COLS = 16;
+    let MINES = 40;
+    const CELL_SIZE = 28;
+
+    let grid = [];
+    let state = 'IDLE'; // IDLE, PLAYING, WON, LOST
+    let flagsPlaced = 0;
+    let timeElapsed = 0;
+    let timerInterval = null;
+    let firstClick = true;
+
+    // Num colors matching dark theme aesthetic
+    const NUM_COLORS = [
+      '', '#38bdf8', '#4ade80', '#ef4444', '#a78bfa', '#fb923c', '#2dd4bf', '#facc15', '#9ca3af'
+    ];
+
+    function setDifficulty() {
+      const diff = diffSelect.value;
+      if (diff === 'easy') { ROWS = 9; COLS = 9; MINES = 10; }
+      else if (diff === 'medium') { ROWS = 16; COLS = 16; MINES = 40; }
+      else if (diff === 'hard') { ROWS = 20; COLS = 24; MINES = 99; }
+      init();
+    }
+
+    diffSelect.addEventListener('change', setDifficulty);
+    restartBtn.addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('click', init);
+    document.getElementById('playAgainBtn').addEventListener('click', init);
+
+    function init() {
+      canvas.width = COLS * CELL_SIZE;
+      canvas.height = ROWS * CELL_SIZE;
+      
+      grid = Array(ROWS).fill().map(() => Array(COLS).fill().map(() => ({
+        isMine: false,
+        isRevealed: false,
+        isFlagged: false,
+        neighborMines: 0
+      })));
+
+      state = 'IDLE';
+      firstClick = true;
+      flagsPlaced = 0;
+      timeElapsed = 0;
+      clearInterval(timerInterval);
+      
+      mineCountEl.textContent = MINES;
+      timerEl.textContent = '000';
+      restartBtn.innerHTML = '˜Š Restart';
+      
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+      gameWonOverlay.style.opacity = '0';
+      gameWonOverlay.style.pointerEvents = 'none';
+
+      draw();
+    }
+
+    function placeMines(safeR, safeC) {
+      let minesPlaced = 0;
+      while (minesPlaced < MINES) {
+        let r = Math.floor(Math.random() * ROWS);
+        let c = Math.floor(Math.random() * COLS);
+        // Ensure first click and its neighbors are safe
+        if (!grid[r][c].isMine && Math.abs(r - safeR) > 1 && Math.abs(c - safeC) > 1) {
+          grid[r][c].isMine = true;
+          minesPlaced++;
+        }
+      }
+
+      // Calculate neighbors
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (!grid[r][c].isMine) {
+            let count = 0;
+            for (let dr = -1; dr <= 1; dr++) {
+              for (let dc = -1; dc <= 1; dc++) {
+                let nr = r + dr, nc = c + dc;
+                if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && grid[nr][nc].isMine) {
+                  count++;
+                }
+              }
+            }
+            grid[r][c].neighborMines = count;
+          }
+        }
+      }
+    }
+
+    function startTimer() {
+      state = 'PLAYING';
+      timerInterval = setInterval(() => {
+        if(state === 'PLAYING') {
+          timeElapsed++;
+          timerEl.textContent = timeElapsed.toString().padStart(3, '0');
+        }
+      }, 1000);
+    }
+
+    function reveal(r, c) {
+      if (state === 'WON' || state === 'LOST' || grid[r][c].isFlagged || grid[r][c].isRevealed) return;
+      
+      if (firstClick) {
+        placeMines(r, c);
+        startTimer();
+        firstClick = false;
+      }
+
+      grid[r][c].isRevealed = true;
+
+      if (grid[r][c].isMine) {
+        gameOver(false);
+        return;
+      }
+
+      if (grid[r][c].neighborMines === 0) {
+        // Flood fill
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            let nr = r + dr, nc = c + dc;
+            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+              reveal(nr, nc);
+            }
+          }
+        }
+      }
+
+      checkWin();
+      draw();
+    }
+
+    function toggleFlag(r, c) {
+      if (state === 'WON' || state === 'LOST' || grid[r][c].isRevealed) return;
+      
+      grid[r][c].isFlagged = !grid[r][c].isFlagged;
+      flagsPlaced += grid[r][c].isFlagged ? 1 : -1;
+      mineCountEl.textContent = MINES - flagsPlaced;
+      draw();
+    }
+
+    function gameOver(isWin) {
+      state = isWin ? 'WON' : 'LOST';
+      clearInterval(timerInterval);
+      restartBtn.innerHTML = isWin ? '˜Ž Play Again' : '˜µ Try Again';
+      
+      // Reveal all mines if lost
+      if (!isWin) {
+        for (let r = 0; r < ROWS; r++) {
+          for (let c = 0; c < COLS; c++) {
+            if (grid[r][c].isMine) grid[r][c].isRevealed = true;
+          }
+        }
+        gameOverOverlay.style.opacity = '1';
+        gameOverOverlay.style.pointerEvents = 'auto';
+      } else {
+        const key = `arcadenexus_game2_best_${diffSelect.value}`;
+        const best = parseInt(localStorage.getItem(key)) || Infinity;
+        if (timeElapsed < best) {
+          localStorage.setItem(key, timeElapsed);
+          bestTimeMsg.textContent = `New Best Time: ${timeElapsed}s!`;
+        } else {
+          bestTimeMsg.textContent = `Time: ${timeElapsed}s (Best: ${best}s)`;
+        }
+        gameWonOverlay.style.opacity = '1';
+        gameWonOverlay.style.pointerEvents = 'auto';
+      }
+      draw();
+    }
+
+    function checkWin() {
+      let unrevealedSafe = 0;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (!grid[r][c].isMine && !grid[r][c].isRevealed) unrevealedSafe++;
+        }
+      }
+      if (unrevealedSafe === 0) gameOver(true);
+    }
+
+    // Input Handling
+    function getGridCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      let clientX = e.clientX;
+      let clientY = e.clientY;
+      
+      if(e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      }
+      
+      const x = (clientX - rect.left) * scaleX;
+      const y = (clientY - rect.top) * scaleY;
+      return { c: Math.floor(x / CELL_SIZE), r: Math.floor(y / CELL_SIZE) };
+    }
+
+    canvas.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      const {r, c} = getGridCoords(e);
+      if (r >= 0 && r < ROWS && c >= 0 && c < COLS) toggleFlag(r, c);
+    });
+
+    canvas.addEventListener('mousedown', e => {
+      if (e.button !== 0) return; // Only left click
+      const {r, c} = getGridCoords(e);
+      if (r >= 0 && r < ROWS && c >= 0 && c < COLS) reveal(r, c);
+    });
+
+    // Touch support (tap to reveal, long press to flag)
+    let touchTimer = null;
+    let touchMoved = false;
+
+    canvas.addEventListener('touchstart', e => {
+      touchMoved = false;
+      const {r, c} = getGridCoords(e);
+      if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
+      
+      touchTimer = setTimeout(() => {
+        if(!touchMoved) toggleFlag(r, c);
+        touchTimer = null;
+        // Vibrate if supported
+        if(navigator.vibrate) navigator.vibrate(50);
+      }, 400); // 400ms long press
+    });
+    
+    canvas.addEventListener('touchmove', e => {
+      touchMoved = true;
+      if (touchTimer) { clearTimeout(touchTimer); touchTimer = null; }
+    });
+
+    canvas.addEventListener('touchend', e => {
+      if (touchTimer) {
+        // Short tap completed
+        clearTimeout(touchTimer);
+        touchTimer = null;
+        if (!touchMoved) {
+          const {r, c} = getGridCoords(e.changedTouches[0]);
+          if (r >= 0 && r < ROWS && c >= 0 && c < COLS) reveal(r, c);
+        }
+      }
+      e.preventDefault();
+    });
+
+    // Drawing
+    function draw() {
+      ctx.fillStyle = '#06060e'; // nexus.dark
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = 'bold 16px Inter';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const x = c * CELL_SIZE;
+          const y = r * CELL_SIZE;
+          const cell = grid[r][c];
+
+          if (cell.isRevealed) {
+            // Revealed cell
+            ctx.fillStyle = '#111125'; // nexus.card
+            ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+            ctx.strokeStyle = '#2a2a40';
+            ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
+
+            if (cell.isMine) {
+              // Mine (bomb emoji or drawn)
+              ctx.fillStyle = state === 'LOST' ? '#ef4444' : '#111125'; // Red bg if exploded
+              ctx.fillRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2);
+              ctx.fillStyle = '#fff';
+              ctx.font = '16px sans-serif';
+              ctx.fillText('’£', x + CELL_SIZE/2, y + CELL_SIZE/2 + 2);
+            } else if (cell.neighborMines > 0) {
+              // Number
+              ctx.fillStyle = NUM_COLORS[cell.neighborMines];
+              ctx.font = 'bold 16px Inter';
+              ctx.fillText(cell.neighborMines, x + CELL_SIZE/2, y + CELL_SIZE/2 + 1);
+            }
+          } else {
+            // Unrevealed cell (3D bevel)
+            ctx.fillStyle = '#1a1a2e'; // nexus.elevated
+            ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+            
+            // Highlights & shadows for 3D effect
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            ctx.beginPath(); ctx.moveTo(x, y+CELL_SIZE); ctx.lineTo(x, y); ctx.lineTo(x+CELL_SIZE, y); ctx.fill();
+            
+            ctx.fillStyle = 'rgba(0,0,0,0.4)';
+            ctx.beginPath(); ctx.moveTo(x, y+CELL_SIZE); ctx.lineTo(x+CELL_SIZE, y+CELL_SIZE); ctx.lineTo(x+CELL_SIZE, y); ctx.fill();
+            
+            // Inner fill
+            ctx.fillStyle = '#22223b';
+            ctx.fillRect(x+3, y+3, CELL_SIZE-6, CELL_SIZE-6);
+
+            if (cell.isFlagged) {
+              ctx.fillStyle = '#ef4444';
+              ctx.font = '14px sans-serif';
+              ctx.fillText('š©', x + CELL_SIZE/2, y + CELL_SIZE/2 + 1);
+            }
+          }
+        }
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

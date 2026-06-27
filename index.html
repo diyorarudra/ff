@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArcadeNexus &mdash; Play 100+ Free HTML5 Browser Games Online</title>
+  <meta name="description" content="ArcadeNexus is your premium destination for free browser-based HTML5 games. Play 100+ unique titles across puzzle, arcade, mystery, rhythm, and casual categories. No downloads required.">
+  <meta name="keywords" content="HTML5 games, browser games, free online games, arcade games, puzzle games, rhythm games, mystery games, canvas games">
+  <meta name="author" content="ArcadeNexus">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ArcadeNexus &mdash; Play 100+ Free HTML5 Browser Games Online">
+  <meta property="og:description" content="Your premium destination for free browser-based HTML5 games. Puzzle, arcade, rhythm, mystery and more.">
+  <meta property="og:url" content="https://arcadenexus.com/">
+  <meta property="og:site_name" content="ArcadeNexus">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ArcadeNexus &mdash; 100+ Free HTML5 Games">
+  <meta name="twitter:description" content="Play free browser-based HTML5 games instantly. No downloads, no installs.">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ArcadeNexus",
+    "url": "https://arcadenexus.com",
+    "description": "Play 100+ free HTML5 games online. Puzzle, arcade, rhythm, mystery and more &mdash; no downloads needed.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus",
+      "url": "https://arcadenexus.com"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://arcadenexus.com/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body class="font-body">
+
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar px-4 md:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="/index.html" class="flex items-center gap-2 text-xl font-bold font-heading" aria-label="ArcadeNexus Home">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg>
+        <span class="gradient-text">ArcadeNexus</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#games" class="text-gray-300 hover:text-white transition-colors font-medium">Games</a>
+        <a href="/blog/index.html" class="text-gray-300 hover:text-white transition-colors font-medium">Blog</a>
+        <a href="/compliance/about-us.html" class="text-gray-300 hover:text-white transition-colors font-medium">About</a>
+        <a href="/compliance/contact.html" class="text-gray-300 hover:text-white transition-colors font-medium">Contact</a>
+      </div>
+
+      <!-- Hamburger -->
+      <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu">
+        <span class="w-6 h-0.5 bg-white rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-white rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-white rounded transition-all"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300">
+      <div class="flex flex-col gap-4 pt-4 pb-2 px-2">
+        <a href="#games" class="text-gray-300 hover:text-white py-2 border-b border-white/5">Games</a>
+        <a href="/blog/index.html" class="text-gray-300 hover:text-white py-2 border-b border-white/5">Blog</a>
+        <a href="/compliance/about-us.html" class="text-gray-300 hover:text-white py-2 border-b border-white/5">About</a>
+        <a href="/compliance/contact.html" class="text-gray-300 hover:text-white py-2">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ===== HERO CAROUSEL ===== -->
+    <section class="max-w-7xl mx-auto px-4 md:px-8 pt-8 pb-4" aria-label="Featured Games">
+      <div class="carousel-container glass-card">
+        <div id="carousel-track" class="carousel-track">
+          <!-- JS populates slides -->
+        </div>
+      </div>
+      <div id="carousel-dots" class="carousel-dots" role="tablist" aria-label="Carousel navigation"></div>
+    </section>
+
+    <!-- ===== AD SLOT: Header Banner ===== -->
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+      <div class="ad-slot ad-slot-banner" id="ad-header" aria-label="Advertisement">
+        <!-- AdSense: ca-pub-XXXXXXXXXXXXXXXX / header-banner -->
+      </div>
+    </div>
+
+    <!-- ===== GAMES SECTION ===== -->
+    <section id="games" class="max-w-7xl mx-auto px-4 md:px-8 py-12">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold font-heading mb-3">
+          <span class="gradient-text">100+ Free Browser Games</span>
+        </h1>
+        <p class="text-gray-400 max-w-2xl mx-auto text-lg">Pick a category and start playing instantly. No downloads, no installs &mdash; just pure HTML5 gaming right in your browser.</p>
+      </div>
+
+      <!-- Category Filters -->
+      <div id="filter-buttons" class="flex flex-wrap justify-center gap-3 mb-10" role="toolbar" aria-label="Filter games by category">
+        <!-- JS populates filters -->
+      </div>
+
+      <!-- Game Grid -->
+      <div id="game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+        <!-- JS populates game cards -->
+      </div>
+    </section>
+
+    <!-- ===== AD SLOT: In-Feed ===== -->
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+      <div class="ad-slot ad-slot-banner" id="ad-in-feed" aria-label="Advertisement">
+        <!-- AdSense: ca-pub-XXXXXXXXXXXXXXXX / in-feed -->
+      </div>
+    </div>
+
+    <!-- ===== BLOG PREVIEW ===== -->
+    <section class="max-w-7xl mx-auto px-4 md:px-8 py-12" aria-label="Latest Blog Posts">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-bold font-heading">
+            Latest from the <span class="gradient-text">Blog</span>
+          </h2>
+          <p class="text-gray-400 mt-2">Deep dives into game design, web tech, and digital culture.</p>
+        </div>
+        <a href="/blog/index.html" class="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-gray-300 hover:text-white hover:border-cyan-400 transition-all font-medium">
+          View All †’
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Blog Card 1 -->
+        <a href="/blog/post1.html" class="blog-card group" id="blog-preview-1">
+          <div class="h-44 relative overflow-hidden" style="background:linear-gradient(135deg, #06b6d422, #8b5cf622)">
+            <div class="absolute inset-0 opacity-30" style="background-image: repeating-linear-gradient(45deg, #06b6d4 0, #06b6d4 1px, transparent 1px, transparent 10px);"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#111125] to-transparent"></div>
+          </div>
+          <div class="p-5">
+            <span class="category-badge mb-3 inline-block" style="background:#06b6d420;color:#06b6d4">Web Gaming</span>
+            <h3 class="font-bold text-white text-lg mb-2 font-heading group-hover:text-cyan-400 transition-colors">How the HTML5 Canvas API Changed Browser Gaming Forever</h3>
+            <p class="text-sm text-gray-400 line-clamp-2">The moment browser gaming stopped being a joke and started competing with native apps — all thanks to one powerful rendering API.</p>
+            <div class="flex items-center gap-3 mt-4 text-xs text-gray-500">
+              <span>8 min read</span>
+              <span>·</span>
+              <span>Jun 2026</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Blog Card 2 -->
+        <a href="/blog/post11.html" class="blog-card group" id="blog-preview-2">
+          <div class="h-44 relative overflow-hidden" style="background:linear-gradient(135deg, #7c3aed22, #ec489922)">
+            <div class="absolute inset-0 opacity-30" style="background-image: repeating-linear-gradient(-45deg, #7c3aed 0, #7c3aed 1px, transparent 1px, transparent 10px);"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#111125] to-transparent"></div>
+          </div>
+          <div class="p-5">
+            <span class="category-badge mb-3 inline-block" style="background:#7c3aed20;color:#7c3aed">Narrative Design</span>
+            <h3 class="font-bold text-white text-lg mb-2 font-heading group-hover:text-cyan-400 transition-colors">What Makes a Great Detective Game? Lessons from Point-and-Click Classics</h3>
+            <p class="text-sm text-gray-400 line-clamp-2">From Myst to Return of the Obra Dinn — the best mystery games share a few surprisingly simple design principles.</p>
+            <div class="flex items-center gap-3 mt-4 text-xs text-gray-500">
+              <span>10 min read</span>
+              <span>·</span>
+              <span>Jun 2026</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Blog Card 3 -->
+        <a href="/blog/post31.html" class="blog-card group" id="blog-preview-3">
+          <div class="h-44 relative overflow-hidden" style="background:linear-gradient(135deg, #22c55e22, #06b6d422)">
+            <div class="absolute inset-0 opacity-30" style="background-image: repeating-linear-gradient(90deg, #22c55e 0, #22c55e 1px, transparent 1px, transparent 15px);"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#111125] to-transparent"></div>
+          </div>
+          <div class="p-5">
+            <span class="category-badge mb-3 inline-block" style="background:#22c55e20;color:#22c55e">Psychology</span>
+            <h3 class="font-bold text-white text-lg mb-2 font-heading group-hover:text-cyan-400 transition-colors">Why Your Brain Loves Pattern-Matching Games Like 2048</h3>
+            <p class="text-sm text-gray-400 line-clamp-2">There is real neuroscience behind why sliding tiles feels so satisfying. Here is what happens in your head when you play.</p>
+            <div class="flex items-center gap-3 mt-4 text-xs text-gray-500">
+              <span>7 min read</span>
+              <span>·</span>
+              <span>Jun 2026</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="text-center mt-8 md:hidden">
+        <a href="/blog/index.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-gray-300 hover:text-white hover:border-cyan-400 transition-all font-medium">
+          View All Posts †’
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== AD SLOT: Footer Banner ===== -->
+    <div class="max-w-7xl mx-auto px-4 md:px-8 mb-8">
+      <div class="ad-slot ad-slot-banner" id="ad-footer" aria-label="Advertisement">
+        <!-- AdSense: ca-pub-XXXXXXXXXXXXXXXX / footer-banner -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer py-12 px-4 md:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <!-- Brand -->
+        <div class="md:col-span-2">
+          <a href="/index.html" class="flex items-center gap-2 text-xl font-bold font-heading mb-4">
+            <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg>
+            <span class="gradient-text">ArcadeNexus</span>
+          </a>
+          <p class="text-gray-400 max-w-md leading-relaxed">Your premium destination for free, browser-based HTML5 games. We blend interactive digital art with web gaming to create experiences that are fast, beautiful, and accessible to everyone.</p>
+        </div>
+        <!-- Quick Links -->
+        <div>
+          <h4 class="font-heading font-bold text-white mb-4">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#games" class="text-gray-400 hover:text-cyan-400 transition-colors">All Games</a></li>
+            <li><a href="/blog/index.html" class="text-gray-400 hover:text-cyan-400 transition-colors">Blog</a></li>
+            <li><a href="/compliance/about-us.html" class="text-gray-400 hover:text-cyan-400 transition-colors">About Us</a></li>
+            <li><a href="/compliance/contact.html" class="text-gray-400 hover:text-cyan-400 transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        <!-- Legal -->
+        <div>
+          <h4 class="font-heading font-bold text-white mb-4">Legal</h4>
+          <ul class="space-y-2">
+            <li><a href="/privacy-policy.html" class="text-gray-400 hover:text-cyan-400 transition-colors">Privacy Policy</a></li>
+            <li><a href="/terms-of-service.html" class="text-gray-400 hover:text-cyan-400 transition-colors">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-gray-500 text-sm">&copy; 2026 ArcadeNexus. All rights reserved.</p>
+        <p class="text-gray-600 text-xs">Built with <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 4px;vertical-align:middle;color:#ef4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> using HTML5, Canvas API &amp; Vanilla JavaScript</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+</body>
+</html>

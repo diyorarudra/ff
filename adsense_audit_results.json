@@ -1,0 +1,17 @@
+{
+  "registry": {
+    "privacy-policy.html": "[PASS] Contains third-party/cookie disclosures.",
+    "terms-of-service.html": "[PASS] Contains terms/anti-scraping parameters.",
+    "ads.txt": "[PASS] Valid authorized distributor string syntax.",
+    "sitemap.xml": "[CRITICAL FIX REQUIRED] Schema does not cover all 100 game deep routes.",
+    "robots.txt": "[PASS] Mediapartners-Google crawler allowed explicitly."
+  },
+  "games": {
+    "summary": "Checked 100 games. 0 passed all checks. 100 are missing the mandatory adsense-seo-block text elements."
+  },
+  "blog": {
+    "summary": "Scanned 51 blog files. 0 files flagged for AI-pattern remediation.",
+    "flagged": []
+  },
+  "score": 35
+}

@@ -1,0 +1,375 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Piano Tiles &mdash; ArcadeNexus</title>
+  <meta name="description" content="Don't tap the white tile! A fast-paced music rhythm game.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Piano Tiles",
+    "genre": "Rhythm Action",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; touch-action: manipulation; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[450px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg">
+      <div class="flex gap-4 items-center w-full justify-center">
+        <div class="flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-3xl font-bold text-cyan-400 font-heading leading-tight drop-shadow-md transition-transform" style="transform: scale(1)">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Area (CSS grid approach instead of canvas for better mobile touch responsiveness in this specific type) -->
+    <div class="relative w-full aspect-[3/4] sm:aspect-[2/3] bg-white rounded-xl overflow-hidden mb-4 shadow-[0_0_30px_rgba(34,211,238,0.1)] border-2 border-white/20 flex touch-none" id="board">
+      
+      <!-- 4 Columns -->
+      <div class="flex-1 border-r border-gray-200 relative col-track" data-col="0"></div>
+      <div class="flex-1 border-r border-gray-200 relative col-track" data-col="1"></div>
+      <div class="flex-1 border-r border-gray-200 relative col-track" data-col="2"></div>
+      <div class="flex-1 relative col-track" data-col="3"></div>
+
+      <!-- Hit Line -->
+      <div class="absolute bottom-0 w-full h-[20%] border-t-[3px] border-cyan-400/50 pointer-events-none z-10 bg-cyan-400/5"></div>
+
+      <!-- Overlays -->
+      <div id="startOverlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-30 transition-opacity duration-300">
+        <h2 class="text-4xl font-bold font-heading text-white drop-shadow-md mb-2">Piano Tiles</h2>
+        <p class="text-gray-300 text-sm mb-6">Tap the black tiles.</p>
+        <button id="startBtn" class="bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-3 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-transform active:scale-95">PLAY</button>
+      </div>
+
+      <div id="gameOverOverlay" class="absolute inset-0 bg-red-900/90 flex flex-col items-center justify-center opacity-0 pointer-events-none z-30 transition-opacity duration-300">
+        <h2 class="text-5xl font-bold font-heading text-white drop-shadow-md mb-2">Game Over</h2>
+        <p class="text-gray-200 text-xl mb-6">Score: <span id="finalScore" class="font-bold text-white">0</span></p>
+        <button id="restartBtn" class="bg-white text-red-600 px-8 py-3 rounded-full font-bold text-lg shadow-lg transition-transform active:scale-95">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 16 Operations Manual</h3>
+        <p>Welcome to Arcade Room 16, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <style>
+    /* Add specific animation for smooth falling using CSS variables for performance */
+    .tile {
+      position: absolute;
+      width: 100%;
+      height: 25%; /* 4 rows visible at once */
+      background-color: #000;
+      top: -25%; /* start above */
+      will-change: transform;
+      border: 1px solid #333;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .tile.tapped {
+      background-color: #cbd5e1; /* slate-300 */
+      pointer-events: none;
+    }
+    
+    .tile.missed {
+      background-color: #ef4444; /* red-500 */
+      animation: pulse 0.5s infinite;
+    }
+    
+    .col-track { touch-action: manipulation; }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+  </style>
+
+  <script>
+    const scoreEl = document.getElementById('score');
+    const board = document.getElementById('board');
+    const tracks = document.querySelectorAll('.col-track');
+    
+    const startOverlay = document.getElementById('startOverlay');
+    const gameOverOverlay = document.getElementById('gameOverOverlay');
+    
+    let score = 0;
+    let state = 'START'; // START, PLAYING, GAMEOVER
+    let speed = 2; // px per frame
+    let animFrame = null;
+    let tiles = [];
+    
+    // Physics variables
+    let boardHeight = board.clientHeight;
+    let tileHeight = boardHeight * 0.25;
+    let baseOffset = 0; // overall downward shift
+    
+    // Resize observer to recalculate physics if window changes
+    new ResizeObserver(() => {
+      if(state === 'START') {
+        boardHeight = board.clientHeight;
+        tileHeight = boardHeight * 0.25;
+      }
+    }).observe(board);
+
+    function init() {
+      score = 0;
+      speed = boardHeight * 0.005; // scales with height
+      scoreEl.textContent = '0';
+      scoreEl.style.color = '#22d3ee'; // cyan
+      
+      // Clear tracks
+      tracks.forEach(track => track.innerHTML = '');
+      tiles = [];
+      baseOffset = 0;
+
+      // Generate initial queue
+      for (let i=0; i<6; i++) {
+        spawnTile(i);
+      }
+
+      state = 'PLAYING';
+      startOverlay.style.opacity = '0';
+      startOverlay.style.pointerEvents = 'none';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+
+      if(animFrame) cancelAnimationFrame(animFrame);
+      lastTime = performance.now();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function spawnTile(index) {
+      let col = Math.floor(Math.random() * 4);
+      let el = document.createElement('div');
+      el.className = 'tile';
+      // initial position based on index (higher index = higher up)
+      let initialY = -tileHeight - (index * tileHeight);
+      el.style.transform = `translateY(${initialY}px)`;
+      
+      let tileObj = {
+        el: el,
+        col: col,
+        y: initialY,
+        tapped: false,
+        index: index
+      };
+      
+      // Tap event attached directly to element for lowest latency
+      el.addEventListener('mousedown', (e) => handleTap(e, tileObj));
+      el.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(e, tileObj); }, {passive: false});
+
+      tracks[col].appendChild(el);
+      tiles.push(tileObj);
+    }
+
+    function handleTap(e, tileObj) {
+      if (state !== 'PLAYING') return;
+      if (tileObj.tapped) return;
+
+      // Strict mode: must tap the lowest untapped tile
+      let lowestUntapped = tiles.filter(t => !t.tapped).reduce((prev, curr) => (prev.y > curr.y) ? prev : curr, {y: -9999});
+      
+      if (tileObj.index !== lowestUntapped.index) {
+        // Tapped out of order (wrong tile)
+        tileObj.el.classList.add('missed');
+        gameOver(false);
+        return;
+      }
+
+      tileObj.tapped = true;
+      tileObj.el.classList.add('tapped');
+      
+      score++;
+      scoreEl.textContent = score;
+      
+      // Pop effect
+      scoreEl.style.transform = 'scale(1.2)';
+      setTimeout(() => scoreEl.style.transform = 'scale(1)', 100);
+
+      // Increase speed slightly
+      speed += boardHeight * 0.0001; 
+      if (score % 10 === 0) {
+        // change color to indicate speedup
+        scoreEl.style.color = '#a855f7'; // purple
+        setTimeout(() => scoreEl.style.color = '#22d3ee', 500);
+      }
+    }
+
+    // Tap on empty track logic
+    tracks.forEach((track, colIdx) => {
+      let handleEmptyTap = (e) => {
+        if(state !== 'PLAYING') return;
+        if(e.target.classList.contains('tile')) return; // handled by tile event
+        
+        // Clicked white space!
+        e.target.style.backgroundColor = '#ef4444'; // turn red
+        gameOver(false);
+      };
+      track.addEventListener('mousedown', handleEmptyTap);
+      track.addEventListener('touchstart', e => { e.preventDefault(); handleEmptyTap(e); }, {passive: false});
+    });
+
+    let lastTime = 0;
+    function gameLoop(timestamp) {
+      if (state !== 'PLAYING') return;
+      
+      let dt = timestamp - lastTime;
+      lastTime = timestamp;
+      
+      // Fall logic based on dt for smooth framerate independent movement
+      let fallAmt = speed * (dt / 16.66);
+      
+      // Find the lowest untapped tile
+      let lowestUntapped = null;
+      for (let t of tiles) {
+        if (!t.tapped) {
+          if (!lowestUntapped || t.y > lowestUntapped.y) lowestUntapped = t;
+        }
+      }
+
+      for (let i = 0; i < tiles.length; i++) {
+        let t = tiles[i];
+        t.y += fallAmt;
+        t.el.style.transform = `translateY(${t.y}px)`;
+
+        // Check if lowest untapped tile fell off screen
+        if (t === lowestUntapped && t.y > boardHeight) {
+          t.el.classList.add('missed');
+          gameOver(true);
+          return;
+        }
+
+        // Cleanup tiles far below screen
+        if (t.y > boardHeight + tileHeight && t.tapped) {
+          t.el.remove();
+          tiles.splice(i, 1);
+          i--;
+          
+          // Spawn new tile at top
+          let highestY = tiles.reduce((prev, curr) => (prev.y < curr.y) ? prev : curr).y;
+          // Calculate new index
+          let maxIndex = tiles.reduce((prev, curr) => (prev.index > curr.index) ? prev : curr).index;
+          
+          let col = Math.floor(Math.random() * 4);
+          let el = document.createElement('div');
+          el.className = 'tile';
+          let initialY = highestY - tileHeight; // stack above highest
+          el.style.transform = `translateY(${initialY}px)`;
+          
+          let newTile = { el: el, col: col, y: initialY, tapped: false, index: maxIndex + 1 };
+          el.addEventListener('mousedown', (e) => handleTap(e, newTile));
+          el.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(e, newTile); }, {passive: false});
+          
+          tracks[col].appendChild(el);
+          tiles.push(newTile);
+        }
+      }
+
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    function gameOver(missed) {
+      state = 'GAMEOVER';
+      document.getElementById('finalScore').textContent = score;
+      
+      // Flash red effect on board wrapper handled via CSS overlay
+      setTimeout(() => {
+        gameOverOverlay.style.opacity = '1';
+        gameOverOverlay.style.pointerEvents = 'auto';
+      }, 500);
+    }
+
+    document.getElementById('startBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    // Initial setup
+    boardHeight = board.clientHeight;
+    tileHeight = boardHeight * 0.25;
+  </script>
+</body>
+</html>

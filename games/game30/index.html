@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Data Miner Idle &mdash; ArcadeNexus</title>
+  <meta name="description" content="Click to mine data, buy upgrades, and automate your empire in this idle clicker game.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Data Miner Idle",
+    "genre": "Incremental Idle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    
+    .main-btn {
+      transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.1s;
+      cursor: pointer;
+    }
+    .main-btn:active {
+      transform: scale(0.9);
+      filter: brightness(1.2);
+    }
+
+    .upgrade-btn {
+      transition: all 0.2s;
+    }
+    .upgrade-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(100%);
+    }
+
+    /* Floating numbers */
+    .float-num {
+      position: absolute;
+      color: #22d3ee;
+      font-weight: bold;
+      font-size: 1.2rem;
+      pointer-events: none;
+      animation: floatUp 1s ease-out forwards;
+      z-index: 50;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
+    }
+    
+    /* Matrix rain background effect */
+    .matrix-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(34, 211, 238, 0.05) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col relative overflow-hidden">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row gap-6 z-10">
+    
+    <!-- Left Area: The Clicker -->
+    <div class="flex-1 bg-nexus-card rounded-2xl border border-white/10 shadow-[0_0_30px_rgba(34,211,238,0.05)] p-8 flex flex-col items-center justify-center relative overflow-hidden min-h-[400px]">
+      <div class="matrix-bg"></div>
+      
+      <h2 class="text-gray-400 uppercase tracking-widest font-bold text-sm mb-2 z-10">Data Mined</h2>
+      <div id="score" class="text-6xl md:text-7xl font-bold text-cyan-400 font-heading tracking-tighter mb-2 z-10 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">0</div>
+      <div class="text-purple-400 font-mono text-sm mb-12 z-10"><span id="bps">0</span> Bytes / sec</div>
+      
+      <!-- The Big Button -->
+      <div id="clickTarget" class="main-btn relative w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-cyan-900 to-indigo-950 border-4 border-cyan-500 shadow-[0_0_50px_rgba(34,211,238,0.4)] flex items-center justify-center z-10 group">
+        <!-- Inner glow -->
+        <div class="absolute inset-2 rounded-full border border-white/20"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 md:h-28 md:w-28 text-cyan-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      
+      <div class="mt-12 text-gray-500 text-sm z-10">Click power: <span id="clickPowerText" class="text-white font-bold">1</span></div>
+      
+      <button id="resetSaveBtn" class="absolute bottom-4 left-4 text-xs text-gray-600 hover:text-red-400 z-10">Hard Reset</button>
+    </div>
+
+    <!-- Right Area: Upgrades -->
+    <div class="w-full md:w-[400px] flex flex-col gap-4">
+      <h3 class="text-xl font-bold font-heading text-white border-b border-white/10 pb-2">Upgrades</h3>
+      
+      <div id="upgradesContainer" class="flex flex-col gap-3 overflow-y-auto max-h-[60vh] pr-2 custom-scrollbar">
+        <!-- Upgrades generated via JS -->
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 30 Operations Manual</h3>
+        <p>Welcome to Arcade Room 30, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<script>
+    // Game State
+    let data = {
+      score: 0,
+      totalScore: 0, // Lifetime for achievements
+      clickPower: 1,
+      bps: 0, // Bytes per second
+      inventory: {
+        autoClicker: 0,
+        mainframe: 0,
+        quantum: 0,
+        aiCore: 0
+      }
+    };
+
+    const UPGRADES = [
+      { id: 'click_upg', type: 'click', name: "Better Algorithm", desc: "+1 Click Power", baseCost: 15, costMult: 1.5, value: 1, icon: '<svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>' },
+      { id: 'autoClicker', type: 'idle', name: "Auto-Clicker Script", desc: "+1 Byte/sec", baseCost: 50, costMult: 1.15, value: 1, icon: '<svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>' },
+      { id: 'mainframe', type: 'idle', name: "Mainframe Server", desc: "+10 Bytes/sec", baseCost: 500, costMult: 1.15, value: 10, icon: '<svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>' },
+      { id: 'quantum', type: 'idle', name: "Quantum Processor", desc: "+80 Bytes/sec", baseCost: 3000, costMult: 1.15, value: 80, icon: '<svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>' },
+      { id: 'aiCore', type: 'idle', name: "Sentient AI Core", desc: "+500 Bytes/sec", baseCost: 15000, costMult: 1.15, value: 500, icon: '<svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>' }
+    ];
+
+    // DOM Elements
+    const scoreEl = document.getElementById('score');
+    const bpsEl = document.getElementById('bps');
+    const clickPowerEl = document.getElementById('clickPowerText');
+    const target = document.getElementById('clickTarget');
+    const upgradesContainer = document.getElementById('upgradesContainer');
+
+    let lastTick = performance.now();
+
+    function init() {
+      loadSave();
+      renderUpgrades();
+      updateUI();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function saveGame() {
+      localStorage.setItem('arcadenexus_idle_save', JSON.stringify(data));
+    }
+
+    function loadSave() {
+      let saved = localStorage.getItem('arcadenexus_idle_save');
+      if (saved) {
+        try {
+          let parsed = JSON.parse(saved);
+          // Merge to handle version updates
+          data = { ...data, ...parsed };
+          data.inventory = { ...data.inventory, ...parsed.inventory };
+        } catch (e) {
+          console.error("Save load failed");
+        }
+      }
+      recalculateStats();
+    }
+
+    document.getElementById('resetSaveBtn').addEventListener('click', () => {
+      if(confirm("Are you sure? This will wipe all progress!")) {
+        localStorage.removeItem('arcadenexus_idle_save');
+        location.reload();
+      }
+    });
+
+    function recalculateStats() {
+      // Calculate BPS from inventory
+      let newBps = 0;
+      newBps += data.inventory.autoClicker * 1;
+      newBps += data.inventory.mainframe * 10;
+      newBps += data.inventory.quantum * 80;
+      newBps += data.inventory.aiCore * 500;
+      data.bps = newBps;
+    }
+
+    function getCost(upgrade) {
+      let count = data.inventory[upgrade.id] || 0;
+      if (upgrade.type === 'click') {
+        // Special calculation for click upgrades, store count temporarily
+        let clickUpgCount = data.clickPower - 1; 
+        return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMult, clickUpgCount));
+      }
+      return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMult, count));
+    }
+
+    function renderUpgrades() {
+      upgradesContainer.innerHTML = '';
+      
+      UPGRADES.forEach(upg => {
+        let cost = getCost(upg);
+        let count = upg.type === 'click' ? (data.clickPower - 1) : (data.inventory[upg.id] || 0);
+        
+        let btn = document.createElement('button');
+        btn.className = `upgrade-btn w-full bg-nexus-elevated border border-white/10 rounded-xl p-4 flex items-center justify-between hover:bg-white/5 text-left`;
+        btn.id = `upg-${upg.id}`;
+        
+        btn.innerHTML = `
+          <div class="flex items-center gap-4">
+            <div class="text-3xl">${upg.icon}</div>
+            <div>
+              <div class="font-bold text-white font-heading">${upg.name} <span class="text-xs font-normal text-gray-500 bg-black/30 px-2 py-0.5 rounded-full ml-1">Lvl ${count}</span></div>
+              <div class="text-xs text-gray-400">${upg.desc}</div>
+            </div>
+          </div>
+          <div class="text-right flex flex-col items-end">
+            <div class="text-sm font-bold text-cyan-400 flex items-center gap-1">
+              <span class="text-[10px]"><svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16"></path></svg></span> <span class="cost-val">${formatNumber(cost)}</span>
+            </div>
+          </div>
+        `;
+        
+        btn.addEventListener('click', () => buyUpgrade(upg));
+        upgradesContainer.appendChild(btn);
+      });
+    }
+
+    function updateUpgradeButtons() {
+      UPGRADES.forEach(upg => {
+        let cost = getCost(upg);
+        let btn = document.getElementById(`upg-${upg.id}`);
+        if(btn) {
+          if (data.score >= cost) btn.removeAttribute('disabled');
+          else btn.setAttribute('disabled', 'true');
+        }
+      });
+    }
+
+    function buyUpgrade(upg) {
+      let cost = getCost(upg);
+      if (data.score >= cost) {
+        data.score -= cost;
+        
+        if (upg.type === 'click') {
+          data.clickPower += upg.value;
+        } else {
+          data.inventory[upg.id] = (data.inventory[upg.id] || 0) + 1;
+        }
+        
+        recalculateStats();
+        renderUpgrades(); // Re-render to update costs/levels
+        updateUI();
+        saveGame();
+      }
+    }
+
+    function formatNumber(num) {
+      if (num < 1000) return Math.floor(num).toString();
+      const suffixes = ["", "k", "M", "B", "T", "Qa"];
+      const suffixNum = Math.floor(("" + Math.floor(num)).length / 3);
+      let shortValue = parseFloat((suffixNum !== 0 ? (num / Math.pow(1000, suffixNum)) : num).toPrecision(3));
+      if (shortValue % 1 !== 0) shortValue = shortValue.toFixed(1);
+      return shortValue + suffixes[suffixNum];
+    }
+
+    function updateUI() {
+      scoreEl.textContent = formatNumber(data.score);
+      bpsEl.textContent = formatNumber(data.bps);
+      clickPowerEl.textContent = formatNumber(data.clickPower);
+      updateUpgradeButtons();
+    }
+
+    function spawnFloatNum(e, amount) {
+      let rect = target.getBoundingClientRect();
+      let x, y;
+      
+      // If triggered by keypress or center touch, spawn at center
+      if (e.clientX === undefined && e.touches === undefined) {
+        x = rect.left + rect.width/2;
+        y = rect.top + rect.height/2;
+      } else {
+        x = e.touches ? e.touches[0].clientX : e.clientX;
+        y = e.touches ? e.touches[0].clientY : e.clientY;
+      }
+
+      // Add slight random offset
+      x += (Math.random() - 0.5) * 40;
+      y += (Math.random() - 0.5) * 20;
+
+      let el = document.createElement('div');
+      el.className = 'float-num font-heading';
+      el.textContent = '+' + formatNumber(amount);
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1000);
+    }
+
+    function handleClick(e) {
+      if(e.type === 'touchstart') e.preventDefault();
+      
+      data.score += data.clickPower;
+      data.totalScore += data.clickPower;
+      updateUI();
+      spawnFloatNum(e, data.clickPower);
+      
+      // Haptic feedback if supported
+      if(navigator.vibrate) navigator.vibrate(10);
+    }
+
+    target.addEventListener('mousedown', handleClick);
+    target.addEventListener('touchstart', handleClick, {passive: false});
+    
+    // Allow spacebar clicking
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        target.classList.add('active'); // fake active state
+        handleClick(e);
+      }
+    });
+    window.addEventListener('keyup', e => {
+      if (e.code === 'Space') target.classList.remove('active');
+    });
+
+    let saveTimer = 0;
+    
+    function gameLoop(now) {
+      let dt = (now - lastTick) / 1000; // seconds
+      lastTick = now;
+      
+      // Limit dt to prevent huge jumps if tab was inactive
+      if (dt > 1) dt = 1;
+
+      if (data.bps > 0) {
+        let gain = data.bps * dt;
+        data.score += gain;
+        data.totalScore += gain;
+        updateUI(); // This is fast enough for DOM, but maybe throttle if it causes lag
+      }
+      
+      // Auto save every 5 seconds
+      saveTimer += dt;
+      if (saveTimer >= 5) {
+        saveGame();
+        saveTimer = 0;
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "arcadenexus",
+  "version": "1.0.0",
+  "description": "ArcadeNexus HTML5 Gaming Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "dev": "serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}

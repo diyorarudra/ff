@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Implementing Dynamic Lighting in HTML5 Canvas — ArcadeNexus</title>
+  <meta name="description" content="Elevate your 2D web games with cinematic dynamic lighting. Learn the math behind global composite operations and radial gradients on the HTML5 Canvas.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Implementing Dynamic Lighting in HTML5 Canvas",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    },
+    "datePublished": "2026-06-26",
+    "author": {
+      "@type": "Person",
+      "name": "ArcadeNexus Editorial Team"
+    }
+  }
+  </script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body class="font-body bg-nexus-dark text-gray-300 min-h-screen flex flex-col">
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <nav class="navbar px-4 py-4 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-xl">ArcadeNexus</span>
+      </a>
+      <div class="flex gap-6 items-center">
+        <a href="../index.html" class="text-gray-300 hover:text-white transition">Games</a>
+        <a href="index.html" class="text-cyan-400 font-bold border-b-2 border-cyan-400">Blog</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-12 w-full">
+    
+    <article class="bg-nexus-card rounded-2xl border border-white/10 shadow-2xl p-6 md:p-12">
+      <header class="mb-10 text-center">
+        <span class="text-yellow-400 uppercase tracking-widest text-xs font-bold bg-yellow-900/30 px-3 py-1 rounded-full">Cinematic Aesthetics</span>
+        <h1 class="text-4xl md:text-5xl font-extrabold font-heading text-white mt-6 mb-4 leading-tight">Implementing Dynamic Lighting in HTML5 Canvas</h1>
+        <p class="text-gray-500 text-sm">Published by ArcadeNexus €¢ June 26, 2026</p>
+      </header>
+
+      <div class="prose prose-invert prose-yellow max-w-none text-lg leading-relaxed">
+        
+        <p>In the realm of modern game engines like Unity or Unreal, adding dynamic lighting to a scene is as simple as dragging a Point Light object from a menu and dropping it onto the screen. The engine's complex shaders handle all the heavy mathematical lifting. But when you are building a custom 2D engine from scratch using the raw HTML5 Canvas API, you don't have built-in shaders. If you want a character holding a torch to illuminate a dark dungeon, you have to engineer the illusion yourself.</p>
+
+        <p>Adding dynamic lighting to a 2D web game is arguably the single most impactful visual upgrade you can make. It instantly transforms flat, static pixel art into an atmospheric, moody, and highly cinematic experience. Fortunately, doing this without frying the CPU doesn't require WebGL; it simply requires a deep understanding of Canvas blend modes and a hidden, off-screen layer.</p>
+
+        <div class="my-8 ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[120px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+          <!-- AdSense: ca-pub-XXXXXXXXXXXXXXXX -->
+          <span class="opacity-50">Advertisement</span>
+        </div>
+
+        <h2 class="text-3xl font-bold font-heading text-white mt-12 mb-6">The Multiply Blend Mode Trick</h2>
+
+        <p>The core concept behind 2D Canvas lighting is the "Multiply" blend mode. In digital art, multiplying two layers together takes the color values of the top layer and mathematically darkens the layer beneath it. If the top layer is pure white, the bottom layer remains unchanged. If the top layer is pure black, the bottom layer becomes completely invisible.</p>
+
+        <p>To light a dungeon, we first draw our entire game world (the floor, the walls, the player, the enemies) to the main canvas exactly as we normally would. Everything is bright and fully visible. Next, we create a second, entirely separate canvas in memory (an off-screen canvas) that is the exact same size as the main screen. We fill this entire off-screen canvas with a solid, dark color—perhaps a very dark, semi-transparent navy blue (e.g., `rgba(0, 0, 50, 0.9)`). This represents our ambient darkness.</p>
+
+        <p>If we simply stamp this dark canvas over our game world, the whole screen gets dark. But we don't want the whole screen dark; we want a circle of light around our player. This is where the magic happens.</p>
+
+        <h3 class="text-2xl font-semibold text-yellow-300 mt-8 mb-4">Punching Holes with 'destination-out'</h3>
+
+        <p>Before we stamp the darkness over the game, we need to "punch a hole" in it. We do this by changing the <code>globalCompositeOperation</code> property of the off-screen darkness canvas to <code>'destination-out'</code>. This specific blend mode tells the canvas: "Any new shape I draw will act like an eraser, making the existing pixels transparent."</p>
+
+        <p>We then draw a circle on the darkness canvas exactly at the X and Y coordinates of the player character. But we don't draw a solid white circle; that would create a harsh, jagged edge of light. Instead, we use the <code>createRadialGradient()</code> API. We create a gradient that is fully opaque white in the very center, and slowly fades to completely transparent at the outer edges.</p>
+
+        <p>Because the blend mode is set to <code>'destination-out'</code>, this radial gradient literally erases a soft, feathered hole through the solid navy blue darkness. Finally, we take this modified darkness canvas and draw it over our main game screen using the normal blend mode. The result? The entire dungeon is plunged into oppressive navy blue darkness, except for a perfectly smooth, feathered circle of visibility emanating directly from the player's torch.</p>
+
+        <h2 class="text-3xl font-bold font-heading text-white mt-12 mb-6">Adding Life to the Light</h2>
+
+        <p>A perfectly static circle of light looks artificial. Real fire flickers, breathes, and dances. To make the torchlight feel cinematic, we must animate the radial gradient using mathematical functions.</p>
+
+        <p>Every frame, we apply a subtle randomized oscillation to the radius of the gradient. We can use <code>Math.sin()</code> tied to the current timestamp to create a smooth breathing effect, and mix in a tiny bit of <code>Math.random()</code> to create sudden, chaotic flickers. When the light source rapidly expands and contracts by just a few pixels, the shadows in the dungeon appear to dance. It triggers a primal psychological response in the player, making the environment feel incredibly tense and alive.</p>
+
+        <div class="my-8 ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[120px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+          <!-- AdSense: ca-pub-XXXXXXXXXXXXXXXX -->
+          <span class="opacity-50">Advertisement</span>
+        </div>
+
+        <h3 class="text-2xl font-semibold text-yellow-300 mt-8 mb-4">Colored Lights and Additive Blending</h3>
+
+        <p>Once you master the eraser technique for basic visibility, you can reverse the math to create intense, colored neon lights. If an enemy shoots a red plasma laser, you don't use 'destination-out'. You change the <code>globalCompositeOperation</code> of your main canvas to <code>'lighter'</code> (which performs additive blending).</p>
+
+        <p>You draw a soft red radial gradient directly over the laser projectile. Because the blend mode is additive, the red pixels of the gradient mathematically add their color values to the pixels beneath them. The dark floor suddenly glows a vibrant, super-saturated crimson as the laser flies over it. If a blue laser flies past the red laser, their intersecting light gradients will additively blend into a blinding, pure white core.</p>
+
+        <h2 class="text-3xl font-bold font-heading text-white mt-12 mb-6">Performance Considerations</h2>
+
+        <p>Drawing massive, screen-sized semi-transparent gradients every single frame is one of the most GPU-intensive things you can ask a 2D Canvas to do. If you have 50 glowing lasers on screen at once, mobile devices will begin to lag.</p>
+
+        <p>The optimization trick is to use pre-rendered gradient images. Instead of using JavaScript to calculate the complex math of a radial gradient every frame, you create a soft glowing orb in Photoshop, save it as a transparent PNG, and simply use <code>drawImage()</code> to scale and stamp that image onto the canvas using the 'lighter' blend mode. Stamping an image is infinitely faster than calculating a gradient. By combining pre-rendered light sprites with clever composite operations, you can achieve AAA cinematic lighting in a browser game without dropping a single frame.</p>
+
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="bg-nexus-card border-t border-white/10 mt-12 py-12 text-center text-gray-500">
+    <p>&copy; 2026 ArcadeNexus. All rights reserved.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

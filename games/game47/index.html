@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Orbiters — ArcadeNexus</title>
+  <meta name="description" content="Use gravity wells to steer the quantum particle to the target.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Quantum Orbiters",
+    "genre": "Puzzle",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-3xl">
+      <div class="flex gap-6">
+        <div>Level: <span id="scoreDisplay" class="font-bold text-sky-400">1</span></div>
+        <div>Gravity Wells: <span id="wellsDisplay" class="font-bold text-white">0/3</span></div>
+      </div>
+      <div class="flex gap-2">
+         <button id="launchBtn" class="game-btn bg-sky-600">LAUNCH PARTICLE</button>
+         <button id="resetBtn" class="game-btn bg-gray-700">Clear Wells</button>
+      </div>
+    </div>
+    
+    <div class="mt-4 w-full max-w-3xl relative">
+       <canvas id="gameCanvas_47" width="800" height="500" class="w-full bg-[#082f49] rounded-lg shadow-2xl border border-sky-900 cursor-crosshair"></canvas>
+    </div>
+    
+    <div class="text-center mt-4 text-gray-400 text-sm">
+        Click to place <span class="text-sky-400 font-bold">Gravity Wells</span>. Then click Launch. Use gravity to curve the particle into the Green Target!
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-sky-600">
+        <h2 id="endTitle" class="text-3xl font-bold font-heading mb-2 text-sky-500">TARGET HIT</h2>
+        <p class="text-gray-400 mb-6">Moving to next configuration...</p>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 47 Operations Manual</h3>
+        <p>Welcome to Arcade Room 47, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_47');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const wellsDisplay = document.getElementById('wellsDisplay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const endTitle = document.getElementById('endTitle');
+    
+    let level = 1;
+    let maxWells = 3;
+    let isGameOver = false;
+    let animationId;
+    
+    let isRunning = false;
+    
+    let wells = [];
+    
+    let startPoint = { x: 50, y: 250 };
+    let target = { x: 700, y: 250, r: 30 };
+    let obstacles = [];
+    
+    let particle = {
+        x: 50, y: 250,
+        vx: 200, vy: 0,
+        r: 5,
+        trail: []
+    };
+    
+    function generateLevel() {
+        wells = [];
+        isRunning = false;
+        
+        maxWells = 2 + Math.floor(level / 2);
+        wellsDisplay.textContent = `0/${maxWells}`;
+        
+        startPoint.x = 50;
+        startPoint.y = Math.random() * 300 + 100;
+        
+        target.x = 700;
+        target.y = Math.random() * 300 + 100;
+        
+        particle.x = startPoint.x;
+        particle.y = startPoint.y;
+        particle.vx = 200; // base launch velocity
+        particle.vy = (target.y - startPoint.y) * 0.2; // slight angle towards target initially
+        particle.trail = [];
+        
+        // Generate obstacles between them
+        obstacles = [];
+        let numObstacles = level;
+        for(let i=0; i<numObstacles; i++) {
+            obstacles.push({
+                x: 200 + Math.random() * 400,
+                y: Math.random() * 500,
+                r: Math.random() * 30 + 20
+            });
+        }
+    }
+    
+    let lastTime = 0;
+    
+    function loop(timestamp) {
+        if(isGameOver) return;
+        const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
+        lastTime = timestamp;
+        
+        if (isRunning) {
+            // Apply Gravity
+            wells.forEach(w => {
+                let dx = w.x - particle.x;
+                let dy = w.y - particle.y;
+                let distSq = dx*dx + dy*dy;
+                let dist = Math.sqrt(distSq);
+                
+                // Cap minimum distance to avoid infinite force
+                if (dist < 10) dist = 10;
+                
+                // Gravity formula: F = G * m1*m2 / r^2
+                // We simplify: accel = strength / r^2
+                let force = w.strength / distSq;
+                
+                particle.vx += (dx / dist) * force * dt;
+                particle.vy += (dy / dist) * force * dt;
+            });
+            
+            // Move
+            particle.x += particle.vx * dt;
+            particle.y += particle.vy * dt;
+            
+            // Trail
+            particle.trail.push({x: particle.x, y: particle.y});
+            if(particle.trail.length > 100) particle.trail.shift();
+            
+            // Collisions
+            // Walls
+            if (particle.x < 0 || particle.x > canvas.width || particle.y < 0 || particle.y > canvas.height) {
+                crash();
+            }
+            
+            // Obstacles
+            obstacles.forEach(obs => {
+                let dx = obs.x - particle.x;
+                let dy = obs.y - particle.y;
+                if (dx*dx + dy*dy < (obs.r + particle.r)*(obs.r + particle.r)) {
+                    crash();
+                }
+            });
+            
+            // Target
+            let tdx = target.x - particle.x;
+            let tdy = target.y - particle.y;
+            if (tdx*tdx + tdy*tdy < target.r * target.r) {
+                win();
+            }
+        }
+        
+        draw();
+        animationId = requestAnimationFrame(loop);
+    }
+    
+    function crash() {
+        isRunning = false;
+        // Explode visually
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, 40, 0, Math.PI*2);
+        ctx.fill();
+        
+        setTimeout(() => {
+            // Reset particle position, keep wells
+            resetParticle();
+        }, 500);
+    }
+    
+    function win() {
+        isRunning = false;
+        isGameOver = true;
+        gameOverOverlay.style.display = 'flex';
+        
+        setTimeout(() => {
+            level++;
+            scoreDisplay.textContent = level;
+            isGameOver = false;
+            gameOverOverlay.style.display = 'none';
+            generateLevel();
+            draw();
+        }, 2000);
+    }
+    
+    function resetParticle() {
+        isRunning = false;
+        particle.x = startPoint.x;
+        particle.y = startPoint.y;
+        particle.vx = 200;
+        particle.vy = (target.y - startPoint.y) * 0.2;
+        particle.trail = [];
+        draw();
+    }
+    
+    function draw() {
+        if(isRunning) {
+            // Motion blur effect
+            ctx.fillStyle = 'rgba(8, 47, 73, 0.2)'; // match bg
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        // Target
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = '#22c55e';
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.2)';
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(target.x, target.y, target.r, 0, Math.PI*2);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Start Emitter
+        ctx.shadowColor = '#38bdf8';
+        ctx.fillStyle = '#bae6fd';
+        ctx.beginPath();
+        ctx.arc(startPoint.x, startPoint.y, 10, 0, Math.PI*2);
+        ctx.fill();
+        
+        ctx.shadowBlur = 0; // reset
+        
+        // Obstacles
+        ctx.fillStyle = '#1e293b'; // Slate 800
+        ctx.strokeStyle = '#334155';
+        obstacles.forEach(obs => {
+            ctx.beginPath();
+            ctx.arc(obs.x, obs.y, obs.r, 0, Math.PI*2);
+            ctx.fill();
+            ctx.stroke();
+        });
+        
+        // Wells
+        wells.forEach(w => {
+            // Visual gravity field
+            let grad = ctx.createRadialGradient(w.x, w.y, 0, w.x, w.y, 80);
+            grad.addColorStop(0, 'rgba(56, 189, 248, 0.8)');
+            grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+            
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(w.x, w.y, 80, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Center core
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(w.x, w.y, 5, 0, Math.PI*2);
+            ctx.fill();
+        });
+        
+        // Trail
+        if (particle.trail.length > 0) {
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(particle.trail[0].x, particle.trail[0].y);
+            for(let i=1; i<particle.trail.length; i++) {
+                ctx.lineTo(particle.trail[i].x, particle.trail[i].y);
+            }
+            ctx.stroke();
+        }
+        
+        // Particle
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI*2);
+        ctx.fill();
+    }
+    
+    canvas.addEventListener('mousedown', (e) => {
+        if(isRunning || isGameOver) return;
+        
+        if (wells.length >= maxWells) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        
+        // Don't place on obstacles
+        let invalid = false;
+        obstacles.forEach(obs => {
+            let dx = x - obs.x; let dy = y - obs.y;
+            if(dx*dx + dy*dy < obs.r*obs.r) invalid = true;
+        });
+        
+        if(!invalid) {
+            wells.push({ x: x, y: y, strength: 100000 }); // Constant strength
+            wellsDisplay.textContent = `${wells.length}/${maxWells}`;
+            draw();
+        }
+    });
+    
+    document.getElementById('launchBtn').addEventListener('click', () => {
+        if(!isRunning && !isGameOver) {
+            resetParticle();
+            isRunning = true;
+        }
+    });
+    
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        if(!isGameOver) {
+            wells = [];
+            wellsDisplay.textContent = `0/${maxWells}`;
+            resetParticle();
+        }
+    });
+    
+    function init() {
+        level = 1;
+        scoreDisplay.textContent = level;
+        gameOverOverlay.style.display = 'none';
+        isGameOver = false;
+        
+        generateLevel();
+        
+        lastTime = performance.now();
+        cancelAnimationFrame(animationId);
+        loop(lastTime);
+    }
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

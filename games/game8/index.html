@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sky Bounce &mdash; ArcadeNexus</title>
+  <meta name="description" content="A fun and frustrating Flappy Bird variant online for free.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Sky Bounce",
+    "genre": "Action Arcade",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    #gameCanvas { touch-action: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Best</span>
+          <div id="bestScore" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button>
+    </div>
+
+    <div class="relative w-full aspect-[3/4] sm:aspect-square bg-nexus-elevated rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.1)] border border-white/10 overflow-hidden mb-4">
+      <canvas id="gameCanvas_8" class="block w-full h-full cursor-pointer"></canvas>
+      
+      <!-- Overlays -->
+      <div id="startOverlay" class="absolute inset-0 bg-black/50 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-3xl font-bold font-heading text-white drop-shadow-md animate-pulse">Tap to Flap</div>
+      </div>
+      
+      <div id="gameOver" class="absolute inset-0 bg-red-900/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-5xl font-bold mb-2 font-heading text-white drop-shadow-md">Crash!</div>
+        <p id="endScoreMsg" class="text-gray-200 mb-6 text-xl">Score: 0</p>
+        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 8 Operations Manual</h3>
+        <p>Welcome to Arcade Room 8, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_8');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const bestEl = document.getElementById('bestScore');
+    const endScoreMsg = document.getElementById('endScoreMsg');
+    
+    const startOverlay = document.getElementById('startOverlay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    // Internal resolution (portrait oriented for this game type)
+    canvas.width = 400;
+    canvas.height = 533;
+
+    let score = 0;
+    let bestScore = parseInt(localStorage.getItem('arcadenexus_game8_best')) || 0;
+    bestEl.textContent = bestScore;
+    
+    let gameState = 'START';
+    let animFrame = null;
+    let frames = 0;
+
+    // Game variables
+    const gravity = 0.5;
+    const flapImpulse = -8;
+    const scrollSpeed = 3.5;
+    const pipeWidth = 60;
+    const pipeGap = 160;
+
+    let bird = {
+      x: 80, y: canvas.height/2, r: 16,
+      velocity: 0,
+      flapTimer: 0 // for animation
+    };
+
+    let pipes = [];
+    let bgOffset = 0;
+
+    function init() {
+      bird.y = canvas.height / 2;
+      bird.velocity = 0;
+      bird.flapTimer = 0;
+      
+      pipes = [];
+      score = 0;
+      frames = 0;
+      scoreEl.textContent = score;
+
+      gameState = 'START';
+      startOverlay.style.opacity = '1';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+
+      if (animFrame) cancelAnimationFrame(animFrame);
+      requestAnimationFrame(gameLoop);
+    }
+
+    function flap() {
+      if (gameState === 'START') {
+        gameState = 'PLAYING';
+        startOverlay.style.opacity = '0';
+      }
+      if (gameState === 'PLAYING') {
+        bird.velocity = flapImpulse;
+        bird.flapTimer = 10;
+        // Optional: play sound here
+      }
+    }
+
+    function gameOver() {
+      gameState = 'GAMEOVER';
+      
+      if (score > bestScore) {
+        bestScore = score;
+        bestEl.textContent = bestScore;
+        localStorage.setItem('arcadenexus_game8_best', bestScore);
+      }
+      endScoreMsg.textContent = `Score: ${score}`;
+      
+      gameOverOverlay.style.opacity = '1';
+      gameOverOverlay.style.pointerEvents = 'auto';
+    }
+
+    function spawnPipe() {
+      let minH = 50;
+      let maxH = canvas.height - minH - pipeGap - 50; // 50 for ground
+      let topHeight = Math.floor(Math.random() * (maxH - minH + 1) + minH);
+      
+      pipes.push({
+        x: canvas.width,
+        w: pipeWidth,
+        topH: topHeight,
+        bottomY: topHeight + pipeGap,
+        passed: false
+      });
+    }
+
+    // Input Events
+    document.addEventListener('keydown', e => {
+      if(e.key === ' ' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        flap();
+      }
+    });
+    canvas.addEventListener('mousedown', flap);
+    canvas.addEventListener('touchstart', e => { e.preventDefault(); flap(); }, {passive: false});
+
+    document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('click', init);
+
+    // Physics
+    function update() {
+      bgOffset = (bgOffset + scrollSpeed * 0.5) % canvas.width;
+
+      if (gameState === 'START') {
+        // Hover effect
+        bird.y = canvas.height/2 + Math.sin(frames * 0.05) * 10;
+        frames++;
+        return;
+      }
+      if (gameState !== 'PLAYING') return;
+
+      frames++;
+      bird.flapTimer--;
+
+      // Bird Physics
+      bird.velocity += gravity;
+      bird.y += bird.velocity;
+
+      // Ground/Ceiling Collision
+      let groundY = canvas.height - 40;
+      if (bird.y + bird.r >= groundY || bird.y - bird.r <= 0) {
+        gameOver();
+      }
+
+      // Pipes
+      if (frames % 90 === 0) { // spawn every 90 frames
+        spawnPipe();
+      }
+
+      for (let i = pipes.length - 1; i >= 0; i--) {
+        let p = pipes[i];
+        p.x -= scrollSpeed;
+
+        // Collision detection (circle vs AABB approximation)
+        let cx = bird.x;
+        let cy = bird.y;
+        
+        // Top pipe
+        if (cx + bird.r > p.x && cx - bird.r < p.x + p.w && cy - bird.r < p.topH) {
+          gameOver();
+        }
+        // Bottom pipe
+        if (cx + bird.r > p.x && cx - bird.r < p.x + p.w && cy + bird.r > p.bottomY) {
+          gameOver();
+        }
+
+        // Score
+        if (p.x + p.w < bird.x && !p.passed) {
+          p.passed = true;
+          score++;
+          scoreEl.textContent = score;
+        }
+
+        // Cleanup
+        if (p.x + p.w < 0) {
+          pipes.splice(i, 1);
+        }
+      }
+    }
+
+    // Rendering
+    function draw() {
+      // Sky BG
+      let skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      skyGrad.addColorStop(0, '#0f172a'); // slate 900
+      skyGrad.addColorStop(1, '#1e3a8a'); // blue 900
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Clouds (parallax background)
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.beginPath();
+      ctx.arc(100 - bgOffset, 150, 40, 0, Math.PI*2);
+      ctx.arc(140 - bgOffset, 160, 30, 0, Math.PI*2);
+      ctx.arc(300 - bgOffset*1.2, 80, 50, 0, Math.PI*2);
+      ctx.fill();
+      
+      // Draw Pipes
+      pipes.forEach(p => {
+        let pGrad = ctx.createLinearGradient(p.x, 0, p.x + p.w, 0);
+        pGrad.addColorStop(0, '#10b981'); // emerald 500
+        pGrad.addColorStop(1, '#047857'); // emerald 700
+
+        ctx.fillStyle = pGrad;
+        // Top Pipe
+        ctx.fillRect(p.x, 0, p.w, p.topH);
+        ctx.fillRect(p.x - 4, p.topH - 20, p.w + 8, 20); // Cap
+
+        // Bottom Pipe
+        ctx.fillRect(p.x, p.bottomY, p.w, canvas.height - p.bottomY);
+        ctx.fillRect(p.x - 4, p.bottomY, p.w + 8, 20); // Cap
+      });
+
+      // Ground
+      let groundY = canvas.height - 40;
+      ctx.fillStyle = '#064e3b'; // emerald 900
+      ctx.fillRect(0, groundY, canvas.width, 40);
+      
+      // Ground stripes (scrolling)
+      ctx.fillStyle = '#065f46';
+      for(let i=0; i<canvas.width + 40; i+=40) {
+        ctx.fillRect(i - (bgOffset*1.5 % 40), groundY, 20, 40);
+      }
+
+      // Draw Bird
+      ctx.save();
+      ctx.translate(bird.x, bird.y);
+      
+      // Rotation based on velocity
+      if (gameState === 'PLAYING') {
+        let rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, (bird.velocity * 0.1)));
+        ctx.rotate(rotation);
+      }
+
+      // Body
+      ctx.fillStyle = '#facc15'; // yellow 400
+      ctx.beginPath();
+      ctx.arc(0, 0, bird.r, 0, Math.PI*2);
+      ctx.fill();
+      
+      // Eye
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(6, -4, 5, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(8, -4, 2, 0, Math.PI*2);
+      ctx.fill();
+
+      // Wing (flapping animation)
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      if (bird.flapTimer > 0) {
+        // Wing UP
+        ctx.ellipse(-4, -2, 8, 5, -Math.PI/6, 0, Math.PI*2);
+      } else {
+        // Wing DOWN
+        ctx.ellipse(-4, 4, 8, 5, Math.PI/6, 0, Math.PI*2);
+      }
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  </script>
+</body>
+</html>

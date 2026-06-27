@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Film Reel Splicer — ArcadeNexus</title>
+  <meta name="description" content="Rotate the film strips to create a continuous scene before the director yells action!">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Film Reel Splicer",
+    "genre": "Puzzle",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-lg">
+      <div class="flex gap-6">
+        <div>Level: <span id="scoreDisplay" class="font-bold text-amber-400">1</span></div>
+        <div>Time: <span id="timeDisplay" class="font-bold text-white">60s</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">New Game</button>
+    </div>
+    
+    <canvas id="gameCanvas_33" width="400" height="400" class="mt-4 bg-[#111] shadow-2xl border-4 border-[#222] rounded-lg cursor-pointer"></canvas>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel">
+        <h2 id="endTitle" class="text-3xl font-bold font-heading mb-2 text-white">CUT!</h2>
+        <p class="text-gray-400 mb-6">Levels Completed: <span id="finalScore" class="text-amber-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full">Edit Next Scene</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 33 Operations Manual</h3>
+        <p>Welcome to Arcade Room 33, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_33');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const endTitle = document.getElementById('endTitle');
+    const finalScore = document.getElementById('finalScore');
+    
+    // Grid settings
+    let rows = 5;
+    let cols = 5;
+    let cellSize = canvas.width / cols;
+    let grid = [];
+    
+    let level = 1;
+    let timeLeft = 60;
+    let timerInterval;
+    let isGameOver = false;
+    let pathFound = false;
+    
+    // Types of tiles: 
+    // binary encoding for connections: [Top, Right, Bottom, Left] -> 0 or 1
+    // 0: Empty, 1: Straight (H), 2: Straight (V), 3: Corner (TR), 4: Corner (RB), 5: Corner (BL), 6: Corner (LT)
+    const TILE_TYPES = [
+      [0, 1, 0, 1], // Horizontal
+      [1, 0, 1, 0], // Vertical
+      [1, 1, 0, 0], // Top-Right
+      [0, 1, 1, 0], // Right-Bottom
+      [0, 0, 1, 1], // Bottom-Left
+      [1, 0, 0, 1]  // Left-Top
+    ];
+    
+    let startCell = {r: 0, c: 0};
+    let endCell = {r: rows-1, c: cols-1};
+    
+    function generateGrid() {
+      // Increase difficulty
+      if (level > 3) { rows = 6; cols = 6; }
+      if (level > 6) { rows = 7; cols = 7; }
+      cellSize = canvas.width / cols;
+      
+      grid = [];
+      for(let r=0; r<rows; r++) {
+        let row = [];
+        for(let c=0; c<cols; c++) {
+          row.push({
+            type: Math.floor(Math.random() * TILE_TYPES.length),
+            rotation: Math.floor(Math.random() * 4), // 0 to 3 (* 90 deg)
+            connected: false
+          });
+        }
+        grid.push(row);
+      }
+      
+      // Ensure start and end are straight lines for simplicity
+      grid[0][0].type = 1; // vertical
+      grid[0][0].rotation = 0;
+      grid[rows-1][cols-1].type = 1;
+      grid[rows-1][cols-1].rotation = 0;
+    }
+    
+    function getConnections(r, c) {
+      const tile = grid[r][c];
+      const base = TILE_TYPES[tile.type];
+      // Rotate array to right by 'rotation' amount
+      let rot = tile.rotation % 4;
+      let conns = [...base];
+      for(let i=0; i<rot; i++) {
+        conns.unshift(conns.pop()); // Shift right
+      }
+      return conns; // [Top, Right, Bottom, Left]
+    }
+    
+    function checkWin() {
+      // Reset connections
+      for(let r=0; r<rows; r++) {
+        for(let c=0; c<cols; c++) {
+          grid[r][c].connected = false;
+        }
+      }
+      
+      // Flood fill from start
+      let stack = [{r: 0, c: 0}];
+      let visited = new Set();
+      grid[0][0].connected = true;
+      
+      while(stack.length > 0) {
+        let curr = stack.pop();
+        let key = `${curr.r},${curr.c}`;
+        if (visited.has(key)) continue;
+        visited.add(key);
+        
+        let conns = getConnections(curr.r, curr.c);
+        
+        // Check Top
+        if (conns[0] && curr.r > 0) {
+          let neighbor = getConnections(curr.r-1, curr.c);
+          if (neighbor[2]) { // neighbor Bottom
+            grid[curr.r-1][curr.c].connected = true;
+            if(!visited.has(`${curr.r-1},${curr.c}`)) stack.push({r: curr.r-1, c: curr.c});
+          }
+        }
+        // Check Right
+        if (conns[1] && curr.c < cols-1) {
+          let neighbor = getConnections(curr.r, curr.c+1);
+          if (neighbor[3]) { // neighbor Left
+            grid[curr.r][curr.c+1].connected = true;
+            if(!visited.has(`${curr.r},${curr.c+1}`)) stack.push({r: curr.r, c: curr.c+1});
+          }
+        }
+        // Check Bottom
+        if (conns[2] && curr.r < rows-1) {
+          let neighbor = getConnections(curr.r+1, curr.c);
+          if (neighbor[0]) { // neighbor Top
+            grid[curr.r+1][curr.c].connected = true;
+            if(!visited.has(`${curr.r+1},${curr.c}`)) stack.push({r: curr.r+1, c: curr.c});
+          }
+        }
+        // Check Left
+        if (conns[3] && curr.c > 0) {
+          let neighbor = getConnections(curr.r, curr.c-1);
+          if (neighbor[1]) { // neighbor Right
+            grid[curr.r][curr.c-1].connected = true;
+            if(!visited.has(`${curr.r},${curr.c-1}`)) stack.push({r: curr.r, c: curr.c-1});
+          }
+        }
+      }
+      
+      // Check if end is connected
+      if (grid[rows-1][cols-1].connected) {
+        let endConns = getConnections(rows-1, cols-1);
+        // Ensure it flows OUT the bottom
+        if(endConns[2]) {
+           pathFound = true;
+           setTimeout(() => {
+             level++;
+             scoreDisplay.textContent = level;
+             timeLeft += 15; // Bonus time
+             generateGrid();
+             pathFound = false;
+             draw();
+           }, 1000); // 1 sec delay to admire
+        }
+      }
+    }
+    
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for(let r=0; r<rows; r++) {
+        for(let c=0; c<cols; c++) {
+          const tile = grid[r][c];
+          const cx = c * cellSize + cellSize/2;
+          const cy = r * cellSize + cellSize/2;
+          
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(tile.rotation * Math.PI / 2);
+          
+          // Draw Film Strip background
+          ctx.fillStyle = '#222';
+          ctx.fillRect(-cellSize/2 + 2, -cellSize/2 + 2, cellSize - 4, cellSize - 4);
+          
+          // Film holes (sprockets)
+          ctx.fillStyle = '#111';
+          for(let i=-cellSize/2+10; i<cellSize/2; i+=15) {
+            ctx.fillRect(i, -cellSize/2 + 4, 8, 8); // Top edge
+            ctx.fillRect(i, cellSize/2 - 12, 8, 8); // Bottom edge
+          }
+          
+          // Draw Path
+          ctx.strokeStyle = tile.connected ? '#fbbf24' : '#4b5563'; // Amber if connected
+          ctx.lineWidth = 12;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          
+          let conns = TILE_TYPES[tile.type]; // Draw base type, rotation handles the rest
+          if(conns[0]) { ctx.moveTo(0,0); ctx.lineTo(0, -cellSize/2); }
+          if(conns[1]) { ctx.moveTo(0,0); ctx.lineTo(cellSize/2, 0); }
+          if(conns[2]) { ctx.moveTo(0,0); ctx.lineTo(0, cellSize/2); }
+          if(conns[3]) { ctx.moveTo(0,0); ctx.lineTo(-cellSize/2, 0); }
+          
+          // If corner, draw smooth curve instead
+          if(tile.type >= 2) {
+             ctx.beginPath();
+             if(tile.type === 2) ctx.arc(cellSize/2, -cellSize/2, cellSize/2, Math.PI, Math.PI/2, true); // TR
+             if(tile.type === 3) ctx.arc(cellSize/2, cellSize/2, cellSize/2, Math.PI*1.5, Math.PI, true); // RB
+             if(tile.type === 4) ctx.arc(-cellSize/2, cellSize/2, cellSize/2, 0, Math.PI*1.5, true); // BL
+             if(tile.type === 5) ctx.arc(-cellSize/2, -cellSize/2, cellSize/2, Math.PI/2, 0, true); // LT
+          }
+          ctx.stroke();
+          
+          ctx.restore();
+          
+          // Highlight Start and End
+          if(r===0 && c===0) {
+            ctx.fillStyle = 'rgba(74, 222, 128, 0.3)';
+            ctx.fillRect(c*cellSize, r*cellSize, cellSize, cellSize);
+            ctx.fillStyle = '#4ade80';
+            ctx.font = '14px Arial';
+            ctx.fillText("IN", c*cellSize+5, r*cellSize+20);
+          }
+          if(r===rows-1 && c===cols-1) {
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.3)';
+            ctx.fillRect(c*cellSize, r*cellSize, cellSize, cellSize);
+            ctx.fillStyle = '#ef4444';
+            ctx.font = '14px Arial';
+            ctx.fillText("OUT", c*cellSize+5, r*cellSize+cellSize-10);
+          }
+        }
+      }
+    }
+    
+    canvas.addEventListener('mousedown', (e) => {
+      if(isGameOver || pathFound) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const c = Math.floor(x / cellSize);
+      const r = Math.floor(y / cellSize);
+      
+      if(r >= 0 && r < rows && c >= 0 && c < cols) {
+        grid[r][c].rotation = (grid[r][c].rotation + 1) % 4;
+        checkWin();
+        draw();
+      }
+    });
+    
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if(isGameOver || pathFound) return;
+        timeLeft--;
+        timeDisplay.textContent = timeLeft + 's';
+        if(timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+    
+    function endGame() {
+      isGameOver = true;
+      clearInterval(timerInterval);
+      finalScore.textContent = level - 1;
+      endTitle.textContent = "TIME'S UP!";
+      gameOverOverlay.style.display = 'flex';
+    }
+    
+    function init() {
+      level = 1;
+      timeLeft = 60;
+      isGameOver = false;
+      pathFound = false;
+      scoreDisplay.textContent = level;
+      timeDisplay.textContent = timeLeft + 's';
+      gameOverOverlay.style.display = 'none';
+      generateGrid();
+      checkWin(); // Initial check
+      draw();
+      startTimer();
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Rickshaw Traffic Weaver — ArcadeNexus</title>
+  <meta name="description" content="Dodge traffic at high speeds in this intense top-down arcade weaver.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Auto-Rickshaw Traffic Weaver",
+    "genre": "Action",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container">
+    <div class="game-header">
+      <div class="flex gap-6">
+        <div>Score: <span id="scoreDisplay" class="font-bold text-cyan-400">0</span></div>
+        <div>Best: <span id="bestDisplay" class="font-bold text-gray-400">0</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">New Game</button>
+    </div>
+    
+    <canvas id="gameCanvas_31"></canvas>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel">
+        <h2 class="text-3xl font-bold font-heading mb-2 text-white">CRASHED!</h2>
+        <p class="text-gray-400 mb-6">Score: <span id="finalScore" class="text-cyan-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 31 Operations Manual</h3>
+        <p>Welcome to Arcade Room 31, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_31');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const bestDisplay = document.getElementById('bestDisplay');
+    const finalScore = document.getElementById('finalScore');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    let CANVAS_WIDTH = 400;
+    let CANVAS_HEIGHT = 600;
+    
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      CANVAS_WIDTH = Math.min(container.clientWidth, 500);
+      CANVAS_HEIGHT = Math.min(window.innerHeight * 0.7, 700);
+      canvas.width = CANVAS_WIDTH;
+      canvas.height = CANVAS_HEIGHT;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let score = 0;
+    let bestScore = localStorage.getItem('arcadenexus_game31_best') || 0;
+    bestDisplay.textContent = bestScore;
+    
+    let isGameOver = false;
+    let animationId;
+    let speedMultiplier = 1;
+    let roadOffset = 0;
+    
+    const rickshaw = {
+      width: 40,
+      height: 70,
+      x: 0,
+      y: 0,
+      speed: 300,
+      color: '#eab308' // Yellow
+    };
+    
+    let traffic = [];
+    const lanes = 3;
+    let laneWidth = 0;
+    
+    const keys = {
+      ArrowLeft: false,
+      ArrowRight: false,
+      a: false,
+      d: false
+    };
+    
+    window.addEventListener('keydown', (e) => {
+      if(keys.hasOwnProperty(e.key)) keys[e.key] = true;
+    });
+    window.addEventListener('keyup', (e) => {
+      if(keys.hasOwnProperty(e.key)) keys[e.key] = false;
+    });
+    
+    // Touch controls
+    let touchX = null;
+    canvas.addEventListener('touchstart', (e) => {
+      touchX = e.touches[0].clientX;
+    }, {passive:true});
+    canvas.addEventListener('touchmove', (e) => {
+      if(!touchX) return;
+      const currentX = e.touches[0].clientX;
+      const diff = currentX - touchX;
+      rickshaw.x += diff * 1.5;
+      touchX = currentX;
+    }, {passive:true});
+    canvas.addEventListener('touchend', () => { touchX = null; });
+    
+    function spawnCar() {
+      const lane = Math.floor(Math.random() * lanes);
+      const isTruck = Math.random() > 0.8;
+      traffic.push({
+        x: lane * laneWidth + (laneWidth - 40)/2,
+        y: -100,
+        width: 40,
+        height: isTruck ? 100 : 70,
+        speed: (Math.random() * 100 + 150) * speedMultiplier,
+        color: `hsl(${Math.random() * 360}, 70%, 50%)`
+      });
+    }
+
+    let lastSpawn = 0;
+    
+    function init() {
+      laneWidth = CANVAS_WIDTH / lanes;
+      rickshaw.x = CANVAS_WIDTH / 2 - rickshaw.width / 2;
+      rickshaw.y = CANVAS_HEIGHT - 100;
+      score = 0;
+      speedMultiplier = 1;
+      traffic = [];
+      isGameOver = false;
+      gameOverOverlay.style.display = 'none';
+      scoreDisplay.textContent = score;
+      lastTime = performance.now();
+      cancelAnimationFrame(animationId);
+      loop(lastTime);
+    }
+    
+    let lastTime = 0;
+    function loop(timestamp) {
+      if(isGameOver) return;
+      const dt = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+      
+      update(dt);
+      draw();
+      
+      animationId = requestAnimationFrame(loop);
+    }
+    
+    function update(dt) {
+      // Movement
+      if (keys.ArrowLeft || keys.a) rickshaw.x -= rickshaw.speed * dt;
+      if (keys.ArrowRight || keys.d) rickshaw.x += rickshaw.speed * dt;
+      
+      // Boundaries
+      if (rickshaw.x < 0) rickshaw.x = 0;
+      if (rickshaw.x + rickshaw.width > CANVAS_WIDTH) rickshaw.x = CANVAS_WIDTH - rickshaw.width;
+      
+      // Road animation
+      roadOffset += 300 * speedMultiplier * dt;
+      if (roadOffset > 100) roadOffset -= 100;
+      
+      // Spawn traffic
+      lastSpawn -= dt;
+      if (lastSpawn <= 0) {
+        spawnCar();
+        lastSpawn = (Math.random() * 0.8 + 0.4) / speedMultiplier;
+      }
+      
+      // Update traffic
+      for (let i = traffic.length - 1; i >= 0; i--) {
+        const car = traffic[i];
+        car.y += car.speed * dt + (100 * speedMultiplier * dt); // Their speed + road speed
+        
+        // Collision
+        if (
+          rickshaw.x < car.x + car.width &&
+          rickshaw.x + rickshaw.width > car.x &&
+          rickshaw.y < car.y + car.height &&
+          rickshaw.y + rickshaw.height > car.y
+        ) {
+          gameOver();
+          return;
+        }
+        
+        // Pass car
+        if (car.y > CANVAS_HEIGHT) {
+          traffic.splice(i, 1);
+          score += 10;
+          scoreDisplay.textContent = score;
+          speedMultiplier += 0.02; // Increase difficulty
+        }
+      }
+    }
+    
+    function draw() {
+      // Background (Road)
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      
+      // Lane markings
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      for (let i = 1; i < lanes; i++) {
+        for (let y = roadOffset - 100; y < CANVAS_HEIGHT; y += 100) {
+          ctx.fillRect(i * laneWidth - 2, y, 4, 50);
+        }
+      }
+      
+      // Draw traffic
+      traffic.forEach(car => {
+        ctx.fillStyle = car.color;
+        ctx.beginPath();
+        ctx.roundRect(car.x, car.y, car.width, car.height, 5);
+        ctx.fill();
+        // Windshield
+        ctx.fillStyle = '#000';
+        ctx.fillRect(car.x + 5, car.y + car.height - 20, car.width - 10, 15);
+      });
+      
+      // Draw rickshaw
+      ctx.fillStyle = rickshaw.color;
+      ctx.beginPath();
+      ctx.roundRect(rickshaw.x, rickshaw.y, rickshaw.width, rickshaw.height, 8);
+      ctx.fill();
+      
+      // Rickshaw roof / windshield
+      ctx.fillStyle = '#06060e';
+      ctx.fillRect(rickshaw.x + 5, rickshaw.y + 10, rickshaw.width - 10, 20);
+      
+      // Rickshaw wheel covers
+      ctx.fillStyle = '#111';
+      ctx.fillRect(rickshaw.x - 2, rickshaw.y + rickshaw.height - 20, 4, 15);
+      ctx.fillRect(rickshaw.x + rickshaw.width - 2, rickshaw.y + rickshaw.height - 20, 4, 15);
+    }
+    
+    function gameOver() {
+      isGameOver = true;
+      if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem('arcadenexus_game31_best', bestScore);
+        bestDisplay.textContent = bestScore;
+      }
+      finalScore.textContent = score;
+      
+      // Explosion effect
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
+      ctx.beginPath();
+      ctx.arc(rickshaw.x + rickshaw.width/2, rickshaw.y + rickshaw.height/2, 60, 0, Math.PI*2);
+      ctx.fill();
+      
+      setTimeout(() => {
+        gameOverOverlay.style.display = 'flex';
+      }, 500);
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

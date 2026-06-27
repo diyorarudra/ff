@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Gravity Flip &mdash; ArcadeNexus</title>
+  <meta name="description" content="Test your reflexes in Gravity Flip, a fast-paced endless runner game.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Gravity Flip",
+    "genre": "Action Endless Runner",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    #gameCanvas { touch-action: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[800px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Best</span>
+          <div id="bestScore" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button>
+    </div>
+
+    <div class="relative w-full aspect-[21/9] sm:aspect-[16/9] bg-nexus-elevated rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.1)] border border-white/10 overflow-hidden mb-4">
+      <canvas id="gameCanvas_7" class="block w-full h-full cursor-pointer"></canvas>
+      
+      <!-- Overlays -->
+      <div id="startOverlay" class="absolute inset-0 bg-black/50 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-3xl font-bold font-heading text-white drop-shadow-md animate-pulse">Tap or Space to Flip</div>
+      </div>
+      
+      <div id="gameOver" class="absolute inset-0 bg-red-900/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+        <div class="text-5xl font-bold mb-2 font-heading text-white drop-shadow-md">Crashed!</div>
+        <button id="tryAgainBtn" class="mt-6 bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 7 Operations Manual</h3>
+        <p>Welcome to Arcade Room 7, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_7');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const bestEl = document.getElementById('bestScore');
+    
+    const startOverlay = document.getElementById('startOverlay');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    // Virtual internal resolution
+    canvas.width = 800;
+    canvas.height = 400;
+
+    let score = 0;
+    let bestScore = parseInt(localStorage.getItem('arcadenexus_game7_best')) || 0;
+    bestEl.textContent = bestScore;
+    
+    let gameState = 'START'; // START, PLAYING, GAMEOVER
+    let animFrame = null;
+    let gameSpeed = 6;
+    let frames = 0;
+
+    const gravity = 0.6;
+    const player = {
+      x: 100, y: 200, size: 24,
+      velocity: 0,
+      gravityDir: 1, // 1 = down, -1 = up
+      trail: []
+    };
+
+    let obstacles = [];
+    let particles = []; // background stars
+
+    function init() {
+      player.y = canvas.height / 2;
+      player.velocity = 0;
+      player.gravityDir = 1;
+      player.trail = [];
+      
+      obstacles = [];
+      score = 0;
+      gameSpeed = 6;
+      frames = 0;
+      scoreEl.textContent = score;
+
+      gameState = 'START';
+      startOverlay.style.opacity = '1';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+
+      // Init background stars
+      particles = [];
+      for(let i=0; i<40; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          speed: Math.random() * 2 + 0.5,
+          size: Math.random() * 2 + 1
+        });
+      }
+
+      if (animFrame) cancelAnimationFrame(animFrame);
+      requestAnimationFrame(gameLoop);
+    }
+
+    function startGame() {
+      if (gameState === 'START') {
+        gameState = 'PLAYING';
+        startOverlay.style.opacity = '0';
+      } else if (gameState === 'PLAYING') {
+        player.gravityDir *= -1; // Flip
+        player.velocity = 0; // reset velocity on flip for crisp feel
+      }
+    }
+
+    function gameOver() {
+      gameState = 'GAMEOVER';
+      
+      // Screen shake or flash effect could go here
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.5)'; // red flash
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestEl.textContent = bestScore;
+        localStorage.setItem('arcadenexus_game7_best', bestScore);
+      }
+      
+      gameOverOverlay.style.opacity = '1';
+      gameOverOverlay.style.pointerEvents = 'auto';
+    }
+
+    function spawnObstacle() {
+      // Gap size decreases slightly as game gets faster, but min 120
+      let gap = Math.max(120, 180 - (gameSpeed - 6) * 10); 
+      let minH = 40;
+      // Random gap position
+      let gapY = Math.floor(Math.random() * (canvas.height - minH * 2 - gap)) + minH;
+      
+      obstacles.push({
+        x: canvas.width,
+        w: 60,
+        topH: gapY,
+        bottomY: gapY + gap,
+        passed: false
+      });
+    }
+
+    // Inputs
+    document.addEventListener('keydown', e => {
+      if(e.key === ' ' || e.key === 'ArrowUp') {
+        e.preventDefault(); // stop scroll
+        startGame();
+      }
+    });
+    canvas.addEventListener('mousedown', startGame);
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      startGame();
+    }, {passive: false});
+
+    document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('click', init);
+
+    // Update Logic
+    function update() {
+      if (gameState !== 'PLAYING') return;
+
+      frames++;
+      
+      // Physics
+      player.velocity += gravity * player.gravityDir;
+      player.y += player.velocity;
+
+      // Floor/Ceiling collision
+      if (player.y + player.size/2 >= canvas.height) {
+        player.y = canvas.height - player.size/2;
+        gameOver();
+      } else if (player.y - player.size/2 <= 0) {
+        player.y = player.size/2;
+        gameOver();
+      }
+
+      // Update trail
+      player.trail.push({x: player.x, y: player.y});
+      if (player.trail.length > 8) player.trail.shift();
+
+      // Obstacles
+      if (frames % 90 === 0) {
+        spawnObstacle();
+        gameSpeed += 0.05; // slowly increase speed
+      }
+
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        let obs = obstacles[i];
+        obs.x -= gameSpeed;
+
+        // Collision
+        // Player rect: (x-size/2, y-size/2, size, size)
+        let px = player.x - player.size/2;
+        let py = player.y - player.size/2;
+        
+        // hit top pipe
+        if (px < obs.x + obs.w && px + player.size > obs.x && py < obs.topH) {
+          gameOver();
+        }
+        // hit bottom pipe
+        if (px < obs.x + obs.w && px + player.size > obs.x && py + player.size > obs.bottomY) {
+          gameOver();
+        }
+
+        // Score
+        if (obs.x + obs.w < player.x && !obs.passed) {
+          obs.passed = true;
+          score++;
+          scoreEl.textContent = score;
+        }
+
+        // Remove off-screen
+        if (obs.x + obs.w < 0) {
+          obstacles.splice(i, 1);
+        }
+      }
+
+      // Background particles
+      particles.forEach(p => {
+        p.x -= p.speed + (gameSpeed * 0.2);
+        if (p.x < 0) {
+          p.x = canvas.width;
+          p.y = Math.random() * canvas.height;
+        }
+      });
+    }
+
+    // Rendering
+    function draw() {
+      // BG
+      ctx.fillStyle = '#06060e';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Stars
+      ctx.fillStyle = '#475569';
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      // Obstacles
+      obstacles.forEach(obs => {
+        // Gradient for pipes
+        let gradTop = ctx.createLinearGradient(obs.x, 0, obs.x + obs.w, 0);
+        gradTop.addColorStop(0, '#3b0764'); // purple-950
+        gradTop.addColorStop(1, '#6b21a8'); // purple-800
+        
+        ctx.fillStyle = gradTop;
+        // Top block
+        ctx.fillRect(obs.x, 0, obs.w, obs.topH);
+        // Bottom block
+        ctx.fillRect(obs.x, obs.bottomY, obs.w, canvas.height - obs.bottomY);
+        
+        // Edge highlights
+        ctx.fillStyle = '#a855f7'; // bright purple
+        ctx.fillRect(obs.x, obs.topH - 4, obs.w, 4);
+        ctx.fillRect(obs.x, obs.bottomY, obs.w, 4);
+      });
+
+      // Trail
+      if (gameState === 'PLAYING') {
+        player.trail.forEach((p, idx) => {
+          ctx.globalAlpha = (idx / player.trail.length) * 0.4;
+          ctx.fillStyle = '#22d3ee';
+          ctx.fillRect(p.x - player.size/2, p.y - player.size/2, player.size, player.size);
+        });
+        ctx.globalAlpha = 1;
+      }
+
+      // Player
+      ctx.fillStyle = '#22d3ee'; // cyan-400
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#22d3ee';
+      ctx.fillRect(player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+      
+      // Eye (shows direction)
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#fff';
+      let eyeY = player.gravityDir === 1 ? player.y + player.size/4 : player.y - player.size/4;
+      ctx.fillRect(player.x + player.size/4, eyeY - 2, 4, 4);
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  </script>
+</body>
+</html>

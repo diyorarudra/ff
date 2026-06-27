@@ -1,0 +1,415 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Word Search &mdash; ArcadeNexus</title>
+  <meta name="description" content="Classic Word Search puzzle game. Find all the hidden words!">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Word Search",
+    "genre": "Puzzle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    #gameCanvas { touch-action: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[800px] mx-auto px-4 py-6 flex flex-col lg:flex-row items-center lg:items-start gap-6">
+    
+    <div class="flex-1 w-full flex flex-col items-center">
+      <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg">
+        <div class="flex gap-4 items-center">
+          <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+            <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Time</span>
+            <div id="timer" class="text-xl font-bold text-cyan-400 font-heading leading-tight w-16 text-center">00:00</div>
+          </div>
+        </div>
+        <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">New Puzzle</button>
+      </div>
+
+      <div class="relative w-full aspect-square max-w-[500px] bg-nexus-elevated rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.05)] border border-white/10 overflow-hidden p-2">
+        <canvas id="gameCanvas_15" class="block w-full h-full bg-[#06060e] rounded-lg"></canvas>
+        
+        <div id="gameWon" class="absolute inset-0 bg-cyan-900/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 rounded-xl">
+          <div class="text-5xl font-bold mb-4 font-heading text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">Solved!</div>
+          <p id="finalTime" class="text-white text-xl mb-6">Time: 00:00</p>
+          <button id="playAgainBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Next Puzzle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Word List Panel -->
+    <div class="w-full lg:w-64 bg-nexus-card rounded-xl border border-white/10 p-4 shrink-0 shadow-lg">
+      <h3 class="text-lg font-heading font-bold text-white mb-4 border-b border-white/10 pb-2">Words to Find</h3>
+      <ul id="wordList" class="grid grid-cols-2 lg:grid-cols-1 gap-2 text-gray-300 text-sm font-medium">
+        <!-- populated via js -->
+      </ul>
+    </div>
+
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 15 Operations Manual</h3>
+        <p>Welcome to Arcade Room 15, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_15');
+    const ctx = canvas.getContext('2d');
+    const timerEl = document.getElementById('timer');
+    const wordListEl = document.getElementById('wordList');
+    const gameWonOverlay = document.getElementById('gameWon');
+    
+    // Virtual internal resolution
+    canvas.width = 500;
+    canvas.height = 500;
+
+    const WORD_BANKS = [
+      ["ARCADE", "NEXUS", "GAMING", "PIXEL", "SCORE", "LEVEL", "RETRO", "CANVAS", "HTML", "CODE"],
+      ["SPACE", "ALIEN", "ROCKET", "PLANET", "GALAXY", "STARS", "METEOR", "ORBIT", "MOON", "SUN"],
+      ["DRAGON", "KNIGHT", "MAGIC", "SWORD", "SHIELD", "QUEST", "CASTLE", "GOLD", "SPELL", "HERO"]
+    ];
+
+    let gridSize = 12;
+    let grid = [];
+    let wordsToFind = [];
+    let foundWords = [];
+    let cellW = canvas.width / gridSize;
+    
+    let isDragging = false;
+    let startCell = null;
+    let currentCell = null;
+    let selectedCells = []; // current drag line
+    let permanentLines = []; // {start: {r,c}, end: {r,c}, color: hex}
+    
+    let timeElapsed = 0;
+    let timerInterval = null;
+    let state = 'PLAYING';
+
+    const LINE_COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#a855f7', '#06b6d4', '#f43f5e', '#f97316'];
+
+    function init() {
+      let bank = WORD_BANKS[Math.floor(Math.random() * WORD_BANKS.length)];
+      wordsToFind = [...bank].sort(() => 0.5 - Math.random()).slice(0, 8); // pick 8
+      foundWords = [];
+      permanentLines = [];
+      
+      generateGrid();
+      renderWordList();
+      
+      state = 'PLAYING';
+      timeElapsed = 0;
+      clearInterval(timerInterval);
+      timerEl.textContent = '00:00';
+      timerInterval = setInterval(() => {
+        if(state === 'PLAYING') {
+          timeElapsed++;
+          let m = Math.floor(timeElapsed / 60).toString().padStart(2, '0');
+          let s = (timeElapsed % 60).toString().padStart(2, '0');
+          timerEl.textContent = `${m}:${s}`;
+        }
+      }, 1000);
+
+      gameWonOverlay.style.opacity = '0';
+      gameWonOverlay.style.pointerEvents = 'none';
+
+      draw();
+    }
+
+    function generateGrid() {
+      // Empty grid
+      grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
+      
+      // Place words
+      for (let word of wordsToFind) {
+        let placed = false;
+        let attempts = 0;
+        while (!placed && attempts < 100) {
+          let dirs = [[0,1], [1,0], [1,1], [1,-1], [0,-1], [-1,0], [-1,-1], [-1,1]]; // 8 directions
+          let dir = dirs[Math.floor(Math.random() * dirs.length)];
+          let startR = Math.floor(Math.random() * gridSize);
+          let startC = Math.floor(Math.random() * gridSize);
+          
+          if (canPlaceWord(word, startR, startC, dir)) {
+            for (let i = 0; i < word.length; i++) {
+              grid[startR + i * dir[0]][startC + i * dir[1]] = word[i];
+            }
+            placed = true;
+          }
+          attempts++;
+        }
+        if(!placed) console.warn("Failed to place: " + word); // Rare on 12x12 with 8 words
+      }
+
+      // Fill empty spaces
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      for (let r=0; r<gridSize; r++) {
+        for (let c=0; c<gridSize; c++) {
+          if (grid[r][c] === '') {
+            grid[r][c] = letters.charAt(Math.floor(Math.random() * letters.length));
+          }
+        }
+      }
+    }
+
+    function canPlaceWord(word, r, c, dir) {
+      let endR = r + (word.length - 1) * dir[0];
+      let endC = c + (word.length - 1) * dir[1];
+      if (endR < 0 || endR >= gridSize || endC < 0 || endC >= gridSize) return false;
+      
+      for (let i = 0; i < word.length; i++) {
+        let cr = r + i * dir[0];
+        let cc = c + i * dir[1];
+        if (grid[cr][cc] !== '' && grid[cr][cc] !== word[i]) return false;
+      }
+      return true;
+    }
+
+    function renderWordList() {
+      wordListEl.innerHTML = '';
+      wordsToFind.forEach(w => {
+        let li = document.createElement('li');
+        li.textContent = w;
+        li.id = `word-${w}`;
+        if (foundWords.includes(w)) {
+          li.className = 'text-gray-500 line-through decoration-2 decoration-cyan-400';
+        } else {
+          li.className = 'text-gray-200';
+        }
+        wordListEl.appendChild(li);
+      });
+    }
+
+    // Input Handling
+    function getCell(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      let clientX = e.clientX;
+      let clientY = e.clientY;
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      }
+      let x = (clientX - rect.left) * scaleX;
+      let y = (clientY - rect.top) * scaleY;
+      let c = Math.floor(x / cellW);
+      let r = Math.floor(y / cellW);
+      if (r>=0 && r<gridSize && c>=0 && c<gridSize) return {r, c};
+      return null;
+    }
+
+    function handleStart(e) {
+      if(state !== 'PLAYING') return;
+      isDragging = true;
+      startCell = getCell(e);
+      currentCell = startCell;
+      calcSelectedCells();
+      draw();
+    }
+
+    function handleMove(e) {
+      if (!isDragging) return;
+      let c = getCell(e);
+      if (c && (c.r !== currentCell.r || c.c !== currentCell.c)) {
+        currentCell = c;
+        calcSelectedCells();
+        draw();
+      }
+    }
+
+    function handleEnd(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      
+      if (selectedCells.length > 0) {
+        // Check if selected forms a valid word
+        let wordStr1 = selectedCells.map(sc => grid[sc.r][sc.c]).join('');
+        let wordStr2 = selectedCells.map(sc => grid[sc.r][sc.c]).reverse().join(''); // backwards
+        
+        let found = null;
+        if (wordsToFind.includes(wordStr1) && !foundWords.includes(wordStr1)) found = wordStr1;
+        if (wordsToFind.includes(wordStr2) && !foundWords.includes(wordStr2)) found = wordStr2;
+        
+        if (found) {
+          foundWords.push(found);
+          permanentLines.push({
+            start: selectedCells[0],
+            end: selectedCells[selectedCells.length-1],
+            color: LINE_COLORS[foundWords.length % LINE_COLORS.length]
+          });
+          renderWordList();
+          
+          if (foundWords.length === wordsToFind.length) {
+            state = 'WON';
+            clearInterval(timerInterval);
+            document.getElementById('finalTime').textContent = `Time: ${timerEl.textContent}`;
+            gameWonOverlay.style.opacity = '1';
+            gameWonOverlay.style.pointerEvents = 'auto';
+          }
+        }
+      }
+      
+      selectedCells = [];
+      draw();
+    }
+
+    function calcSelectedCells() {
+      selectedCells = [];
+      if(!startCell || !currentCell) return;
+      
+      // Determine if straight line (horiz, vert, diag)
+      let dr = currentCell.r - startCell.r;
+      let dc = currentCell.c - startCell.c;
+      
+      // Must be 0, or equal magnitude for diag
+      if (dr !== 0 && dc !== 0 && Math.abs(dr) !== Math.abs(dc)) return; // not straight
+      
+      let steps = Math.max(Math.abs(dr), Math.abs(dc));
+      let stepR = dr === 0 ? 0 : dr / Math.abs(dr);
+      let stepC = dc === 0 ? 0 : dc / Math.abs(dc);
+      
+      for(let i=0; i<=steps; i++) {
+        selectedCells.push({
+          r: startCell.r + i * stepR,
+          c: startCell.c + i * stepC
+        });
+      }
+    }
+
+    canvas.addEventListener('mousedown', handleStart);
+    window.addEventListener('mousemove', handleMove); // window to allow drag off canvas
+    window.addEventListener('mouseup', handleEnd);
+    
+    canvas.addEventListener('touchstart', e => { e.preventDefault(); handleStart(e); }, {passive: false});
+    window.addEventListener('touchmove', e => { if(isDragging) e.preventDefault(); handleMove(e); }, {passive: false});
+    window.addEventListener('touchend', handleEnd);
+
+    document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('playAgainBtn').addEventListener('click', init);
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw grid text
+      ctx.font = 'bold 24px Outfit';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      for (let r=0; r<gridSize; r++) {
+        for (let c=0; c<gridSize; c++) {
+          let x = c * cellW + cellW/2;
+          let y = r * cellW + cellW/2;
+          ctx.fillStyle = '#cbd5e1'; // slate-300
+          ctx.fillText(grid[r][c], x, y);
+        }
+      }
+
+      // Draw permanent lines
+      ctx.lineCap = 'round';
+      ctx.lineWidth = cellW * 0.7;
+      
+      permanentLines.forEach(line => {
+        ctx.strokeStyle = line.color + '66'; // add alpha
+        ctx.beginPath();
+        ctx.moveTo(line.start.c * cellW + cellW/2, line.start.r * cellW + cellW/2);
+        ctx.lineTo(line.end.c * cellW + cellW/2, line.end.r * cellW + cellW/2);
+        ctx.stroke();
+      });
+
+      // Draw current drag line
+      if (isDragging && selectedCells.length > 0) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.beginPath();
+        let s = selectedCells[0];
+        let e = selectedCells[selectedCells.length-1];
+        ctx.moveTo(s.c * cellW + cellW/2, s.r * cellW + cellW/2);
+        ctx.lineTo(e.c * cellW + cellW/2, e.r * cellW + cellW/2);
+        ctx.stroke();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

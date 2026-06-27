@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Math of Collision Detection Algorithms — ArcadeNexus</title>
+  <meta name="description" content="Dive into the mathematics of game physics. Learn how AABB, circle collision, and spatial hashing algorithms optimize performance in HTML5 games.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "The Math of Collision Detection Algorithms",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    },
+    "datePublished": "2026-06-26",
+    "author": {
+      "@type": "Person",
+      "name": "ArcadeNexus Editorial Team"
+    }
+  }
+  </script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body class="font-body bg-nexus-dark text-gray-300 min-h-screen flex flex-col">
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <nav class="navbar px-4 py-4 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-xl">ArcadeNexus</span>
+      </a>
+      <div class="flex gap-6 items-center">
+        <a href="../index.html" class="text-gray-300 hover:text-white transition">Games</a>
+        <a href="index.html" class="text-cyan-400 font-bold border-b-2 border-cyan-400">Blog</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 py-12 w-full">
+    
+    <article class="bg-nexus-card rounded-2xl border border-white/10 shadow-2xl p-6 md:p-12">
+      <header class="mb-10 text-center">
+        <span class="text-emerald-400 uppercase tracking-widest text-xs font-bold bg-emerald-900/30 px-3 py-1 rounded-full">HTML5 Canvas Optimization</span>
+        <h1 class="text-4xl md:text-5xl font-extrabold font-heading text-white mt-6 mb-4 leading-tight">The Math of Collision Detection Algorithms</h1>
+        <p class="text-gray-500 text-sm">Published by ArcadeNexus €¢ June 26, 2026</p>
+      </header>
+
+      <div class="prose prose-invert prose-emerald max-w-none text-lg leading-relaxed">
+        
+        <p>A video game is essentially a high-speed illusion. When Mario jumps and lands on a platform, it looks like a physical interaction. But underneath the graphics, there are no solid objects, no gravity, and no physical mass. There are only numbers stored in a computer's memory representing X and Y coordinates. The illusion of a solid world is maintained entirely by mathematical formulas known as collision detection algorithms. If these algorithms are written poorly, characters will fall through the floor, bullets will pass harmlessly through enemies, and the game will lag uncontrollably.</p>
+
+        <p>In HTML5 Canvas development, you don't have the luxury of dragging and dropping a built-in physics engine like you do in Unity or Unreal Engine (unless you import a heavy third-party library like Matter.js). Often, for lightweight web games, you have to write the physics yourself. Let's explore the fundamental math behind the most common collision algorithms and how to optimize them so they don't destroy your framerate.</p>
+
+        <div class="my-8 ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[120px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+          <!-- AdSense: ca-pub-XXXXXXXXXXXXXXXX -->
+          <span class="opacity-50">Advertisement</span>
+        </div>
+
+        <h2 class="text-3xl font-bold font-heading text-white mt-12 mb-6">AABB: Axis-Aligned Bounding Boxes</h2>
+
+        <p>The simplest and most computationally cheap form of collision detection is AABB (Axis-Aligned Bounding Box). In this model, every entity in the game is enclosed in an invisible rectangle. "Axis-Aligned" simply means the box cannot be rotated; its edges are always perfectly parallel to the X and Y axes of the screen.</p>
+
+        <p>The math to check if two AABB boxes are intersecting is incredibly simple. It requires no complex trigonometry or square roots—just four basic logical comparisons. You check if Box A's right edge is past Box B's left edge, AND if Box A's left edge is past Box B's right edge, AND the same for the top and bottom edges. If all four statements are true, the boxes are overlapping.</p>
+
+        <p>Because the math is just basic addition and logic gates, a modern CPU can calculate thousands of AABB collisions in a fraction of a millisecond. This is why almost all 2D platformers and retro arcade games rely entirely on AABB. Even if the character sprite is highly detailed and irregular, the physics engine just treats them as a solid, unmoving rectangle.</p>
+
+        <h3 class="text-2xl font-semibold text-emerald-300 mt-8 mb-4">Circle Collision: The Pythagorean Theorem</h3>
+
+        <p>AABB is great for square platforms, but it is terrible for round objects like asteroids or balls in a game of pool. If you use a square hit-box on a circular asteroid, a spaceship might clip the empty corner of the square and explode, even though it visually missed the asteroid rock. This feels incredibly unfair to the player.</p>
+
+        <p>For these scenarios, developers use Circle Collision. The math here is beautiful because it relies on the Pythagorean theorem (A² + B² = C²) you learned in middle school. To check if two circles are overlapping, you calculate the distance between their center points using the distance formula. If that total distance is less than the sum of the two circles' radii, they have collided.</p>
+
+        <p>However, there is a catch. The distance formula requires a square root calculation (`Math.sqrt()`). Square roots are computationally expensive for a CPU. If you have 500 asteroids bouncing around, calculating 500 square roots every frame will cause lag. The optimization trick is to compare the <em>squared distance</em> instead. By comparing `distanceSquared < (radius1 + radius2) * (radius1 + radius2)`, you completely eliminate the need for the expensive square root operation, vastly increasing the engine's speed.</p>
+
+        <div class="my-8 ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[120px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+          <!-- AdSense: ca-pub-XXXXXXXXXXXXXXXX -->
+          <span class="opacity-50">Advertisement</span>
+        </div>
+
+        <h2 class="text-3xl font-bold font-heading text-white mt-12 mb-6">The N-Squared Problem</h2>
+
+        <p>Knowing the math for AABB or Circle collision is only step one. Step two is solving the architectural nightmare known as the N-Squared problem. If you have a single player and 10 bullets, checking for collisions is easy: you loop through the 10 bullets once per frame. That's 10 math calculations. No problem.</p>
+
+        <p>But what if you have an asteroids game where 200 asteroids can all bounce off each other? To check if every asteroid is colliding with every other asteroid, Asteroid 1 has to check Asteroids 2 through 200. Then Asteroid 2 has to check Asteroids 3 through 200. The number of calculations required grows exponentially. For 200 objects, the CPU has to perform nearly 20,000 collision checks every single frame. At 60fps, that is 1.2 million checks per second. This will crash a browser instantly.</p>
+
+        <h3 class="text-2xl font-semibold text-emerald-300 mt-8 mb-4">Broad Phase vs. Narrow Phase: Spatial Partitioning</h3>
+
+        <p>To solve the N-Squared problem, professional physics engines separate collision detection into two phases: the Broad Phase and the Narrow Phase.</p>
+
+        <p>The <strong>Broad Phase</strong> acts as a highly aggressive filter. It doesn't do precise math; its only job is to quickly eliminate objects that are nowhere near each other. A common technique is a Spatial Hash Grid (or a QuadTree). The game world is divided into a massive invisible checkerboard. Every frame, objects register which grid cell they currently occupy. When checking for collisions, an object only bothers to do the math against other objects that are sitting in the exact same (or adjacent) grid cell. If Asteroid A is in cell [0,0] and Asteroid B is in cell [10,10], the engine completely ignores them.</p>
+
+        <p>Once the Broad Phase has quickly narrowed down a list of potential pairs that might be touching, it passes those specific pairs to the <strong>Narrow Phase</strong>. The Narrow Phase then executes the precise AABB or Circle math to confirm the exact pixel of impact.</p>
+
+        <h2 class="text-3xl font-bold font-heading text-white mt-12 mb-6">Respecting the CPU</h2>
+
+        <p>Writing a game in HTML5 Canvas forces a developer to become highly intimate with mathematical optimization. You cannot rely on raw hardware to brute-force poorly written code. By understanding the geometric simplicity of AABB, the optimized squared-distance trick for circles, and the absolute necessity of spatial partitioning to solve the N-Squared problem, you can architect web games that handle hundreds of physical entities with effortless, flawless performance.</p>
+
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="bg-nexus-card border-t border-white/10 mt-12 py-12 text-center text-gray-500">
+    <p>&copy; 2026 ArcadeNexus. All rights reserved.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

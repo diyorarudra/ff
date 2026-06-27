@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synthesizer Defense — ArcadeNexus</title>
+  <meta name="description" content="Place nodes to filter out the incoming visual noise viruses.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Synthesizer Defense",
+    "genre": "Strategy",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-4xl">
+      <div class="flex gap-6 items-center">
+        <div>Wave: <span id="waveDisplay" class="font-bold text-yellow-400">1</span></div>
+        <div>Energy: <span id="energyDisplay" class="font-bold text-cyan-400">50</span> ⚡</div>
+        <div>System Core: <span id="livesDisplay" class="font-bold text-red-500">100%</span></div>
+      </div>
+      <button id="startWaveBtn" class="game-btn bg-yellow-600 hover:bg-yellow-700">START WAVE</button>
+    </div>
+    
+    <div class="mt-4 w-full max-w-4xl flex gap-4">
+       <!-- Tower Selection Sidebar -->
+       <div class="w-48 bg-[#09090b] rounded-lg border border-white/10 p-4 flex flex-col gap-4">
+           <h3 class="font-heading font-bold text-white text-center border-b border-white/10 pb-2">DEFENSE NODES</h3>
+           
+           <div class="tower-btn cursor-pointer bg-gray-800 p-3 rounded text-center border-2 border-transparent hover:border-cyan-500 selected" data-type="basic">
+               <div class="w-6 h-6 bg-cyan-500 mx-auto rounded-full mb-1"></div>
+               <div class="text-xs font-bold text-white">PULSER</div>
+               <div class="text-xs text-cyan-400">15 ⚡</div>
+           </div>
+           
+           <div class="tower-btn cursor-pointer bg-gray-800 p-3 rounded text-center border-2 border-transparent hover:border-purple-500" data-type="heavy">
+               <div class="w-6 h-6 bg-purple-500 mx-auto rounded-sm mb-1"></div>
+               <div class="text-xs font-bold text-white">CANNON</div>
+               <div class="text-xs text-cyan-400">40 ⚡</div>
+           </div>
+           
+           <div class="text-xs text-gray-500 mt-auto text-center">Select node, then click grid to build.</div>
+       </div>
+       
+       <!-- Main Grid -->
+       <canvas id="gameCanvas_48" width="600" height="400" class="flex-1 bg-[#111] border border-cyan-900/30 rounded-lg cursor-crosshair"></canvas>
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-red-600">
+        <h2 id="endTitle" class="text-3xl font-bold font-heading mb-2 text-red-500">SYSTEM BREACHED</h2>
+        <p class="text-gray-400 mb-6">Survived to Wave: <span id="finalScore" class="text-yellow-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full bg-red-600 hover:bg-red-700">Reboot System</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 48 Operations Manual</h3>
+        <p>Welcome to Arcade Room 48, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_48');
+    const ctx = canvas.getContext('2d');
+    const waveDisplay = document.getElementById('waveDisplay');
+    const energyDisplay = document.getElementById('energyDisplay');
+    const livesDisplay = document.getElementById('livesDisplay');
+    const startWaveBtn = document.getElementById('startWaveBtn');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    const ROWS = 5;
+    const COLS = 8;
+    const CELL_W = canvas.width / COLS;
+    const CELL_H = canvas.height / ROWS;
+    
+    let isGameOver = false;
+    let animationId;
+    let lastTime = 0;
+    
+    // Game State
+    let energy = 50;
+    let coreHealth = 100;
+    let wave = 1;
+    let waveActive = false;
+    
+    let towers = [];
+    let enemies = [];
+    let projectiles = [];
+    let particles = [];
+    
+    let enemiesToSpawn = 0;
+    let spawnTimer = 0;
+    let spawnInterval = 1.5;
+    
+    let selectedTowerType = 'basic';
+    
+    // Tower Stats
+    const TOWER_TYPES = {
+        basic: { cost: 15, color: '#06b6d4', range: 150, damage: 20, fireRate: 1.0, type: 'circle' },
+        heavy: { cost: 40, color: '#a855f7', range: 250, damage: 50, fireRate: 2.0, type: 'square' }
+    };
+    
+    // Select UI logic
+    document.querySelectorAll('.tower-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('border-cyan-500', 'border-purple-500'));
+            let type = btn.getAttribute('data-type');
+            if (type === 'basic') btn.classList.add('border-cyan-500');
+            if (type === 'heavy') btn.classList.add('border-purple-500');
+            selectedTowerType = type;
+        });
+    });
+    // Set initial
+    document.querySelector('[data-type="basic"]').classList.add('border-cyan-500');
+    
+    function spawnEnemy() {
+        let r = Math.floor(Math.random() * ROWS);
+        let hp = 50 + (wave * 20); // HP scales with wave
+        let speed = 40 + (wave * 5); // Speed scales
+        
+        enemies.push({
+            x: -20,
+            y: r * CELL_H + CELL_H/2,
+            hp: hp,
+            maxHp: hp,
+            speed: speed,
+            color: '#ef4444' // Red noise
+        });
+        enemiesToSpawn--;
+    }
+    
+    function fireProjectile(t, target) {
+        // Calculate angle
+        let dx = target.x - t.x;
+        let dy = target.y - t.y;
+        let angle = Math.atan2(dy, dx);
+        
+        projectiles.push({
+            x: t.x,
+            y: t.y,
+            vx: Math.cos(angle) * 300, // speed
+            vy: Math.sin(angle) * 300,
+            damage: t.stats.damage,
+            color: t.stats.color,
+            target: target // homing
+        });
+        
+        t.lastFired = 0;
+    }
+    
+    function loop(timestamp) {
+        if(isGameOver) return;
+        const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
+        lastTime = timestamp;
+        
+        if (waveActive) {
+            // Spawning
+            if (enemiesToSpawn > 0) {
+                spawnTimer += dt;
+                if (spawnTimer >= spawnInterval) {
+                    spawnEnemy();
+                    spawnTimer = 0;
+                }
+            }
+            
+            // Move Enemies
+            for(let i = enemies.length -1; i >= 0; i--) {
+                let e = enemies[i];
+                e.x += e.speed * dt;
+                
+                // Reach end
+                if (e.x > canvas.width) {
+                    coreHealth -= 10;
+                    if (coreHealth <= 0) {
+                        coreHealth = 0;
+                        loseGame();
+                    }
+                    livesDisplay.textContent = coreHealth + '%';
+                    enemies.splice(i, 1);
+                }
+            }
+            
+            // Tower Logic
+            towers.forEach(t => {
+                t.lastFired += dt;
+                if (t.lastFired >= t.stats.fireRate) {
+                    // Find target
+                    let closest = null;
+                    let minDist = t.stats.range;
+                    
+                    enemies.forEach(e => {
+                        let dist = Math.hypot(e.x - t.x, e.y - t.y);
+                        // Prioritize enemies further right
+                        if (dist <= minDist) {
+                            closest = e;
+                            minDist = dist; // Simplification
+                        }
+                    });
+                    
+                    if (closest) {
+                        fireProjectile(t, closest);
+                    }
+                }
+            });
+            
+            // Projectiles
+            for(let i = projectiles.length -1; i >= 0; i--) {
+                let p = projectiles[i];
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+                
+                // Collision check (simple radius)
+                let hit = false;
+                for(let j = enemies.length -1; j >= 0; j--) {
+                    let e = enemies[j];
+                    if (Math.hypot(p.x - e.x, p.y - e.y) < 15) {
+                        e.hp -= p.damage;
+                        hit = true;
+                        
+                        // Particle explosion
+                        for(let k=0; k<5; k++) {
+                            particles.push({
+                                x: e.x, y: e.y,
+                                vx: (Math.random()-0.5)*100, vy: (Math.random()-0.5)*100,
+                                life: 0.5, color: p.color
+                            });
+                        }
+                        
+                        if (e.hp <= 0) {
+                            energy += 5; // Reward
+                            energyDisplay.textContent = energy;
+                            enemies.splice(j, 1);
+                        }
+                        break; // Destroy projectile
+                    }
+                }
+                
+                if(hit || p.x > canvas.width || p.x < 0 || p.y < 0 || p.y > canvas.height) {
+                    projectiles.splice(i, 1);
+                }
+            }
+            
+            // Wave End condition
+            if (enemiesToSpawn === 0 && enemies.length === 0) {
+                waveActive = false;
+                wave++;
+                startWaveBtn.style.display = 'block';
+                startWaveBtn.textContent = `START WAVE ${wave}`;
+            }
+        }
+        
+        // Particles
+        for(let i=particles.length-1; i>=0; i--) {
+            particles[i].x += particles[i].vx * dt;
+            particles[i].y += particles[i].vy * dt;
+            particles[i].life -= dt;
+            if (particles[i].life <= 0) particles.splice(i, 1);
+        }
+        
+        draw();
+        animationId = requestAnimationFrame(loop);
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Grid
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        for(let r=0; r<=ROWS; r++) {
+            ctx.beginPath(); ctx.moveTo(0, r*CELL_H); ctx.lineTo(canvas.width, r*CELL_H); ctx.stroke();
+        }
+        for(let c=0; c<=COLS; c++) {
+            ctx.beginPath(); ctx.moveTo(c*CELL_W, 0); ctx.lineTo(c*CELL_W, canvas.height); ctx.stroke();
+        }
+        
+        // Core area
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+        ctx.fillRect(canvas.width - 20, 0, 20, canvas.height);
+        
+        // Towers
+        towers.forEach(t => {
+            ctx.fillStyle = t.stats.color;
+            if(t.stats.type === 'circle') {
+                ctx.beginPath(); ctx.arc(t.x, t.y, 12, 0, Math.PI*2); ctx.fill();
+            } else {
+                ctx.fillRect(t.x - 12, t.y - 12, 24, 24);
+            }
+            
+            // Range ring (very faint)
+            ctx.strokeStyle = t.stats.color;
+            ctx.globalAlpha = 0.1;
+            ctx.beginPath(); ctx.arc(t.x, t.y, t.stats.range, 0, Math.PI*2); ctx.stroke();
+            ctx.globalAlpha = 1.0;
+        });
+        
+        // Enemies (Glitchy squares)
+        enemies.forEach(e => {
+            ctx.fillStyle = e.color;
+            let offset = (Math.random() > 0.8) ? (Math.random()*4-2) : 0; // glitch jitter
+            ctx.fillRect(e.x - 10 + offset, e.y - 10, 20, 20);
+            
+            // Health bar
+            ctx.fillStyle = '#7f1d1d';
+            ctx.fillRect(e.x - 10, e.y - 15, 20, 3);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(e.x - 10, e.y - 15, 20 * (e.hp / e.maxHp), 3);
+        });
+        
+        // Projectiles
+        projectiles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill();
+        });
+        
+        // Particles
+        particles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.life * 2;
+            ctx.fillRect(p.x, p.y, 3, 3);
+            ctx.globalAlpha = 1.0;
+        });
+    }
+    
+    // Building
+    canvas.addEventListener('click', (e) => {
+        if(isGameOver) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        
+        let c = Math.floor(x / CELL_W);
+        let r = Math.floor(y / CELL_H);
+        
+        // Check if occupied
+        let occupied = towers.some(t => t.r === r && t.c === c);
+        
+        if (!occupied) {
+            let stats = TOWER_TYPES[selectedTowerType];
+            if (energy >= stats.cost) {
+                energy -= stats.cost;
+                energyDisplay.textContent = energy;
+                
+                towers.push({
+                    r: r, c: c,
+                    x: c * CELL_W + CELL_W/2,
+                    y: r * CELL_H + CELL_H/2,
+                    stats: stats,
+                    lastFired: 0
+                });
+                draw();
+            }
+        }
+    });
+    
+    startWaveBtn.addEventListener('click', () => {
+        if (!waveActive && !isGameOver) {
+            waveActive = true;
+            enemiesToSpawn = 5 + (wave * 3);
+            spawnInterval = Math.max(0.5, 2.0 - (wave * 0.1));
+            startWaveBtn.style.display = 'none';
+            waveDisplay.textContent = wave;
+        }
+    });
+    
+    function loseGame() {
+        isGameOver = true;
+        document.getElementById('finalScore').textContent = wave;
+        gameOverOverlay.style.display = 'flex';
+    }
+    
+    function init() {
+        energy = 50;
+        coreHealth = 100;
+        wave = 1;
+        waveActive = false;
+        isGameOver = false;
+        
+        towers = [];
+        enemies = [];
+        projectiles = [];
+        particles = [];
+        
+        energyDisplay.textContent = energy;
+        livesDisplay.textContent = coreHealth + '%';
+        waveDisplay.textContent = wave;
+        startWaveBtn.style.display = 'block';
+        startWaveBtn.textContent = 'START WAVE 1';
+        gameOverOverlay.style.display = 'none';
+        
+        lastTime = performance.now();
+        cancelAnimationFrame(animationId);
+        loop(lastTime);
+    }
+    
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

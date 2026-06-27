@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dance Choreography Master — ArcadeNexus</title>
+  <meta name="description" content="Test your memory and rhythm in this neon-lit dance sequence game.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Dance Choreography Master",
+    "genre": "Rhythm",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col">
+    <div class="game-header w-full">
+      <div class="flex gap-6">
+        <div>Round: <span id="scoreDisplay" class="font-bold text-fuchsia-400">1</span></div>
+        <div>Best: <span id="bestDisplay" class="font-bold text-gray-400">1</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">New Game</button>
+    </div>
+    
+    <div class="flex-1 flex flex-col items-center justify-center p-4 relative w-full h-full min-h-[500px]">
+        <div id="statusText" class="text-2xl font-bold font-heading text-white mb-8 h-8">Watch the sequence...</div>
+        
+        <canvas id="gameCanvas_32" width="400" height="400" class="rounded-full shadow-[0_0_50px_rgba(217,70,239,0.1)]"></canvas>
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel">
+        <h2 class="text-3xl font-bold font-heading mb-2 text-white">MISSTEP!</h2>
+        <p class="text-gray-400 mb-6">You reached Round <span id="finalScore" class="text-fuchsia-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full">Dance Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 32 Operations Manual</h3>
+        <p>Welcome to Arcade Room 32, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_32');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const bestDisplay = document.getElementById('bestDisplay');
+    const statusText = document.getElementById('statusText');
+    const finalScore = document.getElementById('finalScore');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    let score = 1;
+    let bestScore = localStorage.getItem('arcadenexus_game32_best') || 1;
+    bestDisplay.textContent = bestScore;
+    
+    const pads = [
+      { id: 0, x: 200, y: 100, color: '#ef4444', hover: '#fca5a5', key: 'ArrowUp', active: false },   // Top (Red)
+      { id: 1, x: 300, y: 200, color: '#3b82f6', hover: '#93c5fd', key: 'ArrowRight', active: false }, // Right (Blue)
+      { id: 2, x: 200, y: 300, color: '#22c55e', hover: '#86efac', key: 'ArrowDown', active: false },  // Bottom (Green)
+      { id: 3, x: 100, y: 200, color: '#eab308', hover: '#fde047', key: 'ArrowLeft', active: false }   // Left (Yellow)
+    ];
+    
+    let sequence = [];
+    let playerIndex = 0;
+    let state = 'playing'; // 'showing', 'waiting', 'gameover'
+    
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Center dark circle
+      ctx.fillStyle = '#06060e';
+      ctx.beginPath();
+      ctx.arc(200, 200, 200, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Center ring
+      ctx.strokeStyle = '#1a1a2e';
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.arc(200, 200, 60, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      pads.forEach(pad => {
+        ctx.fillStyle = pad.active ? pad.hover : pad.color;
+        
+        // Add glow if active
+        if (pad.active) {
+            ctx.shadowColor = pad.hover;
+            ctx.shadowBlur = 30;
+        } else {
+            ctx.shadowBlur = 0;
+        }
+
+        ctx.beginPath();
+        ctx.arc(pad.x, pad.y, 60, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.shadowBlur = 0; // reset
+        
+        // Draw arrows
+        ctx.fillStyle = '#06060e';
+        ctx.font = '30px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        let arrow = '';
+        if(pad.id === 0) arrow = '↑';
+        if(pad.id === 1) arrow = '→';
+        if(pad.id === 2) arrow = '↓';
+        if(pad.id === 3) arrow = '←';
+        ctx.fillText(arrow, pad.x, pad.y);
+      });
+    }
+    
+    function flashPad(id, duration = 400) {
+      return new Promise(resolve => {
+        pads[id].active = true;
+        draw();
+        
+        // Play sound synthesis
+        const actx = new (window.AudioContext || window.webkitAudioContext)();
+        if(actx) {
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.type = 'sine';
+            const freqs = [329.63, 440, 261.63, 392]; // E4, A4, C4, G4
+            osc.frequency.value = freqs[id];
+            osc.connect(gain);
+            gain.connect(actx.destination);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, actx.currentTime + 0.5);
+            setTimeout(() => { osc.stop(); actx.close(); }, 500);
+        }
+
+        setTimeout(() => {
+          pads[id].active = false;
+          draw();
+          setTimeout(resolve, 100); // Short gap between flashes
+        }, duration);
+      });
+    }
+    
+    async function playSequence() {
+      state = 'showing';
+      statusText.textContent = "Watch the sequence...";
+      statusText.className = "text-2xl font-bold font-heading text-fuchsia-400 mb-8 h-8 animate-pulse";
+      
+      // Wait a sec before starting
+      await new Promise(r => setTimeout(r, 800));
+      
+      for (let i = 0; i < sequence.length; i++) {
+        await flashPad(sequence[i], 400 - Math.min(score * 10, 250)); // Gets faster
+      }
+      
+      state = 'waiting';
+      playerIndex = 0;
+      statusText.textContent = "Your turn!";
+      statusText.className = "text-2xl font-bold font-heading text-cyan-400 mb-8 h-8";
+    }
+    
+    function nextRound() {
+      score = sequence.length + 1;
+      scoreDisplay.textContent = score;
+      sequence.push(Math.floor(Math.random() * 4));
+      playSequence();
+    }
+    
+    async function handleInput(id) {
+      if (state !== 'waiting') return;
+      
+      const expected = sequence[playerIndex];
+      if (id === expected) {
+        // Correct
+        playerIndex++;
+        flashPad(id, 200);
+        
+        if (playerIndex === sequence.length) {
+          state = 'showing'; // lock inputs
+          statusText.textContent = "Perfect!";
+          statusText.className = "text-2xl font-bold font-heading text-green-400 mb-8 h-8";
+          setTimeout(nextRound, 1000);
+        }
+      } else {
+        // Wrong
+        state = 'gameover';
+        pads[id].active = true;
+        draw(); // Show error briefly
+        statusText.textContent = "Wrong Move!";
+        statusText.className = "text-2xl font-bold font-heading text-red-500 mb-8 h-8";
+        
+        // Error sound
+        const actx = new (window.AudioContext || window.webkitAudioContext)();
+        if(actx) {
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.value = 100;
+            osc.connect(gain);
+            gain.connect(actx.destination);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, actx.currentTime + 0.5);
+            setTimeout(() => { osc.stop(); actx.close(); }, 500);
+        }
+
+        setTimeout(() => {
+            pads[id].active = false;
+            gameOver();
+        }, 800);
+      }
+    }
+    
+    // Keyboard Input
+    window.addEventListener('keydown', (e) => {
+      if (state !== 'waiting') return;
+      const pad = pads.find(p => p.key === e.key);
+      if (pad) handleInput(pad.id);
+    });
+    
+    // Mouse/Touch Input
+    canvas.addEventListener('mousedown', handleClick);
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent scrolling
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+        checkClick(x, y);
+    }, {passive: false});
+
+    function handleClick(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        checkClick(x, y);
+    }
+    
+    function checkClick(x, y) {
+      if (state !== 'waiting') return;
+      pads.forEach(pad => {
+        const dx = x - pad.x;
+        const dy = y - pad.y;
+        if (Math.sqrt(dx*dx + dy*dy) < 60) {
+          handleInput(pad.id);
+        }
+      });
+    }
+    
+    function gameOver() {
+      if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem('arcadenexus_game32_best', bestScore);
+        bestDisplay.textContent = bestScore;
+      }
+      finalScore.textContent = score;
+      gameOverOverlay.style.display = 'flex';
+    }
+    
+    function init() {
+      score = 1;
+      scoreDisplay.textContent = score;
+      sequence = [Math.floor(Math.random() * 4)];
+      gameOverOverlay.style.display = 'none';
+      pads.forEach(p => p.active = false);
+      draw();
+      playSequence();
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    // Initial draw
+    draw();
+    // Don't auto-start immediately so user has time to orient
+    statusText.textContent = "Press New Game to Start";
+  </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Hidden Shapes &mdash; ArcadeNexus</title>
+  <meta name="description" content="Find the hidden shape in a chaotic canvas of colors and geometry.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Hidden Shapes",
+    "genre": "Hidden Object Puzzle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[600px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg gap-4">
+      <div class="flex gap-4 items-center w-full">
+        <div class="bg-nexus-dark px-4 py-2 rounded-lg border border-white/5 flex-1 flex flex-col items-center justify-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Target</span>
+          <div id="targetText" class="text-lg font-bold text-white font-heading leading-tight text-center">Find the...</div>
+        </div>
+        <div class="bg-nexus-dark px-4 py-2 rounded-lg border border-white/5 flex flex-col items-center justify-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Level</span>
+          <div id="level" class="text-xl font-bold text-cyan-400 font-heading leading-tight">1</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative w-full aspect-[4/3] bg-nexus-elevated rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.05)] border border-white/10 overflow-hidden mb-4 p-2 flex flex-col">
+      <canvas id="gameCanvas_14" class="block w-full h-full cursor-crosshair touch-none bg-[#0f172a] rounded-lg"></canvas>
+      
+      <!-- Overlays -->
+      <div id="gameOver" class="absolute inset-0 bg-red-900/90 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-5xl font-bold mb-4 font-heading text-white drop-shadow-md">Missed!</div>
+        <p class="text-gray-200 mb-6 text-xl">You reached Level <span id="finalLevel"></span></p>
+        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+
+      <div id="startScreen" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-4xl font-bold font-heading text-purple-400 drop-shadow-md mb-2">Hidden Shapes</div>
+        <p class="text-gray-300 text-sm mb-6 text-center px-6">Read the target description at the top.<br>Find and tap the exact shape in the chaos.</p>
+        <button id="beginBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Start Search</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 14 Operations Manual</h3>
+        <p>Welcome to Arcade Room 14, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas_14');
+    const ctx = canvas.getContext('2d');
+    const targetEl = document.getElementById('targetText');
+    const levelEl = document.getElementById('level');
+    
+    const startScreen = document.getElementById('startScreen');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    canvas.width = 600;
+    canvas.height = 450;
+
+    const COLORS = [
+      { name: 'Red', hex: '#ef4444' },
+      { name: 'Blue', hex: '#3b82f6' },
+      { name: 'Green', hex: '#22c55e' },
+      { name: 'Yellow', hex: '#eab308' },
+      { name: 'Purple', hex: '#a855f7' },
+      { name: 'Cyan', hex: '#06b6d4' },
+      { name: 'Orange', hex: '#f97316' },
+      { name: 'Pink', hex: '#f43f5e' }
+    ];
+
+    const SHAPES = [
+      { name: 'Circle', draw: drawCircle },
+      { name: 'Square', draw: drawSquare },
+      { name: 'Triangle', draw: drawTriangle },
+      { name: 'Star', draw: drawStar },
+      { name: 'Diamond', draw: drawDiamond },
+      { name: 'Hexagon', draw: drawHexagon }
+    ];
+    
+    let level = 1;
+    let shapesOnScreen = [];
+    let targetShape = null;
+    let state = 'START';
+
+    function initGame() {
+      level = 1;
+      startScreen.style.opacity = '0';
+      startScreen.style.pointerEvents = 'none';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+      startLevel();
+    }
+
+    function startLevel() {
+      state = 'PLAYING';
+      levelEl.textContent = level;
+      shapesOnScreen = [];
+      
+      let numShapes = 30 + (level * 10); // Increases clutter
+      
+      // Generate random shapes
+      for(let i=0; i<numShapes; i++) {
+        shapesOnScreen.push(generateRandomShape());
+      }
+      
+      // Ensure target is unique (or pick one from the array that is unique)
+      let uniqueShapes = [];
+      for(let s of shapesOnScreen) {
+        let matches = shapesOnScreen.filter(x => x.cName === s.cName && x.sName === s.sName);
+        if(matches.length === 1) uniqueShapes.push(s);
+      }
+      
+      if(uniqueShapes.length === 0) {
+        // Force a unique one if none exists (rare)
+        let newShape = generateRandomShape();
+        shapesOnScreen.push(newShape);
+        targetShape = newShape;
+      } else {
+        targetShape = uniqueShapes[Math.floor(Math.random() * uniqueShapes.length)];
+      }
+
+      // Update UI text with color styling
+      targetEl.innerHTML = `Find the <span style="color:${targetShape.cHex}">${targetShape.cName} ${targetShape.sName}</span>`;
+      
+      // Sort shapes by Z index so target is drawn, but maybe partially occluded
+      // Actually drawing order is array order, so target might be at the bottom. That's fine!
+      
+      draw();
+    }
+
+    function generateRandomShape() {
+      let colorObj = COLORS[Math.floor(Math.random() * COLORS.length)];
+      let shapeObj = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+      
+      let size = Math.random() * 30 + 20; // 20 to 50
+      // keep away from edges slightly
+      let x = Math.random() * (canvas.width - size*2) + size;
+      let y = Math.random() * (canvas.height - size*2) + size;
+      let angle = Math.random() * Math.PI * 2;
+      
+      return {
+        x: x, y: y, size: size, angle: angle,
+        cName: colorObj.name, cHex: colorObj.hex,
+        sName: shapeObj.name, drawFunc: shapeObj.draw
+      };
+    }
+
+    // Hit detection (AABB bounding box approximation for simplicity)
+    canvas.addEventListener('mousedown', handleClick);
+    canvas.addEventListener('touchstart', e => { e.preventDefault(); handleClick(e.changedTouches[0]); }, {passive: false});
+
+    function handleClick(e) {
+      if (state !== 'PLAYING') return;
+      
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
+      
+      // Reverse iterate to check top-most shapes first
+      let clickedShape = null;
+      for (let i = shapesOnScreen.length - 1; i >= 0; i--) {
+        let s = shapesOnScreen[i];
+        let dx = mx - s.x;
+        let dy = my - s.y;
+        // Simple bounding circle check is forgiving for touch
+        if (Math.sqrt(dx*dx + dy*dy) <= s.size) {
+          clickedShape = s;
+          break;
+        }
+      }
+
+      if (clickedShape) {
+        if (clickedShape === targetShape) {
+          // Win
+          level++;
+          // Draw success circle
+          ctx.strokeStyle = '#22c55e';
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.arc(targetShape.x, targetShape.y, targetShape.size + 10, 0, Math.PI*2);
+          ctx.stroke();
+          
+          state = 'TRANSITION';
+          setTimeout(startLevel, 800);
+        } else {
+          // Lose
+          state = 'GAMEOVER';
+          document.getElementById('finalLevel').textContent = level;
+          
+          // Show where target was
+          ctx.strokeStyle = '#ef4444'; // Red circle on wrong choice
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.arc(clickedShape.x, clickedShape.y, clickedShape.size + 10, 0, Math.PI*2);
+          ctx.stroke();
+          
+          ctx.strokeStyle = '#22c55e'; // Green circle on actual target
+          ctx.beginPath();
+          ctx.arc(targetShape.x, targetShape.y, targetShape.size + 10, 0, Math.PI*2);
+          ctx.stroke();
+
+          setTimeout(() => {
+            gameOverOverlay.style.opacity = '1';
+            gameOverOverlay.style.pointerEvents = 'auto';
+          }, 1000);
+        }
+      }
+    }
+
+    document.getElementById('beginBtn').addEventListener('click', initGame);
+    document.getElementById('tryAgainBtn').addEventListener('click', initGame);
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      shapesOnScreen.forEach(s => {
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(s.angle);
+        
+        ctx.fillStyle = s.cHex;
+        s.drawFunc(ctx, 0, 0, s.size);
+        
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        ctx.restore();
+      });
+    }
+
+    // Drawing functions (centered at 0,0)
+    function drawCircle(ctx, x, y, s) {
+      ctx.beginPath(); ctx.arc(x, y, s/2, 0, Math.PI*2); ctx.fill();
+    }
+    function drawSquare(ctx, x, y, s) {
+      ctx.fillRect(x - s/2, y - s/2, s, s);
+      ctx.rect(x - s/2, y - s/2, s, s); // for stroke path
+    }
+    function drawTriangle(ctx, x, y, s) {
+      ctx.beginPath(); ctx.moveTo(x, y - s/2); ctx.lineTo(x + s/2, y + s/2); ctx.lineTo(x - s/2, y + s/2); ctx.closePath(); ctx.fill();
+    }
+    function drawDiamond(ctx, x, y, s) {
+      ctx.beginPath(); ctx.moveTo(x, y - s/2); ctx.lineTo(x + s/2, y); ctx.lineTo(x, y + s/2); ctx.lineTo(x - s/2, y); ctx.closePath(); ctx.fill();
+    }
+    function drawHexagon(ctx, x, y, s) {
+      ctx.beginPath();
+      for (let i=0; i<6; i++) { ctx.lineTo(x + s/2 * Math.cos(i * Math.PI/3), y + s/2 * Math.sin(i * Math.PI/3)); }
+      ctx.closePath(); ctx.fill();
+    }
+    function drawStar(ctx, x, y, s) {
+      ctx.beginPath();
+      for(let i=0; i<5; i++) {
+        ctx.lineTo(Math.cos( (18+i*72)/180*Math.PI ) * s/2 + x, -Math.sin( (18+i*72)/180*Math.PI ) * s/2 + y);
+        ctx.lineTo(Math.cos( (54+i*72)/180*Math.PI ) * s/4 + x, -Math.sin( (54+i*72)/180*Math.PI ) * s/4 + y);
+      }
+      ctx.closePath(); ctx.fill();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Connect the Dots &mdash; ArcadeNexus</title>
+  <meta name="description" content="Play Connect the Dots instantly in your browser. Free HTML5 game on ArcadeNexus.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Connect the Dots",
+    "genre": "Puzzle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    /* Prevent pull-to-refresh on mobile */
+    body { overscroll-behavior-y: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-6 shadow-lg">
+      <div class="flex gap-4">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5">
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Score</div>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5">
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Best</div>
+          <div id="bestScore" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">New Game</button>
+    </div>    <div class="w-full flex justify-center mb-6 mt-4">
+      <canvas id="gameCanvas_63" width="800" height="500" class="w-full max-w-full bg-[#131a26] rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/10 touch-none select-none block"></canvas>
+    </div>
+
+    <p class="text-center text-gray-300 mt-2 font-medium text-lg px-4">
+      Click the numbered dots in sequential order to connect the vector lines.
+    </p>
+  </div>
+
+  
+      <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+</div>
+
+
+
+  <div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+
+        // --- GAME 63: CONNECT THE DOTS ---
+        const canvas = document.getElementById('gameCanvas_63'); const ctx = canvas.getContext('2d');
+        
+    const restartBtn = document.getElementById('restartBtn') || { addEventListener: () => {} };
+    function updateScoreUI(score) {
+        const scoreNode = document.getElementById('score') || document.querySelector('[id*="score"]');
+        if (scoreNode) scoreNode.textContent = score;
+        const bestNode = document.getElementById('bestScore') || document.querySelector('[id*="bestScore"]');
+        if (bestNode && Number(score) > Number(bestNode.textContent)) bestNode.textContent = score;
+    }
+
+        let dots, next, isOver, score;
+        function init() {
+            score=0; next=1; isOver=false; dots=[]; updateScoreUI(score);
+            for(let i=1; i<=10; i++) dots.push({n:i, x:40+Math.random()*(canvas.width-80), y:40+Math.random()*(canvas.height-80)});
+            draw();
+        }
+        function draw() {
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            if(isOver) { ctx.fillStyle='#4ade80'; ctx.font='bold 36px sans-serif'; ctx.textAlign='center'; ctx.fillText('SUCCESS', canvas.width/2, canvas.height/2); return; }
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.beginPath();
+            for(let i=0; i<next-1; i++) { if(i===0) ctx.moveTo(dots[i].x, dots[i].y); else ctx.lineTo(dots[i].x, dots[i].y); } ctx.stroke();
+            dots.forEach(d => {
+                ctx.fillStyle = d.n < next ? '#38bdf8' : '#334155'; ctx.beginPath(); ctx.arc(d.x, d.y, 15, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle='#fff'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText(d.n, d.x, d.y+5);
+            });
+        }
+        canvas.addEventListener('click', e => {
+            if(isOver) return; const r=canvas.getBoundingClientRect(); let x=(e.clientX-r.left)*(canvas.width/r.width), y=(e.clientY-r.top)*(canvas.height/r.height);
+            let target = dots.find(d => d.n === next);
+            if(target && Math.hypot(x-target.x, y-target.y)<25) {
+                score+=10; next++; updateScoreUI(score);
+                if(next>10) isOver=true; draw();
+            }
+        });
+        restartBtn.addEventListener('click', init); init();
+    
+
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">How to Play Game Room 63</h3>
+        <p>Welcome to Arcade Room 63, a premium browser module designed for instant gaming delivery. This interactive arcade viewport uses native engine loops to provide a responsive user experience on mobile and desktop layout configurations. Players use clean mouse and keyboard controls to navigate custom scenarios, track scoreboard metrics, and trigger win/fail state validations. Built using low-latency vanilla scripts and drawing contexts, this application runs at flat frame rates with zero plug-in steps. Dive into the mechanics to test your high scores and enjoy a refined browser gaming experience right here.</p>
+    </div>\n</body>
+</html>

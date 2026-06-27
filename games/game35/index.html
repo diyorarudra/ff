@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lighting Rig Operator — ArcadeNexus</title>
+  <meta name="description" content="Mix RGB spotlights to match the director's cues on the stage.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Lighting Rig Operator",
+    "genre": "Puzzle",
+    "playMode": "SinglePlayer",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper">
+
+  <nav class="navbar px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex flex-col items-center">
+    <div class="game-header w-full max-w-lg">
+      <div class="flex gap-6">
+        <div>Score: <span id="scoreDisplay" class="font-bold text-yellow-400">0</span></div>
+        <div>Time: <span id="timeDisplay" class="font-bold text-white">45s</span></div>
+      </div>
+      <button id="newGameBtn" class="game-btn">New Gig</button>
+    </div>
+    
+    <div class="bg-nexus-card border border-white/10 rounded-xl p-6 mt-4 w-full max-w-lg shadow-2xl">
+      <div class="flex justify-between mb-8">
+        <!-- Target Stage -->
+        <div class="text-center w-5/12">
+           <h3 class="font-heading font-bold text-gray-400 mb-2">Target Cue</h3>
+           <div id="targetStage" class="w-full h-32 rounded-lg border-4 border-gray-700 shadow-inner flex items-center justify-center">
+              <span class="text-2xl">🎬</span>
+           </div>
+        </div>
+        
+        <!-- Your Stage -->
+        <div class="text-center w-5/12">
+           <h3 class="font-heading font-bold text-gray-400 mb-2">Your Stage</h3>
+           <div id="playerStage" class="w-full h-32 rounded-lg border-4 border-white/20 shadow-[0_0_20px_currentColor] flex items-center justify-center transition-colors duration-100">
+              <span class="text-2xl">🕺</span>
+           </div>
+        </div>
+      </div>
+      
+      <!-- Sliders -->
+      <div class="space-y-6">
+         <div>
+            <div class="flex justify-between text-red-500 font-bold mb-1">
+               <span>Red Spotlight</span>
+               <span id="rValue">0</span>
+            </div>
+            <input type="range" id="rSlider" min="0" max="255" value="0" class="w-full h-3 bg-red-950 rounded-lg appearance-none cursor-pointer">
+         </div>
+         
+         <div>
+            <div class="flex justify-between text-green-500 font-bold mb-1">
+               <span>Green Spotlight</span>
+               <span id="gValue">0</span>
+            </div>
+            <input type="range" id="gSlider" min="0" max="255" value="0" class="w-full h-3 bg-green-950 rounded-lg appearance-none cursor-pointer">
+         </div>
+         
+         <div>
+            <div class="flex justify-between text-blue-500 font-bold mb-1">
+               <span>Blue Spotlight</span>
+               <span id="bValue">0</span>
+            </div>
+            <input type="range" id="bSlider" min="0" max="255" value="0" class="w-full h-3 bg-blue-950 rounded-lg appearance-none cursor-pointer">
+         </div>
+      </div>
+      
+      <button id="lockBtn" class="w-full py-4 rounded-lg bg-gray-800 hover:bg-gray-700 text-white font-bold font-heading mt-8 text-xl tracking-wider transition-colors border border-gray-600 shadow-lg">LOCK IN LIGHTING</button>
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel">
+        <h2 class="text-3xl font-bold font-heading mb-2 text-white">SHOW OVER</h2>
+        <p class="text-gray-400 mb-6">Final Score: <span id="finalScore" class="text-yellow-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 35 Operations Manual</h3>
+        <p>Welcome to Arcade Room 35, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <!-- Custom CSS for sliders to make them look like mixing board faders -->
+  <style>
+    input[type=range] {
+      -webkit-appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 24px;
+      width: 16px;
+      border-radius: 4px;
+      background: #e2e8f0;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+  </style>
+
+  <script>
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const targetStage = document.getElementById('targetStage');
+    const playerStage = document.getElementById('playerStage');
+    
+    const rSlider = document.getElementById('rSlider');
+    const gSlider = document.getElementById('gSlider');
+    const bSlider = document.getElementById('bSlider');
+    const rValue = document.getElementById('rValue');
+    const gValue = document.getElementById('gValue');
+    const bValue = document.getElementById('bValue');
+    
+    const lockBtn = document.getElementById('lockBtn');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const finalScore = document.getElementById('finalScore');
+    
+    let score = 0;
+    let timeLeft = 45;
+    let timerInterval;
+    let isGameOver = false;
+    
+    let targetRGB = { r: 0, g: 0, b: 0 };
+    
+    function generateTarget() {
+       // Generate colors in steps of 15 to make it slightly easier to hit
+       targetRGB.r = Math.floor(Math.random() * 18) * 15; // 0-255 approx
+       targetRGB.g = Math.floor(Math.random() * 18) * 15;
+       targetRGB.b = Math.floor(Math.random() * 18) * 15;
+       
+       targetStage.style.backgroundColor = `rgb(${targetRGB.r}, ${targetRGB.g}, ${targetRGB.b})`;
+    }
+    
+    function updatePlayerStage() {
+       const r = rSlider.value;
+       const g = gSlider.value;
+       const b = bSlider.value;
+       
+       rValue.textContent = r;
+       gValue.textContent = g;
+       bValue.textContent = b;
+       
+       const hex = `rgb(${r}, ${g}, ${b})`;
+       playerStage.style.backgroundColor = hex;
+       playerStage.style.color = hex; // For the glow shadow
+    }
+    
+    function calculateScore() {
+       const rDiff = Math.abs(targetRGB.r - rSlider.value);
+       const gDiff = Math.abs(targetRGB.g - gSlider.value);
+       const bDiff = Math.abs(targetRGB.b - bSlider.value);
+       
+       const totalDiff = rDiff + gDiff + bDiff;
+       const maxDiff = 255 * 3;
+       
+       // Calculate accuracy percentage
+       let accuracy = 1 - (totalDiff / maxDiff);
+       
+       if (accuracy > 0.95) return 500; // Perfect
+       if (accuracy > 0.85) return 250; // Great
+       if (accuracy > 0.75) return 100; // Good
+       return 0; // Miss
+    }
+    
+    [rSlider, gSlider, bSlider].forEach(slider => {
+       slider.addEventListener('input', updatePlayerStage);
+    });
+    
+    lockBtn.addEventListener('click', () => {
+       if(isGameOver) return;
+       
+       const points = calculateScore();
+       if (points > 0) {
+           score += points;
+           scoreDisplay.textContent = score;
+           lockBtn.textContent = `+${points} POINTS!`;
+           lockBtn.className = "w-full py-4 rounded-lg bg-green-600 text-white font-bold font-heading mt-8 text-xl tracking-wider transition-colors";
+           timeLeft += 3; // Time bonus
+       } else {
+           lockBtn.textContent = `MISS! Too Far Off`;
+           lockBtn.className = "w-full py-4 rounded-lg bg-red-600 text-white font-bold font-heading mt-8 text-xl tracking-wider transition-colors";
+       }
+       
+       // Reset sliders
+       setTimeout(() => {
+           rSlider.value = 0;
+           gSlider.value = 0;
+           bSlider.value = 0;
+           updatePlayerStage();
+           generateTarget();
+           lockBtn.textContent = "LOCK IN LIGHTING";
+           lockBtn.className = "w-full py-4 rounded-lg bg-gray-800 hover:bg-gray-700 text-white font-bold font-heading mt-8 text-xl tracking-wider transition-colors border border-gray-600 shadow-lg";
+       }, 800);
+    });
+    
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if(isGameOver) return;
+        timeLeft--;
+        timeDisplay.textContent = timeLeft + 's';
+        if(timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+    
+    function endGame() {
+      isGameOver = true;
+      clearInterval(timerInterval);
+      finalScore.textContent = score;
+      gameOverOverlay.style.display = 'flex';
+    }
+    
+    function init() {
+      score = 0;
+      timeLeft = 45;
+      isGameOver = false;
+      scoreDisplay.textContent = score;
+      timeDisplay.textContent = timeLeft + 's';
+      gameOverOverlay.style.display = 'none';
+      
+      rSlider.value = 0;
+      gSlider.value = 0;
+      bSlider.value = 0;
+      updatePlayerStage();
+      
+      generateTarget();
+      startTimer();
+      
+      lockBtn.textContent = "LOCK IN LIGHTING";
+      lockBtn.className = "w-full py-4 rounded-lg bg-gray-800 hover:bg-gray-700 text-white font-bold font-heading mt-8 text-xl tracking-wider transition-colors border border-gray-600 shadow-lg";
+    }
+    
+    document.getElementById('newGameBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+</body>
+</html>

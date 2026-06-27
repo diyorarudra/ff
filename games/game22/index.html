@@ -1,0 +1,453 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Road Crosser &mdash; ArcadeNexus</title>
+  <meta name="description" content="Help the character cross the busy roads and rivers to reach safety.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Road Crosser",
+    "genre": "Action Arcade",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    #gameCanvas { touch-action: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[600px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Lives</span>
+          <div id="lives" class="text-xl font-bold text-green-400 font-heading leading-tight flex gap-1 pt-1">
+            <span class="text-xs">¸¸¸</span>
+          </div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button>
+    </div>
+
+    <div class="relative w-full aspect-square bg-[#06060e] rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.05)] border border-white/10 overflow-hidden mb-4 p-2 flex flex-col">
+      <canvas id="gameCanvas_22" class="block w-full h-full cursor-pointer touch-none bg-[#111125] rounded-lg"></canvas>
+      
+      <!-- Joystick for Mobile -->
+      <div class="w-full flex justify-between px-4 mt-2 mb-2 md:hidden">
+         <!-- Touch handled directly on canvas via swipe, or fallback buttons below if preferred. We'll use swipe on canvas. -->
+         <p class="text-center w-full text-gray-400 text-sm">Swipe to hop</p>
+      </div>
+
+      <!-- Overlays -->
+      <div id="gameOver" class="absolute inset-0 bg-red-900/90 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-5xl font-bold mb-4 font-heading text-white drop-shadow-md">SPLAT!</div>
+        <p class="text-gray-200 mb-6 text-xl">Score: <span id="finalScore" class="font-bold">0</span></p>
+        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+
+      <div id="startScreen" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-4xl font-bold font-heading text-green-400 drop-shadow-md mb-2">Road Crosser</div>
+        <p class="text-gray-300 text-sm mb-6 text-center px-6">Arrow keys or Swipe to move.<br>Avoid cars, jump on logs. Reach the top!</p>
+        <button id="beginBtn" class="bg-green-500 hover:bg-green-400 text-black px-8 py-3 rounded-lg font-bold text-lg shadow-lg pointer-events-auto transition active:scale-95">START</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 22 Operations Manual</h3>
+        <p>Welcome to Arcade Room 22, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_22');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    
+    const startScreen = document.getElementById('startScreen');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    // Internal resolution (13x13 grid)
+    const COLS = 13;
+    const ROWS = 13;
+    const GRID = 40;
+    canvas.width = COLS * GRID;
+    canvas.height = ROWS * GRID;
+
+    let score = 0;
+    let lives = 3;
+    let state = 'START'; // START, PLAYING, GAMEOVER, RESPAWN
+    let animFrame = null;
+    let highestRow = ROWS - 1;
+
+    let player = { x: 6*GRID, y: 12*GRID, gridX: 6, gridY: 12, size: GRID*0.8 };
+    
+    // Level definition (rows 0 to 12)
+    // 0: Goal, 1-5: River, 6: Safe, 7-11: Road, 12: Safe Start
+    let lanes = [];
+
+    function initLanes() {
+      lanes = [];
+      for(let i=0; i<ROWS; i++) {
+        if(i === 0) lanes.push({ type: 'goal' });
+        else if(i === 6 || i === 12) lanes.push({ type: 'safe' });
+        else if(i >= 1 && i <= 5) {
+          // River
+          let dir = (i % 2 === 0) ? 1 : -1;
+          let speed = Math.random() * 1.5 + 1.0;
+          let objs = [];
+          for(let j=0; j<3; j++) {
+            objs.push({ x: j*200 + Math.random()*50, y: i*GRID, w: GRID*2.5, h: GRID*0.8, speed: speed * dir, dir: dir });
+          }
+          lanes.push({ type: 'river', speed: speed, objs: objs });
+        }
+        else {
+          // Road
+          let dir = (i % 2 === 0) ? -1 : 1;
+          let speed = Math.random() * 2 + 1.5;
+          let objs = [];
+          for(let j=0; j<3; j++) {
+            objs.push({ x: j*180, y: i*GRID, w: GRID, h: GRID*0.8, speed: speed * dir, dir: dir });
+          }
+          lanes.push({ type: 'road', speed: speed, objs: objs });
+        }
+      }
+    }
+
+    function updateLivesUI() {
+      let str = '';
+      for(let i=0; i<lives; i++) str += '¸';
+      livesEl.innerHTML = `<span class="text-xs">${str}</span>`;
+    }
+
+    function init() {
+      score = 0;
+      lives = 3;
+      highestRow = ROWS - 1;
+      updateLivesUI();
+      scoreEl.textContent = score;
+      
+      initLanes();
+      resetPlayer();
+
+      state = 'START';
+      startScreen.style.opacity = '1';
+      startScreen.style.pointerEvents = 'auto';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+
+      if(animFrame) cancelAnimationFrame(animFrame);
+      requestAnimationFrame(gameLoop);
+    }
+
+    function resetPlayer() {
+      player.gridX = 6;
+      player.gridY = 12;
+      player.x = player.gridX * GRID;
+      player.y = player.gridY * GRID;
+      highestRow = 12;
+    }
+
+    function die() {
+      lives--;
+      updateLivesUI();
+      
+      // Death flash
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      if (lives <= 0) {
+        state = 'GAMEOVER';
+        document.getElementById('finalScore').textContent = score;
+        gameOverOverlay.style.opacity = '1';
+        gameOverOverlay.style.pointerEvents = 'auto';
+      } else {
+        state = 'RESPAWN';
+        setTimeout(() => {
+          resetPlayer();
+          state = 'PLAYING';
+        }, 500);
+      }
+    }
+
+    function winRound() {
+      score += 100;
+      scoreEl.textContent = score;
+      state = 'RESPAWN';
+      setTimeout(() => {
+        initLanes(); // Increase difficulty later if desired
+        resetPlayer();
+        state = 'PLAYING';
+      }, 500);
+    }
+
+    function move(dx, dy) {
+      if (state !== 'PLAYING') return;
+      
+      let nx = player.gridX + dx;
+      let ny = player.gridY + dy;
+      
+      if (nx >= 0 && nx < COLS) player.gridX = nx;
+      if (ny >= 0 && ny < ROWS) player.gridY = ny;
+      
+      player.x = player.gridX * GRID;
+      player.y = player.gridY * GRID;
+
+      // Score for moving forward
+      if (player.gridY < highestRow) {
+        score += 10;
+        highestRow = player.gridY;
+        scoreEl.textContent = score;
+      }
+
+      // Check win
+      if (player.gridY === 0) winRound();
+    }
+
+    // Input Handling
+    window.addEventListener('keydown', e => {
+      if(e.key === 'ArrowUp') { move(0, -1); e.preventDefault(); }
+      if(e.key === 'ArrowDown') { move(0, 1); e.preventDefault(); }
+      if(e.key === 'ArrowLeft') { move(-1, 0); e.preventDefault(); }
+      if(e.key === 'ArrowRight') { move(1, 0); e.preventDefault(); }
+    });
+
+    let touchStartX = 0; let touchStartY = 0;
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, {passive: false});
+
+    canvas.addEventListener('touchend', e => {
+      e.preventDefault();
+      let dx = e.changedTouches[0].screenX - touchStartX;
+      let dy = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 30) move(1, 0);
+        else if (dx < -30) move(-1, 0);
+      } else {
+        if (dy > 30) move(0, 1);
+        else if (dy < -30) move(0, -1);
+      }
+    });
+
+    document.getElementById('beginBtn').addEventListener('click', () => {
+      state = 'PLAYING';
+      startScreen.style.opacity = '0';
+      startScreen.style.pointerEvents = 'none';
+    });
+    
+    document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('click', init);
+
+    // AABB
+    function AABB(x1,y1,w1,h1, x2,y2,w2,h2) {
+      return x1 < x2+w2 && x1+w1 > x2 && y1 < y2+h2 && y1+h1 > y2;
+    }
+
+    function update() {
+      if (state !== 'PLAYING') return;
+
+      let safeOnLog = false;
+      let playerRect = { x: player.x + GRID*0.2, y: player.y + GRID*0.2, w: GRID*0.6, h: GRID*0.6 }; // smaller hitbox
+
+      // Update lanes
+      for(let l=0; l<lanes.length; l++) {
+        let lane = lanes[l];
+        if (lane.objs) {
+          for (let obj of lane.objs) {
+            obj.x += obj.speed;
+            
+            // Wrap
+            if (obj.dir === 1 && obj.x > canvas.width) obj.x = -obj.w;
+            if (obj.dir === -1 && obj.x + obj.w < 0) obj.x = canvas.width;
+
+            // Collision logic
+            if (player.gridY === l) {
+              if (lane.type === 'road') {
+                if (AABB(playerRect.x, playerRect.y, playerRect.w, playerRect.h, obj.x, obj.y, obj.w, obj.h)) {
+                  die();
+                }
+              } else if (lane.type === 'river') {
+                if (AABB(playerRect.x, playerRect.y, playerRect.w, playerRect.h, obj.x, obj.y, obj.w, obj.h)) {
+                  safeOnLog = true;
+                  player.x += obj.speed; // move with log
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Check river death
+      if (lanes[player.gridY].type === 'river' && !safeOnLog) {
+        die();
+      }
+
+      // Keep on screen if on log
+      if (player.x < 0 || player.x + GRID > canvas.width) {
+        die();
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      // Draw background lanes
+      for(let i=0; i<ROWS; i++) {
+        let y = i*GRID;
+        if(lanes[i].type === 'safe' || lanes[i].type === 'goal') {
+          ctx.fillStyle = '#166534'; // green-800
+          ctx.fillRect(0, y, canvas.width, GRID);
+        } else if (lanes[i].type === 'road') {
+          ctx.fillStyle = '#1e293b'; // slate-800
+          ctx.fillRect(0, y, canvas.width, GRID);
+          // Road lines
+          ctx.strokeStyle = '#475569'; // slate-600
+          ctx.setLineDash([15, 15]);
+          ctx.beginPath();
+          ctx.moveTo(0, y + GRID/2);
+          ctx.lineTo(canvas.width, y + GRID/2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        } else if (lanes[i].type === 'river') {
+          ctx.fillStyle = '#0ea5e9'; // sky-500
+          ctx.fillRect(0, y, canvas.width, GRID);
+        }
+      }
+
+      // Draw objects
+      for(let lane of lanes) {
+        if(lane.objs) {
+          for(let obj of lane.objs) {
+            if (lane.type === 'road') {
+              ctx.fillStyle = '#ef4444'; // Red cars
+              ctx.fillRect(obj.x, obj.y + GRID*0.1, obj.w, obj.h);
+              // Headlights
+              ctx.fillStyle = '#fef08a';
+              if (obj.dir === 1) ctx.fillRect(obj.x + obj.w - 4, obj.y + GRID*0.2, 4, 4);
+              else ctx.fillRect(obj.x, obj.y + GRID*0.2, 4, 4);
+            } else if (lane.type === 'river') {
+              ctx.fillStyle = '#78350f'; // Brown logs
+              ctx.beginPath();
+              ctx.roundRect(obj.x, obj.y + GRID*0.1, obj.w, obj.h, 10);
+              ctx.fill();
+            }
+          }
+        }
+      }
+
+      // Draw Player (Frog)
+      if (state !== 'GAMEOVER') {
+        let px = player.x + GRID/2;
+        let py = player.y + GRID/2;
+        let s = player.size/2;
+        
+        ctx.fillStyle = '#4ade80'; // Green
+        ctx.beginPath();
+        ctx.arc(px, py, s, 0, Math.PI*2);
+        ctx.fill();
+        
+        // Eyes
+        ctx.fillStyle = 'white';
+        ctx.beginPath(); ctx.arc(px - s*0.4, py - s*0.4, s*0.3, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(px + s*0.4, py - s*0.4, s*0.3, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = 'black';
+        ctx.beginPath(); ctx.arc(px - s*0.4, py - s*0.5, s*0.1, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(px + s*0.4, py - s*0.5, s*0.1, 0, Math.PI*2); ctx.fill();
+      }
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  </script>
+</body>
+</html>

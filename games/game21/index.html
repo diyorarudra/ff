@@ -1,0 +1,520 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dot Eater &mdash; ArcadeNexus</title>
+  <meta name="description" content="Chomp the dots and avoid the ghosts in this classic arcade maze game.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Dot Eater",
+    "genre": "Action Maze",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    #gameCanvas { touch-action: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[600px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Lives</span>
+          <div id="lives" class="text-xl font-bold text-yellow-400 font-heading leading-tight">3</div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button>
+    </div>
+
+    <div class="relative w-full aspect-[4/5] bg-[#000] rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.05)] border border-white/10 overflow-hidden mb-4 flex flex-col p-2">
+      <canvas id="gameCanvas_21" class="block w-full h-full touch-none"></canvas>
+      
+      <!-- Overlays -->
+      <div id="gameOver" class="absolute inset-0 bg-red-900/90 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-5xl font-bold mb-4 font-heading text-white drop-shadow-md">Game Over</div>
+        <p class="text-gray-200 mb-6 text-xl">Final Score: <span id="finalScore" class="font-bold">0</span></p>
+        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+
+      <div id="gameWon" class="absolute inset-0 bg-green-900/90 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-5xl font-bold mb-4 font-heading text-white drop-shadow-md">Maze Cleared!</div>
+        <button id="nextLevelBtn" class="bg-white text-green-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Next Level</button>
+      </div>
+
+      <div id="startScreen" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-4xl font-bold font-heading text-yellow-400 drop-shadow-md mb-2">Dot Eater</div>
+        <p class="text-gray-300 text-sm mb-6 text-center px-6">Swipe or use Arrow Keys to move.<br>Eat all the dots, avoid the ghosts!</p>
+        <button id="beginBtn" class="bg-yellow-400 hover:bg-yellow-300 text-black px-8 py-3 rounded-lg font-bold text-lg shadow-lg pointer-events-auto transition active:scale-95">START</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Arcade Module 21 Operations Manual</h3>
+        <p>Welcome to Arcade Room 21, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+</div>
+</div>
+
+<div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_21');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    
+    const startScreen = document.getElementById('startScreen');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const gameWonOverlay = document.getElementById('gameWon');
+    
+    canvas.width = 440;
+    canvas.height = 550;
+
+    // Simple 20x25 grid
+    const cols = 20;
+    const rows = 25;
+    const cw = canvas.width / cols;
+    const ch = canvas.height / rows;
+
+    let map = [];
+    // 0: empty, 1: wall, 2: dot
+    const levelLayout = [
+      "11111111111111111111",
+      "12222222211222222221",
+      "12111111211211111121",
+      "12111111211211111121",
+      "12222222222222222221",
+      "12111121111112111121",
+      "12222221111112222221",
+      "11111121111112111111",
+      "00000121111112100000",
+      "11111121111112111111",
+      "12222222222222222221",
+      "12111121111112111121",
+      "12111121111112111121",
+      "12221122211222112221",
+      "11121121111112112111",
+      "11121121111112112111",
+      "12222222211222222221",
+      "12111111211211111121",
+      "12222111222211122221",
+      "11112111211211121111",
+      "11112222211222221111",
+      "11111111111111111111",
+      "11111111111111111111",
+      "11111111111111111111",
+      "11111111111111111111"
+    ];
+
+    let score = 0;
+    let lives = 3;
+    let state = 'START';
+    let dotsTotal = 0;
+    
+    let player = { c: 1, r: 1, nextDir: null, curDir: {dc:0,dr:0}, x: 0, y: 0, speed: 2.5 };
+    let ghosts = [];
+
+    const GHOST_COLORS = ['#ef4444', '#3b82f6', '#f9a8d4', '#f97316'];
+
+    function parseMap() {
+      map = [];
+      dotsTotal = 0;
+      for (let r=0; r<rows; r++) {
+        let rowData = [];
+        for (let c=0; c<cols; c++) {
+          let val = parseInt(levelLayout[r][c]);
+          rowData.push(val);
+          if (val === 2) dotsTotal++;
+        }
+        map.push(rowData);
+      }
+    }
+
+    function init() {
+      score = 0;
+      lives = 3;
+      parseMap();
+      resetPositions();
+      updateUI();
+
+      state = 'START';
+      startScreen.style.opacity = '1';
+      startScreen.style.pointerEvents = 'auto';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+      gameWonOverlay.style.opacity = '0';
+      gameWonOverlay.style.pointerEvents = 'none';
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function nextLevel() {
+      parseMap();
+      resetPositions();
+      state = 'PLAYING';
+      gameWonOverlay.style.opacity = '0';
+      gameWonOverlay.style.pointerEvents = 'none';
+    }
+
+    function resetPositions() {
+      player.c = 1; player.r = 1;
+      player.x = player.c * cw; player.y = player.r * ch;
+      player.curDir = {dc:0,dr:0};
+      player.nextDir = null;
+
+      ghosts = [];
+      for(let i=0; i<4; i++) {
+        ghosts.push({
+          c: 9 + (i%2), r: 10,
+          x: (9 + (i%2)) * cw, y: 10 * ch,
+          dir: {dc:0, dr:-1}, // go up initially
+          color: GHOST_COLORS[i],
+          speed: 2.0
+        });
+      }
+    }
+
+    function startGame() {
+      state = 'PLAYING';
+      startScreen.style.opacity = '0';
+      startScreen.style.pointerEvents = 'none';
+      player.nextDir = {dc:1, dr:0}; // Start moving right
+    }
+
+    document.getElementById('beginBtn').addEventListener('click', startGame);
+    document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('click', init);
+    document.getElementById('nextLevelBtn').addEventListener('click', nextLevel);
+
+    // Input Handling
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowUp') { player.nextDir = {dc:0, dr:-1}; e.preventDefault(); }
+      if (e.key === 'ArrowDown') { player.nextDir = {dc:0, dr:1}; e.preventDefault(); }
+      if (e.key === 'ArrowLeft') { player.nextDir = {dc:-1, dr:0}; e.preventDefault(); }
+      if (e.key === 'ArrowRight') { player.nextDir = {dc:1, dr:0}; e.preventDefault(); }
+    });
+
+    let touchStartX = 0; let touchStartY = 0;
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, {passive: false});
+
+    canvas.addEventListener('touchmove', e => e.preventDefault(), {passive:false});
+
+    canvas.addEventListener('touchend', e => {
+      let dx = e.changedTouches[0].screenX - touchStartX;
+      let dy = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 30) player.nextDir = {dc:1, dr:0};
+        else if (dx < -30) player.nextDir = {dc:-1, dr:0};
+      } else {
+        if (dy > 30) player.nextDir = {dc:0, dr:1};
+        else if (dy < -30) player.nextDir = {dc:0, dr:-1};
+      }
+    });
+
+    function updateUI() {
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+    }
+
+    function isWall(r, c) {
+      if (r<0 || r>=rows || c<0 || c>=cols) return false; // wraps
+      return map[r][c] === 1;
+    }
+
+    // AABB
+    function AABB(x1,y1,w1,h1, x2,y2,w2,h2) {
+      return x1 < x2+w2 && x1+w1 > x2 && y1 < y2+h2 && y1+h1 > y2;
+    }
+
+    function update() {
+      if (state !== 'PLAYING') return;
+
+      // --- PLAYER MOVEMENT ---
+      // Are we perfectly aligned to the grid?
+      let alignedC = Math.abs(player.x - player.c * cw) < player.speed;
+      let alignedR = Math.abs(player.y - player.r * ch) < player.speed;
+
+      if (alignedC && alignedR) {
+        // Snap
+        player.x = player.c * cw;
+        player.y = player.r * ch;
+
+        // Wrap tunnel
+        if (player.c <= 0 && player.curDir.dc === -1) { player.c = cols-1; player.x = player.c*cw; }
+        if (player.c >= cols-1 && player.curDir.dc === 1) { player.c = 0; player.x = player.c*cw; }
+
+        // Can we turn to nextDir?
+        if (player.nextDir) {
+          let checkR = player.r + player.nextDir.dr;
+          let checkC = player.c + player.nextDir.dc;
+          if (!isWall(checkR, checkC)) {
+            player.curDir = player.nextDir;
+            player.nextDir = null;
+          }
+        }
+
+        // Can we keep going curDir?
+        let checkR = player.r + player.curDir.dr;
+        let checkC = player.c + player.curDir.dc;
+        if (isWall(checkR, checkC)) {
+          player.curDir = {dc:0, dr:0}; // stop
+        }
+      }
+
+      // Move player visually
+      player.x += player.curDir.dc * player.speed;
+      player.y += player.curDir.dr * player.speed;
+      
+      // Update logical grid pos
+      player.c = Math.floor(player.x / cw + 0.5);
+      player.r = Math.floor(player.y / ch + 0.5);
+
+      // Eat dot
+      if (player.r >= 0 && player.r < rows && player.c >= 0 && player.c < cols) {
+        if (map[player.r][player.c] === 2) {
+          map[player.r][player.c] = 0;
+          score += 10;
+          dotsTotal--;
+          updateUI();
+          if (dotsTotal === 0) {
+            state = 'WON';
+            gameWonOverlay.style.opacity = '1';
+            gameWonOverlay.style.pointerEvents = 'auto';
+          }
+        }
+      }
+
+      // --- GHOST MOVEMENT ---
+      for (let g of ghosts) {
+        let gAlignedC = Math.abs(g.x - g.c * cw) < g.speed;
+        let gAlignedR = Math.abs(g.y - g.r * ch) < g.speed;
+
+        if (gAlignedC && gAlignedR) {
+          g.x = g.c * cw;
+          g.y = g.r * ch;
+
+          // Wrap tunnel
+          if (g.c <= 0 && g.dir.dc === -1) { g.c = cols-1; g.x = g.c*cw; }
+          if (g.c >= cols-1 && g.dir.dc === 1) { g.c = 0; g.x = g.c*cw; }
+
+          // Possible moves (exclude reverse direction unless stuck)
+          let possible = [];
+          let dirs = [{dc:0,dr:-1}, {dc:1,dr:0}, {dc:0,dr:1}, {dc:-1,dr:0}];
+          
+          for (let d of dirs) {
+            if (d.dc === -g.dir.dc && d.dr === -g.dir.dr && g.dir.dc !== 0 && g.dir.dr !== 0) continue;
+            let checkR = g.r + d.dr;
+            let checkC = g.c + d.dc;
+            if (!isWall(checkR, checkC)) possible.push(d);
+          }
+
+          if (possible.length > 0) {
+            // Very simple AI: Mostly random
+            g.dir = possible[Math.floor(Math.random() * possible.length)];
+          } else {
+            // Reverse if dead end
+            g.dir = {dc: -g.dir.dc, dr: -g.dir.dr};
+          }
+        }
+
+        g.x += g.dir.dc * g.speed;
+        g.y += g.dir.dr * g.speed;
+        g.c = Math.floor(g.x / cw + 0.5);
+        g.r = Math.floor(g.y / ch + 0.5);
+
+        // Player Collision (Hitbox smaller than tile)
+        let pHitbox = 10;
+        let gHitbox = 10;
+        if (Math.hypot(player.x - g.x, player.y - g.y) < (pHitbox + gHitbox)) {
+          // Death
+          lives--;
+          updateUI();
+          if (lives <= 0) {
+            state = 'GAMEOVER';
+            document.getElementById('finalScore').textContent = score;
+            gameOverOverlay.style.opacity = '1';
+            gameOverOverlay.style.pointerEvents = 'auto';
+          } else {
+            resetPositions();
+            // brief pause
+            state = 'RESPAWN';
+            setTimeout(() => state = 'PLAYING', 1000);
+          }
+        }
+      }
+    }
+
+    function draw() {
+      // Background
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Map
+      for (let r=0; r<rows; r++) {
+        for (let c=0; c<cols; c++) {
+          if (map[r][c] === 1) {
+            // Wall (neon blue)
+            ctx.fillStyle = '#1e3a8a'; // darker blue inside
+            ctx.fillRect(c*cw, r*ch, cw, ch);
+            ctx.strokeStyle = '#3b82f6'; // bright blue border
+            ctx.lineWidth = 2;
+            ctx.strokeRect(c*cw, r*ch, cw, ch);
+          } else if (map[r][c] === 2) {
+            // Dot (yellow)
+            ctx.fillStyle = '#fef08a';
+            ctx.beginPath();
+            ctx.arc(c*cw + cw/2, r*ch + ch/2, 3, 0, Math.PI*2);
+            ctx.fill();
+          }
+        }
+      }
+
+      // Draw Player
+      ctx.fillStyle = '#facc15'; // Yellow
+      ctx.beginPath();
+      // Simple mouth animation
+      let mouth = 0;
+      if (state === 'PLAYING') {
+        mouth = Math.abs(Math.sin(Date.now() / 100)) * 0.5; // 0 to 0.5
+      }
+      
+      let angleOffset = 0;
+      if (player.curDir.dc === 1) angleOffset = 0;
+      else if (player.curDir.dr === 1) angleOffset = Math.PI/2;
+      else if (player.curDir.dc === -1) angleOffset = Math.PI;
+      else if (player.curDir.dr === -1) angleOffset = -Math.PI/2;
+      else if (player.nextDir) {
+         if (player.nextDir.dc === 1) angleOffset = 0;
+         else if (player.nextDir.dr === 1) angleOffset = Math.PI/2;
+         else if (player.nextDir.dc === -1) angleOffset = Math.PI;
+         else if (player.nextDir.dr === -1) angleOffset = -Math.PI/2;
+      }
+
+      ctx.save();
+      ctx.translate(player.x + cw/2, player.y + ch/2);
+      ctx.rotate(angleOffset);
+      ctx.arc(0, 0, cw/2 - 2, mouth, Math.PI*2 - mouth);
+      ctx.lineTo(0,0);
+      ctx.fill();
+      ctx.restore();
+
+      // Draw Ghosts
+      ghosts.forEach(g => {
+        ctx.fillStyle = g.color;
+        ctx.beginPath();
+        let gx = g.x + cw/2;
+        let gy = g.y + ch/2;
+        let s = cw/2 - 2;
+        
+        ctx.arc(gx, gy, s, Math.PI, 0); // top dome
+        ctx.lineTo(gx + s, gy + s);
+        ctx.lineTo(gx + s*0.33, gy + s*0.7);
+        ctx.lineTo(gx - s*0.33, gy + s);
+        ctx.lineTo(gx - s, gy + s*0.7);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Eyes
+        ctx.fillStyle = 'white';
+        ctx.beginPath(); ctx.arc(gx - s/3, gy - s/4, 3, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(gx + s/3, gy - s/4, 3, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = 'blue';
+        ctx.beginPath(); ctx.arc(gx - s/3 + g.dir.dc, gy - s/4 + g.dir.dr, 1.5, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(gx + s/3 + g.dir.dc, gy - s/4 + g.dir.dr, 1.5, 0, Math.PI*2); ctx.fill();
+      });
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  </script>
+</body>
+</html>

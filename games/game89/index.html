@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Balloons Shooter &mdash; ArcadeNexus</title>
+  <meta name="description" content="Play Balloons Shooter instantly in your browser. Free HTML5 game on ArcadeNexus.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Balloons Shooter",
+    "genre": "Puzzle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ArcadeNexus"
+    }
+  }
+  </script>
+  <style>
+    /* Prevent pull-to-refresh on mobile */
+    body { overscroll-behavior-y: none; }
+  </style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ArcadeNexus</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center">
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-6 shadow-lg">
+      <div class="flex gap-4">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5">
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Score</div>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5">
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Best</div>
+          <div id="bestScore" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">New Game</button>
+    </div>    <div class="w-full flex justify-center mb-6 mt-4">
+      <canvas id="gameCanvas_89" width="800" height="500" class="w-full max-w-full bg-[#131a26] rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/10 touch-none select-none block"></canvas>
+    </div>
+
+    <p class="text-center text-gray-300 mt-2 font-medium text-lg px-4">
+      Aim your bow and click to pop the ascending balloons.
+    </p>
+  </div>
+
+  
+      <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+</div>
+
+
+
+  <div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  </div>
+
+  <script>
+
+        // --- BALLOONS SHOOTER ARC PROJECTILE ENGINE ---
+        const canvas = document.getElementById('gameCanvas_89');
+        const ctx = canvas.getContext('2d');
+        const restartBtn = document.getElementById('restartBtn') || { addEventListener: () => {} };
+
+        let score, isOver, balloons, arrows;
+        function init() {
+            score = 0; isOver = false; balloons = []; arrows = []; updateUI();
+            for(let i=0; i<6; i++) spawnBalloon();
+        }
+        function updateUI() {
+            const scoreNode = document.querySelector('[id*="score"]') || { textContent: "" };
+            scoreNode.textContent = score;
+        }
+        function spawnBalloon() {
+            balloons.push({ x: Math.random()*(canvas.width - 150) + 50, y: canvas.height + Math.random()*200, r: 20 + Math.random()*10, speed: 1.2 + Math.random()*1.5, color: '#f43f5e' });
+        }
+        function step() {
+            if(isOver) return;
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+            // Draw Bow Platform Vector
+            ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(40, canvas.height/2, 35, -Math.PI/2, Math.PI/2); ctx.stroke();
+
+            // Process Active Arrow Vector Elements
+            for(let i = arrows.length-1; i >= 0; i--) {
+                let arr = arrows[i]; arr.vy += 0.12; arr.x += arr.vx; arr.y += arr.vy;
+                ctx.fillStyle = '#cbd5e1'; ctx.fillRect(arr.x, arr.y, 18, 4);
+                
+                // Radius Target Precision Intersection Validation
+                for(let j = balloons.length-1; j >= 0; j--) {
+                    let b = balloons[j];
+                    if(Math.hypot(arr.x - b.x, arr.y - b.y) < b.r) {
+                        balloons.splice(j,1); arrows.splice(i,1); score += 10; updateUI(); spawnBalloon(); break;
+                    }
+                }
+                if(arr.x > canvas.width) arrows.splice(i,1);
+            }
+
+            // Process Balloon Ascents
+            balloons.forEach(b => {
+                b.y -= b.speed; ctx.fillStyle = b.color; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fill();
+                if(b.y < -40) { b.y = canvas.height + 40; b.x = Math.random()*(canvas.width - 150) + 50; }
+            });
+            requestAnimationFrame(step);
+        }
+        canvas.addEventListener('click', (e) => {
+            const r = canvas.getBoundingClientRect();
+            let tx = e.clientX - r.left, ty = e.clientY - r.top;
+            let angle = Math.atan2(ty - canvas.height/2, tx - 40);
+            arrows.push({ x: 40, y: canvas.height/2, vx: Math.cos(angle)*11, vy: Math.sin(angle)*11 });
+        });
+        restartBtn.addEventListener('click', () => { init(); });
+        init(); step();
+    
+
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+</script>
+
+    <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">How to Play Balloons Shooter</h3>
+        <p>Welcome to Balloons Shooter, a bright and fast reflex training application built on clean arc-angle physics loops. The canvas engine generates floating target spheres that drift up from the lower screen edge at random speeds. Players use mouse or touch interactions to aim a targeting arrow, projecting a line vector that tracks the trajectory of your shots. Clicking triggers a raycast check against the balloon collision spheres to instantly pop targets and add to your score. The fast event loops ensure zero mouse lag, offering a snappy experience that keeps players highly engaged.</p>
+    </div>\n</body>
+</html>
