@@ -245,6 +245,7 @@
       }
     });
     canvas.addEventListener('mousedown', startGame);
+    canvas.addEventListener('touchstart', e => {
       e.preventDefault();
       startGame();
     }, {passive: false});
@@ -386,34 +387,6 @@
 
     init();
   
-
-// Mobile Touch-to-Mouse Polyfill
-(function() {
-    function touchToMouse(e) {
-        if (e.target.tagName === 'CANVAS') {
-            e.preventDefault();
-        } else {
-            return;
-        }
-        let type = '';
-        if (e.type === 'touchstart') type = 'mousedown';
-        if (e.type === 'touchmove') type = 'mousemove';
-        if (e.type === 'touchend') type = 'mouseup';
-        if (!type) return;
-        
-        let touch = e.changedTouches[0];
-        let mouseEvent = new MouseEvent(type, {
-            clientX: touch ? touch.clientX : 0,
-            clientY: touch ? touch.clientY : 0,
-            bubbles: true,
-            cancelable: true
-        });
-        e.target.dispatchEvent(mouseEvent);
-    }
-    document.addEventListener('touchstart', touchToMouse, {passive: false});
-    document.addEventListener('touchmove', touchToMouse, {passive: false});
-    document.addEventListener('touchend', touchToMouse, {passive: false});
-})();
 
 </script>
 </body>
