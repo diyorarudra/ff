@@ -249,7 +249,6 @@
       }
     });
 
-    canvas.addEventListener('touchmove', e => {
       e.preventDefault();
       let rect = canvas.getBoundingClientRect();
       let scaleX = canvas.width / rect.width;
@@ -259,7 +258,6 @@
       }
     }, {passive: false});
 
-    canvas.addEventListener('touchstart', launchBall, {passive: true});
     canvas.addEventListener('mousedown', launchBall);
 
     document.getElementById('restartBtn').addEventListener('click', resetGame);

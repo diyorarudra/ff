@@ -159,7 +159,7 @@
             requestAnimationFrame(loop);
         }
         canvas.addEventListener('mousemove', e => { const r=canvas.getBoundingClientRect(); px=(e.clientX-r.left)*(canvas.width/r.width); });
-        canvas.addEventListener('click', () => bullets.push({x:px, y:canvas.height-60}));
+        canvas.addEventListener('mousedown', () => bullets.push({x:px, y:canvas.height-60}));
         restartBtn.addEventListener('click', init); init();
     
 

@@ -290,8 +290,7 @@
       }
     }
 
-    canvas.addEventListener('click', handleInput);
-    canvas.addEventListener('touchstart', handleInput, { passive: false });
+    canvas.addEventListener('mousedown', handleInput);
 
     function draw() {
       ctx.fillStyle = '#111125'; // background

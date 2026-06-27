@@ -295,13 +295,11 @@
     });
 
     let touchStartX = 0; let touchStartY = 0;
-    canvas.addEventListener('touchstart', e => {
       e.preventDefault();
       touchStartX = e.changedTouches[0].screenX;
       touchStartY = e.changedTouches[0].screenY;
     }, {passive: false});
 
-    canvas.addEventListener('touchend', e => {
       e.preventDefault();
       let dx = e.changedTouches[0].screenX - touchStartX;
       let dy = e.changedTouches[0].screenY - touchStartY;

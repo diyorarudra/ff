@@ -148,7 +148,7 @@
             ctx.fillStyle = '#facc15'; ctx.fillRect(ox+obj.c*sz+2, oy+obj.r*sz+2, sz-4, sz-4);
             requestAnimationFrame(loop);
         }
-        canvas.addEventListener('click', () => {
+        canvas.addEventListener('mousedown', () => {
             if(isOver) return;
             if(grid[obj.r][obj.c] === 0) {
                 grid[obj.r][obj.c] = 1; score+=10; updateScoreUI(score);

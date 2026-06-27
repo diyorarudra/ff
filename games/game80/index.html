@@ -145,7 +145,7 @@
             ctx.fillStyle='#22c55e'; ctx.fillRect(canvas.width/2 - 150, 250, 100, 60); ctx.fillStyle='#fff'; ctx.fillText("T", canvas.width/2 - 100, 295);
             ctx.fillStyle='#ef4444'; ctx.fillRect(canvas.width/2 + 50, 250, 100, 60); ctx.fillStyle='#fff'; ctx.fillText("F", canvas.width/2 + 100, 295);
         }
-        canvas.addEventListener('click', e => {
+        canvas.addEventListener('mousedown', e => {
             if(isOver) return; const r=canvas.getBoundingClientRect(); let x=(e.clientX-r.left)*(canvas.width/r.width), y=(e.clientY-r.top)*(canvas.height/r.height);
             if(y>250 && y<310) {
                 let ans = (x>canvas.width/2-150 && x<canvas.width/2-50) ? true : (x>canvas.width/2+50 && x<canvas.width/2+150 ? false : null);

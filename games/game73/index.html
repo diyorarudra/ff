@@ -152,7 +152,7 @@
             requestAnimationFrame(loop);
         }
         window.addEventListener('keydown', e => { if(e.key===' ' && attackTime===0) attackTime=15; });
-        canvas.addEventListener('click', () => { if(attackTime===0) attackTime=15; });
+        canvas.addEventListener('mousedown', () => { if(attackTime===0) attackTime=15; });
         restartBtn.addEventListener('click', init); init();
     
 

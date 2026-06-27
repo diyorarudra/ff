@@ -340,9 +340,6 @@
     canvas.addEventListener('mouseup', endSwipe);
     canvas.addEventListener('mouseleave', endSwipe);
     
-    canvas.addEventListener('touchstart', startSwipe, {passive: false});
-    canvas.addEventListener('touchmove', moveSwipe, {passive: false});
-    canvas.addEventListener('touchend', endSwipe);
 
     document.getElementById('beginBtn').addEventListener('click', init);
     document.getElementById('tryAgainBtn').addEventListener('click', init);

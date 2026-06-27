@@ -146,7 +146,7 @@
                 ctx.fillStyle='#fff'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText(d.n, d.x, d.y+5);
             });
         }
-        canvas.addEventListener('click', e => {
+        canvas.addEventListener('mousedown', e => {
             if(isOver) return; const r=canvas.getBoundingClientRect(); let x=(e.clientX-r.left)*(canvas.width/r.width), y=(e.clientY-r.top)*(canvas.height/r.height);
             let target = dots.find(d => d.n === next);
             if(target && Math.hypot(x-target.x, y-target.y)<25) {

@@ -305,7 +305,7 @@
         }
     }
     
-    canvas.addEventListener('click', (e) => {
+    canvas.addEventListener('mousedown', (e) => {
         if(gameOverOverlay.style.display === 'flex' || isAnimating) return;
         
         const rect = canvas.getBoundingClientRect();

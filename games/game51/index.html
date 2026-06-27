@@ -175,8 +175,7 @@
             if (planeY > canvas.height || planeY < 0) isOver = true;
             requestAnimationFrame(loop);
         }
-        canvas.addEventListener('click', () => { if(!isOver) velocity = jumpForce; });
-        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); if(!isOver) velocity = jumpForce; }, {passive: false});
+        canvas.addEventListener('mousedown', () => { if(!isOver) velocity = jumpForce; });
         window.addEventListener('keydown', (e) => { if(e.code === 'Space' && !isOver) { velocity = jumpForce; e.preventDefault(); } });
         restartBtn.addEventListener('click', () => { init(); loop(); });
         init(); loop();

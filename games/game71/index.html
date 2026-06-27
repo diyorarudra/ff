@@ -171,7 +171,7 @@
             }
             requestAnimationFrame(stepEngine);
         }
-        canvas.addEventListener('click', (e) => { if(!isOver) { const r = canvas.getBoundingClientRect(); fruitList.push(new SphereNode(e.clientX - r.left, 0)); } });
+        canvas.addEventListener('mousedown', (e) => { if(!isOver) { const r = canvas.getBoundingClientRect(); fruitList.push(new SphereNode(e.clientX - r.left, 0)); } });
         restartBtn.addEventListener('click', () => { init(); stepEngine(); });
         init(); stepEngine();
     

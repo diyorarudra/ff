@@ -181,20 +181,17 @@
         }
     });
     
-    canvas.addEventListener('touchstart', (e) => {
         isDragging = true;
         const rect = canvas.getBoundingClientRect();
         catcher.x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width) - catcher.width/2;
         e.preventDefault();
     }, {passive: false});
-    canvas.addEventListener('touchmove', (e) => {
         if(isDragging) {
             const rect = canvas.getBoundingClientRect();
             catcher.x = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width) - catcher.width/2;
         }
         e.preventDefault();
     }, {passive: false});
-    canvas.addEventListener('touchend', () => isDragging = false);
     
     function spawnParticle() {
         // 50% chance to spawn the target type, 50% chance for random other

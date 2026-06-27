@@ -220,7 +220,6 @@
 
     // Hit detection (AABB bounding box approximation for simplicity)
     canvas.addEventListener('mousedown', handleClick);
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); handleClick(e.changedTouches[0]); }, {passive: false});
 
     function handleClick(e) {
       if (state !== 'PLAYING') return;

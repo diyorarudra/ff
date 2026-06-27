@@ -272,7 +272,6 @@
     });
     
     canvas.addEventListener('mousedown', handleInput);
-    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleInput(); }, {passive: false});
     
     let lastTime = 0;
     function loop(timestamp) {

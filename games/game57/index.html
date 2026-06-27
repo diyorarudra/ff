@@ -152,7 +152,7 @@
             if(isPlayer) { pos+=dice; if(jumps[pos]) pos=jumps[pos]; if(pos>=100){pos=100; message="You Win!"; isOver=true; updateScoreUI(100);} else { message="You rolled "+dice+". AI thinking..."; draw(); setTimeout(()=>roll(false), 800); return; } }
             else { aiPos+=dice; if(jumps[aiPos]) aiPos=jumps[aiPos]; if(aiPos>=100){aiPos=100; message="AI Wins!"; isOver=true;} else { message="AI rolled "+dice+". Your turn!"; } } draw();
         }
-        canvas.addEventListener('click', ()=> { if(!isOver && message.includes("Your turn") || message.includes("Click")) roll(true); });
+        canvas.addEventListener('mousedown', ()=> { if(!isOver && message.includes("Your turn") || message.includes("Click")) roll(true); });
         restartBtn.addEventListener('click', init); init();
     
 

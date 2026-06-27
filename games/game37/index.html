@@ -339,8 +339,6 @@
     canvas.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
     
-    canvas.addEventListener('touchstart', onDown, {passive: false});
-    canvas.addEventListener('touchmove', onMove, {passive: false});
     window.addEventListener('touchend', onUp);
     
     function init() {

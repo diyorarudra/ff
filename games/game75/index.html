@@ -151,7 +151,7 @@
             if(py>canvas.height || py<0) isOver=true;
             requestAnimationFrame(loop);
         }
-        canvas.addEventListener('click', () => { if(!isOver) vy=-7; });
+        canvas.addEventListener('mousedown', () => { if(!isOver) vy=-7; });
         window.addEventListener('keydown', e => { if(e.key===' ' && !isOver) vy=-7; });
         restartBtn.addEventListener('click', init); init();
     

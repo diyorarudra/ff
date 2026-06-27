@@ -147,7 +147,7 @@
             });
             requestAnimationFrame(loop);
         }
-        canvas.addEventListener('click', () => {
+        canvas.addEventListener('mousedown', () => {
             if(isOver) return;
             let cur = blocks[blocks.length-1]; let prev = blocks[blocks.length-2];
             if(prev) {

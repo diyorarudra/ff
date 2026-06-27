@@ -147,7 +147,7 @@
                 ctx.fillStyle='#fff'; ctx.font='18px sans-serif'; ctx.fillText(db[qIndex].a[i], canvas.width/2, y+28);
             }
         }
-        canvas.addEventListener('click', e => {
+        canvas.addEventListener('mousedown', e => {
             if(isOver || qIndex>=db.length) return;
             const r=canvas.getBoundingClientRect(); let y=(e.clientY-r.top)*(canvas.height/r.height);
             let clicked = -1;

@@ -235,7 +235,6 @@
       }
     });
     canvas.addEventListener('mousedown', flap);
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); flap(); }, {passive: false});
 
     document.getElementById('restartBtn').addEventListener('click', init);
     document.getElementById('tryAgainBtn').addEventListener('click', init);

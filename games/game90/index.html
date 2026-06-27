@@ -156,7 +156,7 @@
             requestAnimationFrame(loop);
         }
         canvas.addEventListener('mousemove', e => { const r=canvas.getBoundingClientRect(); angle = Math.atan2((e.clientY-r.top)*(canvas.height/r.height) - (canvas.height-40), (e.clientX-r.left)*(canvas.width/r.width) - 40); });
-        canvas.addEventListener('click', () => { balls.push({x: 40, y: canvas.height-40, vx: Math.cos(angle)*12, vy: Math.sin(angle)*12}); });
+        canvas.addEventListener('mousedown', () => { balls.push({x: 40, y: canvas.height-40, vx: Math.cos(angle)*12, vy: Math.sin(angle)*12}); });
         restartBtn.addEventListener('click', init); init();
     
 

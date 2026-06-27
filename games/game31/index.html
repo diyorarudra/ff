@@ -172,17 +172,14 @@
     
     // Touch controls
     let touchX = null;
-    canvas.addEventListener('touchstart', (e) => {
       touchX = e.touches[0].clientX;
     }, {passive:true});
-    canvas.addEventListener('touchmove', (e) => {
       if(!touchX) return;
       const currentX = e.touches[0].clientX;
       const diff = currentX - touchX;
       rickshaw.x += diff * 1.5;
       touchX = currentX;
     }, {passive:true});
-    canvas.addEventListener('touchend', () => { touchX = null; });
     
     function spawnCar() {
       const lane = Math.floor(Math.random() * lanes);

@@ -165,7 +165,7 @@
             });
             requestAnimationFrame(step);
         }
-        canvas.addEventListener('click', (e) => {
+        canvas.addEventListener('mousedown', (e) => {
             const r = canvas.getBoundingClientRect();
             let tx = e.clientX - r.left, ty = e.clientY - r.top;
             let angle = Math.atan2(ty - canvas.height/2, tx - 40);

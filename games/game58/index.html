@@ -145,7 +145,7 @@
             if(player) { p+=dice; if(p>=40){p=40; isOver=true; msg="You Win!"; updateScoreUI(100);} else { msg="You:"+dice+". AI turn."; draw(); setTimeout(()=>play(false), 700); return;} }
             else { ai+=dice; if(ai>=40){ai=40; isOver=true; msg="AI Wins!";} else msg="AI:"+dice+". Your turn."; } draw();
         }
-        canvas.addEventListener('click', ()=> { if(!isOver && msg.includes("turn") || msg.includes("Click")) play(true); });
+        canvas.addEventListener('mousedown', ()=> { if(!isOver && msg.includes("turn") || msg.includes("Click")) play(true); });
         restartBtn.addEventListener('click', init); init();
     
 

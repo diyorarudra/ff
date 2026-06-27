@@ -294,7 +294,6 @@
     
     // Mouse/Touch Input
     canvas.addEventListener('mousedown', handleClick);
-    canvas.addEventListener('touchstart', (e) => {
         e.preventDefault(); // Prevent scrolling
         const rect = canvas.getBoundingClientRect();
         const touch = e.touches[0];

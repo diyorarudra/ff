@@ -255,7 +255,6 @@
       if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) moveTileAt(r, c);
     });
 
-    canvas.addEventListener('touchstart', e => {
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
       const scale = canvas.width / rect.width;

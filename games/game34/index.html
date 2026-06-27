@@ -221,7 +221,6 @@
     });
     
     // Touch support
-    canvas.addEventListener('touchstart', (e) => {
       e.preventDefault();
       if(stuntman.active) return;
       const rect = canvas.getBoundingClientRect();
@@ -236,7 +235,6 @@
       }
     }, {passive: false});
     
-    canvas.addEventListener('touchmove', (e) => {
       if(!isDragging) return;
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
@@ -251,7 +249,6 @@
       }
     }, {passive: false});
     
-    canvas.addEventListener('touchend', () => {
       if(!isDragging) return;
       isDragging = false;
       stuntman.active = true;

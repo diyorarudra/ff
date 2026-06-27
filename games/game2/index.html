@@ -372,7 +372,6 @@
     let touchTimer = null;
     let touchMoved = false;
 
-    canvas.addEventListener('touchstart', e => {
       touchMoved = false;
       const {r, c} = getGridCoords(e);
       if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
@@ -385,12 +384,10 @@
       }, 400); // 400ms long press
     });
     
-    canvas.addEventListener('touchmove', e => {
       touchMoved = true;
       if (touchTimer) { clearTimeout(touchTimer); touchTimer = null; }
     });
 
-    canvas.addEventListener('touchend', e => {
       if (touchTimer) {
         // Short tap completed
         clearTimeout(touchTimer);

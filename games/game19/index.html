@@ -268,7 +268,6 @@
       }
     });
     canvas.addEventListener('mousedown', jump);
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); jump(); }, {passive: false});
 
     document.getElementById('restartBtn').addEventListener('click', init);
     document.getElementById('tryAgainBtn').addEventListener('click', init);

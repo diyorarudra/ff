@@ -180,14 +180,12 @@
             if(minDist < 250) activeAnchor = closest;
         });
         canvas.addEventListener('mouseup', () => activeAnchor = null);
-        canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             if (!hasStarted) { hasStarted = true; return; }
             let closest = null, minDist = 9999;
             anchors.forEach(a => { let d = Math.hypot(px - a.x, py - a.y); if(d < minDist) { minDist = d; closest = a; } });
             if(minDist < 250) activeAnchor = closest;
         }, {passive: false});
-        canvas.addEventListener('touchend', (e) => { e.preventDefault(); activeAnchor = null; }, {passive: false});
         restartBtn.addEventListener('click', () => { init(); });
         init(); loop();
     </script>

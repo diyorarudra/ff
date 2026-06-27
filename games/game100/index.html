@@ -165,7 +165,7 @@
             requestAnimationFrame(loop);
         }
         canvas.addEventListener('mousemove', e => { const r=canvas.getBoundingClientRect(); angle = Math.atan2((e.clientY-r.top)*(canvas.height/r.height) - py, (e.clientX-r.left)*(canvas.width/r.width) - px); });
-        canvas.addEventListener('click', () => { bullets.push({x: px, y: py, vx: Math.cos(angle)*8, vy: Math.sin(angle)*8}); });
+        canvas.addEventListener('mousedown', () => { bullets.push({x: px, y: py, vx: Math.cos(angle)*8, vy: Math.sin(angle)*8}); });
         restartBtn.addEventListener('click', init); init();
     
 

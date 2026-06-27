@@ -245,7 +245,6 @@
       }
     });
     canvas.addEventListener('mousedown', startGame);
-    canvas.addEventListener('touchstart', e => {
       e.preventDefault();
       startGame();
     }, {passive: false});

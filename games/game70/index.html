@@ -153,7 +153,7 @@
             });
             requestAnimationFrame(loop);
         }
-        canvas.addEventListener('click', e => {
+        canvas.addEventListener('mousedown', e => {
             if(isOver || state!=='play') return;
             const r=canvas.getBoundingClientRect(); let x=(e.clientX-r.left)*(canvas.width/r.width), y=(e.clientY-r.top)*(canvas.height/r.height);
             pads.forEach((p,i) => {
