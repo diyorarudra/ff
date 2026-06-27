@@ -8,6 +8,7 @@
     "dev": "serve ."
   },
   "dependencies": {
+    "jsdom": "^29.1.1",
     "serve": "^14.2.1"
   }
 }

@@ -192,7 +192,6 @@
     let state = 'IDLE'; // IDLE, WATCH, PLAY
     
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx;
     const FREQS = [329.63, 440.0, 261.63, 293.66]; // E4, A4, C4, D4
 
     function playTone(index, duration) {

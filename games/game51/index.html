@@ -320,9 +320,10 @@
         if (typeof window.__cushionInjected === 'undefined') {
             window.__cushionInjected = true;
             let __hasStarted = false;
+            let __cushionFrames = 0;
             let __realRAF = window.requestAnimationFrame;
             window.requestAnimationFrame = function(cb) {
-                if (!__hasStarted) {
+                if (!__hasStarted && __cushionFrames++ > 0) {
                     let c = document.querySelector('canvas');
                     if (c) {
                         let cx = c.getContext('2d');
