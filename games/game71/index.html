@@ -339,7 +339,52 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
                 audioBtn.textContent = isMuted ? '🔇' : '🔊';
             };
             audioBtn.addEventListener('click', toggleAudio);
-            audioBtn.addEventListener('touchstart', toggleAudio, {passive: false});
+                        audioBtn.addEventListener('touchstart', toggleAudio, {passive: false});
+            
+            // --- DRAG AND DROP INJECTION ---
+            let isDragging = false, startX, startY, initX, initY;
+            const onMove = (e) => {
+                if(!isDragging) return;
+                e.preventDefault();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                const dx = cx - startX;
+                const dy = cy - startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) audioBtn.dataset.wasDragged = 'true';
+                audioBtn.style.position = 'fixed';
+                audioBtn.style.margin = '0';
+                audioBtn.style.left = (initX + dx) + 'px';
+                audioBtn.style.top = (initY + dy) + 'px';
+            };
+            const onEnd = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            };
+            const onStart = (e) => {
+                isDragging = true;
+                audioBtn.dataset.wasDragged = 'false';
+                startX = e.touches ? e.touches[0].clientX : e.clientX;
+                startY = e.touches ? e.touches[0].clientY : e.clientY;
+                const rect = audioBtn.getBoundingClientRect();
+                initX = rect.left;
+                initY = rect.top;
+                document.addEventListener('mousemove', onMove, {passive: false});
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove, {passive: false});
+                document.addEventListener('touchend', onEnd);
+            };
+            audioBtn.addEventListener('mousedown', onStart);
+            audioBtn.addEventListener('touchstart', onStart, {passive: false});
+            audioBtn.addEventListener('click', (e) => {
+                if (audioBtn.dataset.wasDragged === 'true') {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    audioBtn.dataset.wasDragged = 'false';
+                }
+            }, true);
         }
         // Bind init and SFX to canvas interactions globally
         document.addEventListener('mousedown', (e) => {
