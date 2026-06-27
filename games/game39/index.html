@@ -76,7 +76,8 @@
     
     <div class="relative mt-4 w-[400px] h-[400px] bg-[#022c22] border-2 border-teal-900 rounded-lg overflow-hidden shadow-2xl">
         <!-- Database Fingerprint (Base) -->
-        <canvas id="baseCanvas" width="400" height="400" class="absolute top-0 left-0 opacity-50"></canvas>
+        <button id="audioToggleBtn" style="position: absolute; right: -70px; top: 0px; padding: 12px; background: #1e293b; color: #38bdf8; border: 2px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); transition: all 0.2s; z-index: 100;" title="Toggle Audio">🔊</button>
+      <canvas id="baseCanvas" width="400" height="400" class="absolute top-0 left-0 opacity-50"></canvas>
         
         <!-- Crime Scene Fingerprint (Draggable & Rotatable) -->
         <canvas id="overlayCanvas" width="400" height="400" class="absolute top-0 left-0 cursor-move mix-blend-screen"></canvas>
