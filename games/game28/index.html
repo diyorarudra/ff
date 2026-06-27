@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -88,7 +88,7 @@
         </div>
         <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
           <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Strikes</span>
-          <div id="strikes" class="text-2xl font-bold text-red-500 font-heading leading-tight">ŒŒŒ</div>
+          <div id="strikes" class="text-2xl font-bold text-red-500 font-heading leading-tight"> ❌ ❌ ❌</div>
         </div>
       </div>
     </div>
@@ -196,7 +196,7 @@
     function updateStrikes() {
       let str = '';
       for(let i=0; i<3; i++) {
-        str += (i < misses) ? 'Œ' : 'šª';
+        str += (i < misses) ? ' ❌' : ' ⚪';
       }
       strikesEl.textContent = str;
     }
