@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
-console.log("[ArcadeNexus Finalizer]: Commencing absolute system-wide stabilization pass...");
+console.log("[GamiDay Finalizer]: Commencing absolute system-wide stabilization pass...");
 
 // --- STEP 1: LEGAL PRIVACY & TERMS REWRITING (CCPA/GDPR/ANTI-SCRAPE) ---
 const comprehensivePrivacy = `<!DOCTYPE html>
@@ -12,13 +12,13 @@ const comprehensivePrivacy = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - ArcadeNexus</title>
+    <title>Privacy Policy - GamiDay</title>
     <style>body{background:#0f172a;color:#cbd5e1;font-family:sans-serif;padding:40px;max-width:800px;margin:0 auto;line-height:1.6;}</style>
 </head>
 <body>
     <h1>Privacy Policy</h1>
     <p>Last Updated: June 27, 2026</p>
-    <p>ArcadeNexus utilizes third-party advertising cookies, specifically Google AdSense, to serve tailored, contextual advertisements based on user navigation behaviors. We comply fully with global data privacy frameworks including the California Consumer Privacy Act (CCPA) and the General Data Protection Regulation (GDPR).</p>
+    <p>GamiDay utilizes third-party advertising cookies, specifically Google AdSense, to serve tailored, contextual advertisements based on user navigation behaviors. We comply fully with global data privacy frameworks including the California Consumer Privacy Act (CCPA) and the General Data Protection Regulation (GDPR).</p>
     <p>Users can manage tracking consent, clear localized cookie caches, or opt-out of behavioral data collection via browser privacy settings or third-party digital advertising alliance opt-out mechanisms.</p>
 </body>
 </html>`;
@@ -28,13 +28,13 @@ const comprehensiveTerms = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - ArcadeNexus</title>
+    <title>Terms of Service - GamiDay</title>
     <style>body{background:#0f172a;color:#cbd5e1;font-family:sans-serif;padding:40px;max-width:800px;margin:0 auto;line-height:1.6;}</style>
 </head>
 <body>
     <h1>Terms of Service</h1>
     <p>Last Updated: June 27, 2026</p>
-    <p>Welcome to ArcadeNexus. By accessing our HTML5 browser modules, you agree to these comprehensive Terms of Use. Automated data scraping, directory mining, crawling via unauthorized programmatic bots (excluding verified search engine indexers), or visual frame encapsulation is strictly prohibited.</p>
+    <p>Welcome to GamiDay. By accessing our HTML5 browser modules, you agree to these comprehensive Terms of Use. Automated data scraping, directory mining, crawling via unauthorized programmatic bots (excluding verified search engine indexers), or visual frame encapsulation is strictly prohibited.</p>
 </body>
 </html>`;
 
@@ -43,7 +43,7 @@ fs.writeFileSync(path.join(rootDir, 'terms-of-service.html'), comprehensiveTerms
 console.log("[PASS]: Legal policy templates updated with compliant GDPR/CCPA and anti-scraping parameters.");
 
 // --- STEP 2: REBUILD UNTRUNCATED SITEMAP MATRIX ---
-const domainUrl = "https://arcadenexus.com";
+const domainUrl = "https://gamiday.com";
 let sitemapLines = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'

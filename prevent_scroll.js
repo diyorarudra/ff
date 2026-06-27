@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
-console.log("[ArcadeNexus Input Engineer]: Initiating Scroll Prevention Sweep...");
+console.log("[GamiDay Input Engineer]: Initiating Scroll Prevention Sweep...");
 
 const preventScrollScript = `
 <script>

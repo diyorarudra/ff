@@ -327,7 +327,7 @@ const upgradedLogic = {
     `
 };
 
-console.log("[ArcadeNexus Engine]: Commencing physics engine realizations...");
+console.log("[GamiDay Engine]: Commencing physics engine realizations...");
 
 Object.keys(upgradedLogic).forEach(gameId => {
     const fileLoc = path.join(gamesDir, gameId, 'index.html');

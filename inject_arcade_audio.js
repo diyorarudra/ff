@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
-console.log("[ArcadeNexus Audio Architect]: Initiating Universal Web Audio Deployment...");
+console.log("[GamiDay Audio Architect]: Initiating Universal Web Audio Deployment...");
 
 const buttonTemplate = `<button id="audioToggleBtn" style="position: absolute; top: 15px; right: 15px; z-index: 100; padding: 8px 14px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 6px; cursor: pointer; font-family: sans-serif; font-weight: bold; font-size: 13px; transition: all 0.2s;">🔊 Music: ON</button>`;
 

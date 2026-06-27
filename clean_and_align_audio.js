@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
-console.log("[ArcadeNexus Layout Engineer]: Initiating Audio Button Cleanup and Responsive Alignment Protocol...");
+console.log("[GamiDay Layout Engineer]: Initiating Audio Button Cleanup and Responsive Alignment Protocol...");
 
 const oldBtnRegex = /\s*<button id="audioToggleBtn"[^>]*>.*?<\/button>\s*/gs;
 const oldStyleRegex = /\s*<style>\s*@media\s*\(max-width:\s*1024px\)\s*\{\s*#audioToggleBtn\s*\{[\s\S]*?\}\s*\}\s*<\/style>\s*/g;

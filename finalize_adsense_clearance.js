@@ -15,7 +15,7 @@ const post51Html = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Diversification Techniques in Digital Equities for the 2026 Macro Economy &mdash; ArcadeNexus Blog</title>
+  <title>Advanced Diversification Techniques in Digital Equities for the 2026 Macro Economy &mdash; GamiDay Blog</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { theme: { extend: { colors: { nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' } } } } }
@@ -25,7 +25,7 @@ const post51Html = `<!DOCTYPE html>
 <body class="bg-nexus-dark text-gray-200 min-h-screen flex flex-col">
   <nav class="navbar px-4 py-3 bg-nexus-dark/90 border-b border-white/10">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <a href="../index.html" class="font-bold text-lg text-white">ArcadeNexus</a>
+      <a href="../index.html" class="font-bold text-lg text-white">GamiDay</a>
     </div>
   </nav>
   <main class="max-w-4xl mx-auto px-4 py-12 flex-1">
@@ -77,7 +77,7 @@ flaggedFiles.forEach(num => {
 
 // 3. RECONSTRUCT THE TOTAL UNTRUNCATED SITEMAP ARCHITECTURE
 let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-const addUrl = (p) => { sitemapXml += `  <url><loc>https://arcadenexus.com${p}</loc></url>\n`; };
+const addUrl = (p) => { sitemapXml += `  <url><loc>https://gamiday.com${p}</loc></url>\n`; };
 addUrl('/');
 addUrl('/privacy-policy.html');
 addUrl('/terms-of-service.html');

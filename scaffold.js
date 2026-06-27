@@ -17,7 +17,7 @@ const newGames = [
 const templateFile = path.join(__dirname, 'games', 'game1.html');
 let template = fs.readFileSync(templateFile, 'utf8');
 
-// The template has "<title>2048 &mdash; ArcadeNexus</title>" and other specific things we need to replace.
+// The template has "<title>2048 &mdash; GamiDay</title>" and other specific things we need to replace.
 // We will replace "2048" with the new game title.
 // We'll also inject the AdSense verification block below the canvas.
 // The canvas is `<div class="game-container...><canvas id="gameCanvas"...></canvas>`
@@ -42,8 +42,8 @@ for (let i = 0; i < 50; i++) {
     const title = newGames[i];
     
     // Replace title and metadata
-    let content = template.replace(/<title>.*?<\/title>/, `<title>${title} &mdash; ArcadeNexus</title>`);
-    content = content.replace(/<meta name="description" content=".*?">/, `<meta name="description" content="Play ${title} instantly in your browser. Free HTML5 game on ArcadeNexus.">`);
+    let content = template.replace(/<title>.*?<\/title>/, `<title>${title} &mdash; GamiDay</title>`);
+    content = content.replace(/<meta name="description" content=".*?">/, `<meta name="description" content="Play ${title} instantly in your browser. Free HTML5 game on GamiDay.">`);
     content = content.replace(/<h1 class="text-3xl font-heading font-bold text-white tracking-tight">.*?<\/h1>/, `<h1 class="text-3xl font-heading font-bold text-white tracking-tight">${title}</h1>`);
     content = content.replace(/"name": ".*?"/, `"name": "${title}"`);
     content = content.replace(/"description": ".*?"/, `"description": "Play ${title} online for free."`);

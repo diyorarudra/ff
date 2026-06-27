@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
-console.log("[ArcadeNexus Cleaner]: Initiating universal bug remediation sweep...");
+console.log("[GamiDay Cleaner]: Initiating universal bug remediation sweep...");
 
 // --- STEP 1: GLOBAL LITERAL \\n PURGE ---
 for (let i = 1; i <= 100; i++) {

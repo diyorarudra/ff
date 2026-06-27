@@ -5,8 +5,8 @@ const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
 // --- STEP 1: CONSTRUCT MASTER SITEMAP.XML MAP MATRIX ---
-console.log("[ArcadeNexus Engine]: Restructuring master sitemap.xml pathways...");
-const domainUrl = "https://arcadenexus.com"; // Replace with your live public production URL domain
+console.log("[GamiDay Engine]: Restructuring master sitemap.xml pathways...");
+const domainUrl = "https://gamiday.com"; // Replace with your live public production URL domain
 let sitemapLines = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
@@ -41,7 +41,7 @@ function fallbackDescription(id, name) {
     return `Welcome to ${name}, a premium browser module designed for instant gaming delivery. This interactive arcade viewport uses native engine loops to provide a responsive user experience on mobile and desktop layout configurations. Players use clean mouse and keyboard controls to navigate custom scenarios, track scoreboard metrics, and trigger win/fail state validations. Built using low-latency vanilla scripts and drawing contexts, this application runs at flat frame rates with zero plug-in steps. Dive into the mechanics to test your high scores and enjoy a refined browser gaming experience right here.`;
 }
 
-console.log("[ArcadeNexus Engine]: Injecting SEO conversational content blocks...");
+console.log("[GamiDay Engine]: Injecting SEO conversational content blocks...");
 for (let i = 51; i <= 100; i++) {
     const fileLoc = path.join(gamesDir, `game${i}`, 'index.html');
     if (fs.existsSync(fileLoc)) {

@@ -5,7 +5,7 @@ const path = require('path');
 const gamesDir = path.join(__dirname, 'games');
 const brokenGames = [2, 5, 6, 7, 13, 21, 22, 31, 32, 34, 44, 74];
 
-console.log("[ArcadeNexus Recovery]: Restoring corrupted engine files...");
+console.log("[GamiDay Recovery]: Restoring corrupted engine files...");
 
 brokenGames.forEach(id => {
     const fileRel = `games/game${id}/index.html`;
@@ -33,4 +33,4 @@ brokenGames.forEach(id => {
     }
 });
 
-console.log("[ArcadeNexus Final Status]: Recovery pass complete.");
+console.log("[GamiDay Final Status]: Recovery pass complete.");

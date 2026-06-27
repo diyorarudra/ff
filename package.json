@@ -1,7 +1,7 @@
 {
-  "name": "arcadenexus",
+  "name": "gamiday",
   "version": "1.0.0",
-  "description": "ArcadeNexus HTML5 Gaming Platform",
+  "description": "GamiDay HTML5 Gaming Platform",
   "main": "index.html",
   "scripts": {
     "start": "serve .",

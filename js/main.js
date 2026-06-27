@@ -1,5 +1,5 @@
 /* ============================================
-   ArcadeNexus — Main Portal JavaScript
+   GamiDay — Main Portal JavaScript
    ============================================ */
 
 // ---- Game Registry (all 30 titles) ----

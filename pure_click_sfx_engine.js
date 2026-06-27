@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
-console.log("[ArcadeNexus Audio Architect]: Initiating Pure SFX Engine Extraction...");
+console.log("[GamiDay Audio Architect]: Initiating Pure SFX Engine Extraction...");
 
 const pureEngine = `// --- NATIVE WEB AUDIO ENGINE ---
         let audioCtx = null;

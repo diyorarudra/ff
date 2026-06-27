@@ -404,7 +404,7 @@ const engines = {
     `
 };
 
-console.log("[ArcadeNexus Engine]: Commencing Phase 2 Batch Injection...");
+console.log("[GamiDay Engine]: Commencing Phase 2 Batch Injection...");
 
 Object.keys(engines).forEach(gameId => {
     const fileLoc = path.join(gamesDir, 'game'+gameId, 'index.html');

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const domain = 'https://www.arcadenexus.com';
+const domain = 'https://www.gamiday.com';
 const today = new Date().toISOString().split('T')[0];
 
 function getFiles(dir, exts) {

@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
-console.log("[ArcadeNexus Architect]: Initiating Input Architecture Sweep...");
+console.log("[GamiDay Architect]: Initiating Input Architecture Sweep...");
 
 let clickPatches = 0;
 let doubleFirePatches = 0;

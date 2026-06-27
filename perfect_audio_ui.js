@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = __dirname;
 const gamesDir = path.join(rootDir, 'games');
 
-console.log("[ArcadeNexus UX Architect]: Initiating Perfect Audio UI Relocation Protocol...");
+console.log("[GamiDay UX Architect]: Initiating Perfect Audio UI Relocation Protocol...");
 
 const oldBtnRegex = /<button id="audioToggleBtn"[^>]*>[🔊🔇]<\/button>\s*/g;
 const newBtn = `<button id="audioToggleBtn" style="display: inline-block; margin-left: 15px; padding: 12px; background: #1e293b; color: #38bdf8; border: 2px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); transition: all 0.2s; vertical-align: middle;">🔊</button>`;
