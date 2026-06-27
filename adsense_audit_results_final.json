@@ -1,0 +1,151 @@
+{
+  "infrastructure": {
+    "adsTxt": true,
+    "robotsTxt": true,
+    "sitemap": {
+      "games": 100,
+      "blogs": 0
+    },
+    "privacy": true,
+    "tos": true
+  },
+  "ui": {
+    "audioBtnDefects": [],
+    "seoBlockDefects": [],
+    "cushionCount": 23
+  },
+  "nlp": {
+    "totalBlogs": 50,
+    "flaggedBlogs": [
+      {
+        "file": "post10.html",
+        "flags": [
+          "crucial"
+        ]
+      },
+      {
+        "file": "post12.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post13.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post17.html",
+        "flags": [
+          "crucial",
+          "vital"
+        ]
+      },
+      {
+        "file": "post18.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post19.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post22.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post23.html",
+        "flags": [
+          "furthermore",
+          "crucial"
+        ]
+      },
+      {
+        "file": "post24.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post30.html",
+        "flags": [
+          "crucial"
+        ]
+      },
+      {
+        "file": "post33.html",
+        "flags": [
+          "crucial"
+        ]
+      },
+      {
+        "file": "post34.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post35.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post37.html",
+        "flags": [
+          "crucial"
+        ]
+      },
+      {
+        "file": "post40.html",
+        "flags": [
+          "crucial"
+        ]
+      },
+      {
+        "file": "post43.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post45.html",
+        "flags": [
+          "crucial"
+        ]
+      },
+      {
+        "file": "post46.html",
+        "flags": [
+          "crucial"
+        ]
+      },
+      {
+        "file": "post48.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post5.html",
+        "flags": [
+          "furthermore"
+        ]
+      },
+      {
+        "file": "post9.html",
+        "flags": [
+          "furthermore",
+          "vital"
+        ]
+      }
+    ]
+  }
+}

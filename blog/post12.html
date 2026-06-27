@@ -118,7 +118,7 @@
 
         <p>Implementing an Object Pool is a relatively simple concept, but it requires diligent architectural discipline. If you forget to reset a variable when pulling a "dead" object from the pool, your newly fired bullet might suddenly spawn with half its health missing, or a particle might spawn with the wrong color from its previous life.</p>
 
-        <p>Furthermore, iterating through a pool of 5,000 objects to find the one inactive object can actually become its own performance bottleneck. Advanced pooling architectures maintain two separate lists: one containing pointers to active objects, and one containing pointers to inactive objects. When an object dies, it is popped off the active list and pushed onto the inactive stack. This ensures that spawning a new entity is always an O(1) instantaneous operation, regardless of how large the pool is.</p>
+        <p>In tandem with this, iterating through a pool of 5,000 objects to find the one inactive object can actually become its own performance bottleneck. Advanced pooling architectures maintain two separate lists: one containing pointers to active objects, and one containing pointers to inactive objects. When an object dies, it is popped off the active list and pushed onto the inactive stack. This ensures that spawning a new entity is always an O(1) instantaneous operation, regardless of how large the pool is.</p>
 
         <h2 class="text-3xl font-bold font-heading text-white mt-12 mb-6">Control is Everything</h2>
 
