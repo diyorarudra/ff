@@ -128,52 +128,143 @@
 
         let fruitList, score, isOver;
         const fruitTiers = [
-            { r: 16, color: '#f43f5e' }, { r: 24, color: '#fb923c' },
-            { r: 32, color: '#facc15' }, { r: 42, color: '#4ade80' }, { r: 54, color: '#60a5fa' }
+            { r: 16, color: '#f43f5e', emoji: '🍒' }, 
+            { r: 24, color: '#fb923c', emoji: '🍓' },
+            { r: 32, color: '#facc15', emoji: '🍇' }, 
+            { r: 42, color: '#4ade80', emoji: '🍋' }, 
+            { r: 54, color: '#60a5fa', emoji: '🍊' },
+            { r: 68, color: '#a855f7', emoji: '🍎' },
+            { r: 84, color: '#ec4899', emoji: '🍈' },
+            { r: 104, color: '#ef4444', emoji: '🍉' }
         ];
+        
         function init() {
             fruitList = []; score = 0; isOver = false; updateUI();
         }
+        
         function updateUI() {
             const scoreNode = document.querySelector('[id*="score"]') || { textContent: "" };
             scoreNode.textContent = score;
         }
+        
         class SphereNode {
-            constructor(x, tier=0) { this.x = x; this.y = 60; this.tier = tier; this.r = fruitTiers[tier].r; this.vy = 2; this.settled = false; }
+            constructor(x, tier=0) { 
+                this.x = x; this.y = 60; 
+                this.tier = tier; this.r = fruitTiers[tier].r; 
+                this.vx = 0; this.vy = 2; 
+            }
             step() {
-                if(!this.settled) { this.vy += 0.3; this.y += this.vy; if(this.y > canvas.height - this.r) { this.y = canvas.height - this.r; this.vy = 0; this.settled = true; } }
+                this.vy += 0.4; // Gravity
+                this.vy *= 0.99; // Air resistance
+                this.vx *= 0.95; // Horizontal friction
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Floor collision
+                if(this.y > canvas.height - this.r) { 
+                    this.y = canvas.height - this.r; 
+                    this.vy *= -0.3; // Bounce
+                }
+                // Wall collisions
+                if(this.x < this.r) { this.x = this.r; this.vx *= -0.5; }
+                if(this.x > canvas.width - this.r) { this.x = canvas.width - this.r; this.vx *= -0.5; }
             }
         }
+        
         function stepEngine() {
-            if(isOver) { ctx.fillStyle='rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#f43f5e'; ctx.font='bold 32px sans-serif'; ctx.textAlign='center'; ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2); return; }
+            if(isOver) { 
+                ctx.fillStyle='rgba(15,23,42,0.85)'; 
+                ctx.fillRect(0,0,canvas.width,canvas.height); 
+                ctx.fillStyle='#f43f5e'; ctx.font='bold 48px sans-serif'; 
+                ctx.textAlign='center'; ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2); 
+                return; 
+            }
             ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
             
             // Draw Critical AdSense Threat Danger Line
-            ctx.strokeStyle = '#ef4444'; ctx.setLineDash([6, 4]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, 110); ctx.lineTo(canvas.width, 110); ctx.stroke(); ctx.setLineDash([]);
+            ctx.strokeStyle = '#ef4444'; ctx.setLineDash([6, 4]); ctx.lineWidth = 2; 
+            ctx.beginPath(); ctx.moveTo(0, 110); ctx.lineTo(canvas.width, 110); ctx.stroke(); ctx.setLineDash([]);
             
-            fruitList.forEach(f => { f.step(); ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2); ctx.fillStyle = fruitTiers[f.tier].color; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=1; ctx.stroke(); });
+            fruitList.forEach(f => { 
+                f.step(); 
+                ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2); 
+                ctx.fillStyle = fruitTiers[f.tier].color; ctx.fill(); 
+                ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke(); 
+                
+                ctx.fillStyle = '#fff';
+                ctx.font = `${f.r}px sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(fruitTiers[f.tier].emoji, f.x, f.y + (f.r * 0.1));
+            });
             
-            // Circle-to-Circle Collision Vector Optimization Passes
+            // Circle-to-Circle Elastic Collision Physics
             for(let i=0; i<fruitList.length; i++) {
                 for(let j=i+1; j<fruitList.length; j++) {
                     let f1 = fruitList[i], f2 = fruitList[j];
-                    let dist = Math.hypot(f1.x - f2.x, f1.y - f2.y);
-                    if (dist < f1.r + f2.r) {
+                    let dx = f1.x - f2.x;
+                    let dy = f1.y - f2.y;
+                    let dist = Math.hypot(dx, dy);
+                    let minDist = f1.r + f2.r;
+                    
+                    if (dist < minDist) {
                         if (f1.tier === f2.tier && f1.tier < fruitTiers.length - 1) {
                             let mx = (f1.x + f2.x)/2, my = (f1.y + f2.y)/2;
                             fruitList.splice(j, 1); fruitList.splice(i, 1);
                             score += (f1.tier + 1)*10; updateUI();
-                            let upgradedFruit = new SphereNode(mx, f1.tier + 1); upgradedFruit.y = my; fruitList.push(upgradedFruit);
-                            return;
+                            let upgradedFruit = new SphereNode(mx, f1.tier + 1); 
+                            upgradedFruit.y = my; 
+                            fruitList.push(upgradedFruit);
+                            return; // Exit iteration early due to array mutation
                         }
-                        f1.y -= 1; f2.settled = true; f1.settled = true;
+                        
+                        let overlap = minDist - dist;
+                        if (dist === 0) { dx = 1; dy = 0; dist = 1; }
+                        let nx = dx / dist;
+                        let ny = dy / dist;
+                        
+                        // Separate them
+                        let pushX = nx * (overlap / 2);
+                        let pushY = ny * (overlap / 2);
+                        f1.x += pushX; f1.y += pushY;
+                        f2.x -= pushX; f2.y -= pushY;
+                        
+                        // Elastic bounce resolution
+                        let vxDiff = f1.vx - f2.vx;
+                        let vyDiff = f1.vy - f2.vy;
+                        let dotProduct = vxDiff * nx + vyDiff * ny;
+                        
+                        if (dotProduct < 0) {
+                            let restitution = 0.1; 
+                            let impulse = -(1 + restitution) * dotProduct / 2;
+                            f1.vx += impulse * nx; f1.vy += impulse * ny;
+                            f2.vx -= impulse * nx; f2.vy -= impulse * ny;
+                        }
                     }
                 }
-                if(fruitList[i].settled && fruitList[i].y - fruitList[i].r < 110) isOver = true;
+                
+                // Game over condition: resting over the danger line
+                if (fruitList[i].y - fruitList[i].r < 110 && Math.abs(fruitList[i].vy) < 0.5 && fruitList.length > 5) {
+                    isOver = true;
+                }
             }
             requestAnimationFrame(stepEngine);
         }
-        canvas.addEventListener('mousedown', (e) => { if(!isOver) { const r = canvas.getBoundingClientRect(); fruitList.push(new SphereNode(e.clientX - r.left, 0)); } });
+        
+        let lastDrop = 0;
+        canvas.addEventListener('mousedown', (e) => { 
+            let now = Date.now();
+            if(!isOver && now - lastDrop > 500) { 
+                lastDrop = now;
+                const r = canvas.getBoundingClientRect(); 
+                // Randomly spawn tier 0 or tier 1
+                let dropTier = Math.random() > 0.8 ? 1 : 0;
+                let scaleX = canvas.width / r.width;
+                let dropX = Math.max(20, Math.min(canvas.width - 20, (e.clientX - r.left) * scaleX));
+                fruitList.push(new SphereNode(dropX, dropTier)); 
+            } 
+        });
+        
         restartBtn.addEventListener('click', () => { init(); stepEngine(); });
         init(); stepEngine();
     
