@@ -3,18 +3,5 @@
   "rewrites": [
     { "source": "/games/game:id", "destination": "/games/game:id/index.html" },
     { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" }
-  ],
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.gamiday.com"
-        }
-      ],
-      "destination": "https://gamiday.com/$1",
-      "permanent": true
-    }
   ]
 }
