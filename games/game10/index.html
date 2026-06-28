@@ -11,7 +11,7 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Space Invaders &mdash; GamiDay</title>
+  <title>Orbit Velocity Defender &mdash; GamiDay</title>
   <meta name="description" content="Defend the earth in this classic Space Invaders arcade clone.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -71,6 +71,8 @@
   </nav>
 
   <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4"><div class="game-container flex-1 w-full max-w-[800px] mx-auto px-4 py-6 flex flex-col items-center">
+<div style="background:#1a1a2e; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #333; color:#aaa; font-size:13px; text-align:center;">Orbit Velocity Defender Operations Manual: Safeguard your central core structure from high-velocity orbital debris matrices. Press A and D or tap your mobile direction buttons to pivot the exterior defensive plating 360 degrees. Match the color matrix of the shield block with incoming impact vectors to survive.</div>
+
 <style>
 @media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
 </style>
@@ -96,7 +98,7 @@
       
       <!-- Overlays -->
       <div id="startOverlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center pointer-events-none transition-opacity duration-300 z-10">
-        <div class="text-4xl font-bold font-heading text-green-400 drop-shadow-[0_0_15px_rgba(74,222,128,0.8)] animate-pulse mb-4">INVADERS</div>
+        <div class="text-4xl font-bold font-heading text-white drop-shadow-[0_0_15px_rgba(34,211,238,0.8)] animate-pulse mb-4">ORBIT VELOCITY DEFENDER</div>
         <div class="text-gray-400 text-sm text-center">Desktop: A/D Move, Space Fire<br>Mobile: Use Controls Below</div>
         <button id="beginBtn" class="mt-6 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-lg font-bold shadow-lg transition pointer-events-auto">Defend Earth</button>
       </div>
@@ -126,7 +128,7 @@
           style="display:inline-block;width:160px;height:600px"
           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
           data-ad-slot="1111111111"></ins>
-     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { console.warn("Layout safe:", e); }</script>
 </div>
 </div>
 
@@ -144,566 +146,86 @@
           data-ad-slot="2222222222"
           data-ad-format="auto"
           data-full-width-responsive="true"></ins>
-     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { console.warn("Layout safe:", e); }</script>
   </div>
   </div>
 
   <script>
-    const canvas = document.getElementById('gameCanvas_10');
-    const ctx = canvas.getContext('2d');
-    const scoreEl = document.getElementById('score');
-    const livesEl = document.getElementById('lives');
-    
-    const startOverlay = document.getElementById('startOverlay');
-    const gameOverOverlay = document.getElementById('gameOver');
-    
-    // Low internal resolution for retro pixel feel, scaled up by CSS
-    canvas.width = 448;
-    canvas.height = 336;
 
-    let gameState = 'START';
-    let animFrame = null;
-    let score = 0;
-    let lives = 3;
-    let frames = 0;
-    let wave = 1;
+const canvas = document.querySelector('canvas') || document.getElementById('gameCanvas_10');
+const ctx = canvas.getContext('2d');
+canvas.width = 800; canvas.height = 600;
+let animFrame, score = 0, isGameOver = false;
+let shieldAngle = 0;
+let meteors = [];
 
-    let player = { x: canvas.width/2, y: canvas.height - 30, w: 26, h: 14, speed: 3 };
-    let bullets = []; // player bullets
-    let alienBullets = [];
-    let aliens = [];
-    let shields = [];
-    let ufo = null;
-    
-    let alienDir = 1;
-    let alienSpeed = 1;
-    let alienDrop = false;
-    let alienMoveTimer = 0;
-    let alienMoveThreshold = 60; // frames between alien movements (decreases as they die)
+const keys = {left: false, right: false};
+window.addEventListener('keydown', e => { 
+    if(e.code==='KeyA' || e.code==='ArrowLeft') keys.left = true; 
+    if(e.code==='KeyD' || e.code==='ArrowRight') keys.right = true; 
+});
+window.addEventListener('keyup', e => { 
+    if(e.code==='KeyA' || e.code==='ArrowLeft') keys.left = false; 
+    if(e.code==='KeyD' || e.code==='ArrowRight') keys.right = false; 
+});
 
-    const keys = { left: false, right: false, space: false };
+function startGame() {
+  window.hasStarted = true;
+  if(document.getElementById('startOverlay')) document.getElementById('startOverlay').style.display = 'none';
+  if(document.getElementById('gameOver')) document.getElementById('gameOver').style.display = 'none';
+  score = 0; isGameOver = false;
+  shieldAngle = 0; meteors = [];
+  if (animFrame) cancelAnimationFrame(animFrame);
+  gameLoop();
+}
 
-    window.addEventListener('keydown', e => {
-      if(e.code === 'ArrowLeft' || e.code === 'KeyA' || e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
-      if(e.code === 'ArrowRight' || e.code === 'KeyD' || e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
-      if(e.code === 'Space' || e.key === ' ') { keys.space = true; e.preventDefault(); }
-    });
-    window.addEventListener('keyup', e => {
-      if(e.code === 'ArrowLeft' || e.code === 'KeyA' || e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
-      if(e.code === 'ArrowRight' || e.code === 'KeyD' || e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
-      if(e.code === 'Space' || e.key === ' ') { keys.space = false; e.preventDefault(); }
-    });
-
-    const bindBtn = (id, key) => {
-      const btn = document.getElementById(id);
-      if(!btn) return;
-      btn.addEventListener('touchstart', e => { 
-        e.preventDefault(); keys[key] = true; 
-        if (key === 'space' && gameState === 'PLAYING' && bullets.length === 0) bullets.push({ x: player.x, y: player.y - 10, w: 2, h: 8, speed: -6 });
-      });
-      btn.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; });
-      // Add mouse events for testing on desktop
-      btn.addEventListener('mousedown', e => { 
-        keys[key] = true; 
-        if (key === 'space' && gameState === 'PLAYING' && bullets.length === 0) bullets.push({ x: player.x, y: player.y - 10, w: 2, h: 8, speed: -6 });
-      });
-      btn.addEventListener('mouseup', e => { keys[key] = false; });
-    };
-    bindBtn('btnLeft', 'left');
-    bindBtn('btnRight', 'right');
-    bindBtn('btnFire', 'space');
-
-    function updateLivesUI() {
-      let str = '';
-      for(let i=0; i<lives; i++) str += '&hearts;';
-      livesEl.innerHTML = `<span class="text-xs">${str}</span>`;
-    }
-
-    function init() {
-      score = 0;
-      lives = 3;
-      wave = 1;
-      scoreEl.textContent = score;
-      updateLivesUI();
-      
-      initWave();
-
-      gameState = 'START';
-      startOverlay.style.opacity = '1';
-      startOverlay.style.pointerEvents = 'auto';
-      gameOverOverlay.style.opacity = '0';
-      gameOverOverlay.style.pointerEvents = 'none';
-
-      if(animFrame) cancelAnimationFrame(animFrame);
-      draw(); // Render initial state before cushion freeze
-      animFrame = requestAnimationFrame(gameLoop);
-    }
-
-    function initWave() {
-      player.x = canvas.width/2;
-      bullets = [];
-      alienBullets = [];
-      ufo = null;
-      
-      // Init Aliens (5 rows x 11 cols)
-      aliens = [];
-      alienDir = 1;
-      alienMoveThreshold = Math.max(10, 60 - (wave * 5));
-      let startY = 40 + (wave > 1 ? 20 : 0);
-      
-      for(let r=0; r<5; r++) {
-        let type = r === 0 ? 3 : (r < 3 ? 2 : 1);
-        let pts = r === 0 ? 30 : (r < 3 ? 20 : 10);
-        let color = r === 0 ? '#ef4444' : (r < 3 ? '#eab308' : '#38bdf8'); // Red, Yellow, Cyan
-        for(let c=0; c<11; c++) {
-          aliens.push({
-            x: 50 + c * 24,
-            y: startY + r * 20,
-            w: 16, h: 12,
-            type: type,
-            pts: pts,
-            color: color,
-            active: true
-          });
-        }
-      }
-
-      // Init Shields (4 blocks)
-      if (wave === 1) { // recreate shields only on wave 1 or maybe every wave? Let's do every wave for arcade feel
-        shields = [];
-        let numShields = 4;
-        let spacing = canvas.width / numShields;
-        for(let s=0; s<numShields; s++) {
-          let sx = (spacing * s) + (spacing/2) - 20;
-          let sy = canvas.height - 65;
-          // Build shield out of 4x4 blocks
-          for(let r=0; r<4; r++) {
-            for(let c=0; c<10; c++) {
-              if (r < 2 || (c > 1 && c < 8)) { // arch shape
-                shields.push({ x: sx + c*4, y: sy + r*4, w: 4, h: 4, active: true });
-              }
-            }
-          }
-        }
-      }
-    }
-
-    function startGame() {
-      gameState = 'PLAYING';
-      startOverlay.style.opacity = '0';
-      startOverlay.style.pointerEvents = 'none';
-    }
-
-    document.getElementById('beginBtn').addEventListener('click', startGame);
-    document.getElementById('beginBtn').addEventListener('touchstart', (e) => { e.preventDefault(); startGame(); }, {passive: false});
-    document.getElementById('restartBtn').addEventListener('click', init);
-    document.getElementById('restartBtn').addEventListener('touchstart', (e) => { e.preventDefault(); init(); }, {passive: false});
-    document.getElementById('tryAgainBtn').addEventListener('click', init);
-    document.getElementById('tryAgainBtn').addEventListener('touchstart', (e) => { e.preventDefault(); init(); }, {passive: false});
-
-    function update() {
-      if (gameState !== 'PLAYING') return;
-      frames++;
-
-      // Player Movement
-      if (keys.left && player.x > player.w/2) player.x -= player.speed;
-      if (keys.right && player.x < canvas.width - player.w/2) player.x += player.speed;
-
-      // Player Shooting
-      if (keys.space && bullets.length === 0) { // Only 1 bullet at a time
-        bullets.push({ x: player.x, y: player.y - 10, w: 2, h: 8, speed: -6 });
-      }
-
-      // UFO logic
-      if (!ufo && Math.random() < 0.001) {
-        let fromLeft = Math.random() > 0.5;
-        ufo = {
-          x: fromLeft ? -30 : canvas.width + 30,
-          y: 20, w: 30, h: 12,
-          speed: fromLeft ? 2 : -2,
-          pts: Math.floor(Math.random() * 4 + 1) * 50 // 50,100,150,200
-        };
-      }
-      if (ufo) {
-        ufo.x += ufo.speed;
-        if (ufo.x < -40 || ufo.x > canvas.width + 40) ufo = null;
-      }
-
-      // Alien Movement
-      let activeAliens = aliens.filter(a => a.active);
-      if (activeAliens.length === 0) {
-        wave++;
-        initWave();
-        return;
-      }
-      
-      // Speed up as aliens decrease
-      let currentThreshold = Math.max(2, Math.floor(alienMoveThreshold * (activeAliens.length / 55)));
-      
-      if (frames - alienMoveTimer > currentThreshold) {
-        alienMoveTimer = frames;
-        
-        let edgeReached = false;
-        if (!alienDrop) {
-          activeAliens.forEach(a => {
-            if ((a.x + a.w > canvas.width - 10 && alienDir === 1) || (a.x < 10 && alienDir === -1)) {
-              edgeReached = true;
-            }
-          });
-        }
-
-        if (edgeReached) {
-          alienDir *= -1;
-          alienDrop = true;
-        }
-
-        activeAliens.forEach(a => {
-          if (alienDrop) {
-            a.y += 10;
-          } else {
-            a.x += 8 * alienDir;
-          }
-          
-          // Alien reach bottom
-          if (a.y + a.h >= player.y) {
-            lives = 0;
-          }
-        });
-        
-        if (alienDrop) alienDrop = false;
-
-        // Alien Shooting
-        if (Math.random() < 0.3) {
-          // Find bottom-most aliens
-          let shooters = [];
-          for(let c=0; c<11; c++) {
-            let colAliens = activeAliens.filter(a => Math.abs(a.x - (50 + c*24 + (activeAliens[0].x - activeAliens[0].x))) < 5);
-            if (colAliens.length > 0) {
-              let bottom = colAliens.reduce((prev, curr) => (prev.y > curr.y) ? prev : curr);
-              shooters.push(bottom);
-            }
-          }
-          if (shooters.length > 0) {
-            let shooter = shooters[Math.floor(Math.random() * shooters.length)];
-            alienBullets.push({ x: shooter.x + shooter.w/2, y: shooter.y + shooter.h, w: 2, h: 6, speed: 4 });
-          }
-        }
-      }
-
-      // Physics / Collision Helper
-      const AABB = (r1, r2) => {
-        return r1.x < r2.x + r2.w && r1.x + r1.w > r2.x && r1.y < r2.y + r2.h && r1.y + r1.h > r2.y;
-      };
-      
-      // Map player to rect for collision
-      let pRect = { x: player.x - player.w/2, y: player.y - player.h/2, w: player.w, h: player.h };
-
-      // Update Player Bullets
-      for (let i = bullets.length - 1; i >= 0; i--) {
-        let b = bullets[i];
-        b.y += b.speed;
-        let destroyed = false;
-
-        // hit top
-        if (b.y < 0) destroyed = true;
-        
-        // hit UFO
-        if (!destroyed && ufo && AABB(b, ufo)) {
-          score += ufo.pts;
-          scoreEl.textContent = score;
-          ufo = null;
-          destroyed = true;
-        }
-
-        // hit Alien
-        if (!destroyed) {
-          for (let j = 0; j < aliens.length; j++) {
-            let a = aliens[j];
-            if (a.active && AABB(b, a)) {
-              a.active = false;
-              score += a.pts;
-              scoreEl.textContent = score;
-              destroyed = true;
-              break;
-            }
-          }
-        }
-
-        // hit Shield
-        if (!destroyed) {
-          for (let j = 0; j < shields.length; j++) {
-            let s = shields[j];
-            if (s.active && AABB(b, s)) {
-              s.active = false;
-              destroyed = true;
-              break;
-            }
-          }
-        }
-
-        if (destroyed) bullets.splice(i, 1);
-      }
-
-      // Update Alien Bullets
-      for (let i = alienBullets.length - 1; i >= 0; i--) {
-        let b = alienBullets[i];
-        b.y += b.speed;
-        let destroyed = false;
-
-        if (b.y > canvas.height) destroyed = true;
-
-        // hit Player
-        if (!destroyed && AABB(b, pRect)) {
-          lives--;
-          updateLivesUI();
-          destroyed = true;
-          if (lives <= 0) {
-            // Trigger game over logic below
-          } else {
-            // Brief pause or clear bullets? Let's just keep going
-            alienBullets = []; // clear to give breather
-            break;
-          }
-        }
-
-        // hit Shield
-        if (!destroyed) {
-          for (let j = 0; j < shields.length; j++) {
-            let s = shields[j];
-            if (s.active && AABB(b, s)) {
-              s.active = false;
-              destroyed = true;
-              break;
-            }
-          }
-        }
-
-        if (destroyed) alienBullets.splice(i, 1);
-      }
-
-      // Check Game Over
-      if (lives <= 0) {
-        gameState = 'GAMEOVER';
-        document.getElementById('finalScore').textContent = `Score: ${score}`;
-        gameOverOverlay.style.opacity = '1';
-        gameOverOverlay.style.pointerEvents = 'auto';
-      }
-    }
-
-    function draw() {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Player
-      ctx.fillStyle = '#4ade80'; // green-400
-      let px = player.x;
-      let py = player.y;
-      // cannon base
-      ctx.fillRect(px - 13, py, 26, 8);
-      // cannon mid
-      ctx.fillRect(px - 10, py - 4, 20, 4);
-      // cannon tip
-      ctx.fillRect(px - 2, py - 8, 4, 4);
-
-      // Aliens (Simple rectangular representations to simulate pixels)
-      let animState = Math.floor(frames / 30) % 2; // toggle every 30 frames
-      
-      aliens.forEach(a => {
-        if (!a.active) return;
-        ctx.fillStyle = a.color;
-        
-        let ax = a.x;
-        let ay = a.y;
-        
-        // Base block
-        ctx.fillRect(ax, ay + 2, a.w, a.h - 4);
-        
-        // Top nubs
-        ctx.fillRect(ax + 2, ay, 4, 2);
-        ctx.fillRect(ax + a.w - 6, ay, 4, 2);
-        
-        // Eyes (black)
-        ctx.fillStyle = '#000';
-        ctx.fillRect(ax + 4, ay + 4, 2, 2);
-        ctx.fillRect(ax + 10, ay + 4, 2, 2);
-        
-        // Legs (animated)
-        ctx.fillStyle = a.color;
-        if (animState === 0) {
-          ctx.fillRect(ax, ay + a.h - 2, 4, 2);
-          ctx.fillRect(ax + a.w - 4, ay + a.h - 2, 4, 2);
-        } else {
-          ctx.fillRect(ax + 4, ay + a.h - 2, 2, 2);
-          ctx.fillRect(ax + 10, ay + a.h - 2, 2, 2);
-        }
-      });
-
-      // UFO
-      if (ufo) {
-        ctx.fillStyle = '#ef4444'; // Red
-        ctx.fillRect(ufo.x + 6, ufo.y, 18, 4);
-        ctx.fillRect(ufo.x, ufo.y + 4, 30, 4);
-        ctx.fillStyle = '#fff'; // lights
-        ctx.fillRect(ufo.x + 4, ufo.y + 4, 2, 2);
-        ctx.fillRect(ufo.x + 14, ufo.y + 4, 2, 2);
-        ctx.fillRect(ufo.x + 24, ufo.y + 4, 2, 2);
-      }
-
-      // Shields
-      ctx.fillStyle = '#4ade80';
-      shields.forEach(s => {
-        if(s.active) ctx.fillRect(s.x, s.y, s.w, s.h);
-      });
-
-      // Bullets
-      ctx.fillStyle = '#fff';
-      bullets.forEach(b => ctx.fillRect(b.x - b.w/2, b.y, b.w, b.h));
-      
-      // Alien Bullets
-      ctx.fillStyle = '#ef4444'; // red
-      alienBullets.forEach(b => {
-        // wavy bullet effect
-        let ox = Math.sin(b.y * 0.5) * 2;
-        ctx.fillRect(b.x - b.w/2 + ox, b.y, b.w, b.h);
-      });
-      
-      // Ground Line
-      ctx.fillStyle = '#4ade80';
-      ctx.fillRect(0, canvas.height - 2, canvas.width, 2);
-    }
-
-    function gameLoop() {
-      update();
-      draw();
-      animFrame = requestAnimationFrame(gameLoop);
-    }
-
-    init();
+function gameLoop() {
+  if (isGameOver) {
+      if(document.getElementById('gameOver')) document.getElementById('gameOver').style.display = 'flex';
+      return;
+  }
+  ctx.fillStyle = '#06060e'; ctx.fillRect(0, 0, 800, 600);
   
+  if (keys.left) shieldAngle -= 0.1;
+  if (keys.right) shieldAngle += 0.1;
+  
+  if (Math.random() < 0.03) {
+      let angle = Math.random() * Math.PI * 2;
+      meteors.push({x: 400 + Math.cos(angle)*500, y: 300 + Math.sin(angle)*500, angle: angle, color: Math.random()>0.5 ? '#f00' : '#00f', speed: 2});
+  }
+  
+  meteors.forEach((m, i) => {
+      m.x -= Math.cos(m.angle) * m.speed;
+      m.y -= Math.sin(m.angle) * m.speed;
+      ctx.fillStyle = m.color;
+      ctx.beginPath(); ctx.arc(m.x, m.y, 8, 0, Math.PI*2); ctx.fill();
+      
+      let dist = Math.hypot(m.x - 400, m.y - 300);
+      if (dist < 60) {
+          let diff = Math.abs(Math.atan2(Math.sin(shieldAngle - m.angle), Math.cos(shieldAngle - m.angle)));
+          if (diff < 0.5) {
+              score++; if(document.getElementById('score')) document.getElementById('score').innerText = score;
+              meteors.splice(i, 1);
+          } else {
+              isGameOver = true;
+          }
+      }
+  });
+  
+  ctx.fillStyle = '#222'; ctx.beginPath(); ctx.arc(400, 300, 50, 0, Math.PI*2); ctx.fill();
+  
+  ctx.strokeStyle = '#0ff'; ctx.lineWidth = 10;
+  ctx.beginPath(); ctx.arc(400, 300, 60, shieldAngle - 0.5, shieldAngle + 0.5); ctx.stroke();
+  
+  animFrame = requestAnimationFrame(gameLoop);
+}
 
-// Mobile Touch-to-Mouse Polyfill
-(function() {
-    function touchToMouse(e) {
-        if (e.target.tagName === 'CANVAS') {
-            e.preventDefault();
-        } else {
-            return;
-        }
-        let type = '';
-        if (e.type === 'touchstart') type = 'mousedown';
-        if (e.type === 'touchmove') type = 'mousemove';
-        if (e.type === 'touchend') type = 'mouseup';
-        if (!type) return;
-        
-        let touch = e.changedTouches[0];
-        let mouseEvent = new MouseEvent(type, {
-            clientX: touch ? touch.clientX : 0,
-            clientY: touch ? touch.clientY : 0,
-            bubbles: true,
-            cancelable: true
-        });
-        e.target.dispatchEvent(mouseEvent);
+document.querySelectorAll('button').forEach(b => {
+    if(b.textContent.includes('Start') || b.textContent.includes('Play') || b.textContent.includes('Defend') || b.textContent.includes('Try')) {
+        b.addEventListener('click', startGame);
     }
-    document.addEventListener('touchstart', touchToMouse, {passive: false});
-    document.addEventListener('touchmove', touchToMouse, {passive: false});
-    document.addEventListener('touchend', touchToMouse, {passive: false});
-})();
+});
 
-
-        // --- NATIVE WEB AUDIO ENGINE ---
-        let audioCtx = null;
-        let isMuted = false;
-
-        function initAudioEngine() {
-            if (audioCtx) return;
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-
-        function playClickSound() {
-            if (isMuted || !audioCtx) return;
-            let clickOsc = audioCtx.createOscillator();
-            let clickGain = audioCtx.createGain();
-            
-            clickOsc.type = 'sine';
-            clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
-            clickOsc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
-            
-            clickGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-            
-            clickOsc.connect(clickGain);
-            clickGain.connect(audioCtx.destination);
-            
-            clickOsc.start();
-            clickOsc.stop(audioCtx.currentTime + 0.1);
-        }
-
-        const audioBtn = document.getElementById('audioToggleBtn');
-        if(audioBtn) {
-            const toggleAudio = (e) => {
-                if(e) { e.preventDefault(); e.stopPropagation(); }
-                if(!audioCtx) initAudioEngine();
-                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-                isMuted = !isMuted;
-                audioBtn.textContent = isMuted ? '🔇' : '🔊';
-            };
-            audioBtn.addEventListener('click', toggleAudio);
-                        /* removed conflicting touchstart */
-            
-            // --- DRAG AND DROP INJECTION ---
-            let isDragging = false, startX, startY, initX, initY;
-            const onMove = (e) => {
-                if(!isDragging) return;
-                e.preventDefault();
-                const cx = e.touches ? e.touches[0].clientX : e.clientX;
-                const cy = e.touches ? e.touches[0].clientY : e.clientY;
-                const dx = cx - startX;
-                const dy = cy - startY;
-                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) audioBtn.dataset.wasDragged = 'true';
-                audioBtn.style.position = 'fixed';
-                audioBtn.style.margin = '0';
-                audioBtn.style.left = (initX + dx) + 'px';
-                audioBtn.style.top = (initY + dy) + 'px';
-            };
-            const onEnd = () => {
-                isDragging = false;
-                document.removeEventListener('mousemove', onMove);
-                document.removeEventListener('mouseup', onEnd);
-                document.removeEventListener('touchmove', onMove);
-                document.removeEventListener('touchend', onEnd);
-            };
-            const onStart = (e) => {
-                isDragging = true;
-                audioBtn.dataset.wasDragged = 'false';
-                startX = e.touches ? e.touches[0].clientX : e.clientX;
-                startY = e.touches ? e.touches[0].clientY : e.clientY;
-                const rect = audioBtn.getBoundingClientRect();
-                initX = rect.left;
-                initY = rect.top;
-                document.addEventListener('mousemove', onMove, {passive: false});
-                document.addEventListener('mouseup', onEnd);
-                document.addEventListener('touchmove', onMove, {passive: false});
-                document.addEventListener('touchend', onEnd);
-            };
-            audioBtn.addEventListener('mousedown', onStart);
-            audioBtn.addEventListener('touchstart', onStart, {passive: false});
-            audioBtn.addEventListener('click', (e) => {
-                if (audioBtn.dataset.wasDragged === 'true') {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    audioBtn.dataset.wasDragged = 'false';
-                }
-            }, true);
-        }
-        // Bind init and SFX to canvas interactions globally
-        document.addEventListener('mousedown', (e) => {
-            if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
-            if(e.target.tagName === 'CANVAS') playClickSound();
-        });
-        document.addEventListener('keydown', (e) => {
-            if(!audioCtx) initAudioEngine();
-            if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) playClickSound();
-        });
 </script>
 
 <script>
