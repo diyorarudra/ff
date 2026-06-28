@@ -139,7 +139,7 @@
 
         let pos, score, isOver, colors, blocks, pColor;
         function init() { colors=['#ef4444','#3b82f6','#22c55e']; pos=0; score=0; isOver=false; blocks=[]; pColor=0; updateScoreUI(0); for(let i=0;i<10;i++) spawnBlock(i); blocks[0].c = 0; blocks[1].c = 0; loop(); }
-        function spawnBlock(idx) { blocks.push({x: idx*100, c: Math.floor(Math.random()*3)}); }
+        function spawnBlock(idx) { blocks.push({x: idx*300, c: Math.floor(Math.random()*3)}); }
         function loop() {
             if(isOver){ ctx.fillStyle='rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#ef4444'; ctx.font='bold 36px sans-serif'; ctx.textAlign='center'; ctx.fillText('MISMATCH', canvas.width/2, canvas.height/2); return; }
             ctx.fillStyle = '#020617'; ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -153,7 +153,7 @@
                     if(b.x - pos < -40 && !b.scored) { b.scored = true; score+=5; updateScoreUI(score); }
                 }
             }
-            if(blocks[0].x - pos < -100) { blocks.shift(); spawnBlock(blocks[blocks.length-1].x/100 + 1); }
+            if(blocks[0].x - pos < -100) { blocks.shift(); spawnBlock(blocks[blocks.length-1].x/300 + 1); }
             
             ctx.fillStyle = colors[pColor]; ctx.beginPath(); ctx.arc(50, canvas.height/2 - 20, 20, 0, Math.PI*2); ctx.fill();
             requestAnimationFrame(loop);
