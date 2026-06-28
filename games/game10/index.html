@@ -273,6 +273,107 @@ document.querySelectorAll('button').forEach(b => {
         }
         // -----------------------------
 
+// --- NATIVE WEB AUDIO ENGINE ---
+        let audioCtx = null;
+        let isMuted = false;
+
+        function initAudioEngine() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playClickSound() {
+            if (isMuted || !audioCtx) return;
+            let clickOsc = audioCtx.createOscillator();
+            let clickGain = audioCtx.createGain();
+            
+            clickOsc.type = 'sine';
+            clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            clickOsc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+            
+            clickGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            
+            clickOsc.connect(clickGain);
+            clickGain.connect(audioCtx.destination);
+            
+            clickOsc.start();
+            clickOsc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        const audioBtn = document.getElementById('audioToggleBtn');
+        if(audioBtn) {
+            const toggleAudio = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
+                if(!audioCtx) initAudioEngine();
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                isMuted = !isMuted;
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
+            };
+            audioBtn.addEventListener('click', toggleAudio);
+                        /* removed conflicting touchstart */
+            
+            // --- DRAG AND DROP INJECTION ---
+            let isDragging = false, startX, startY, initX, initY;
+            const onMove = (e) => {
+                if(!isDragging) return;
+                e.preventDefault();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                const dx = cx - startX;
+                const dy = cy - startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) audioBtn.dataset.wasDragged = 'true';
+                audioBtn.style.position = 'fixed';
+                audioBtn.style.margin = '0';
+                audioBtn.style.left = (initX + dx) + 'px';
+                audioBtn.style.top = (initY + dy) + 'px';
+            };
+            const onEnd = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            };
+            const onStart = (e) => {
+                isDragging = true;
+                audioBtn.dataset.wasDragged = 'false';
+                startX = e.touches ? e.touches[0].clientX : e.clientX;
+                startY = e.touches ? e.touches[0].clientY : e.clientY;
+                const rect = audioBtn.getBoundingClientRect();
+                initX = rect.left;
+                initY = rect.top;
+                document.addEventListener('mousemove', onMove, {passive: false});
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove, {passive: false});
+                document.addEventListener('touchend', onEnd);
+            };
+            audioBtn.addEventListener('mousedown', onStart);
+            audioBtn.addEventListener('touchstart', onStart, {passive: false});
+            audioBtn.addEventListener('click', (e) => {
+                if (audioBtn.dataset.wasDragged === 'true') {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    audioBtn.dataset.wasDragged = 'false';
+                }
+            }, true);
+        }
+        
+        // Bind init and SFX to canvas interactions globally
+        document.addEventListener('mousedown', (e) => {
+            if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
+            if(e.target.tagName === 'CANVAS' || e.target.tagName === 'BUTTON' || e.target.closest('button')) playClickSound();
+        });
+        document.addEventListener('touchstart', (e) => {
+            if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
+            if(e.target.tagName === 'CANVAS' || e.target.tagName === 'BUTTON' || e.target.closest('button')) playClickSound();
+        }, {passive: true});
+        document.addEventListener('keydown', (e) => {
+            if(!audioCtx) initAudioEngine();
+            if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) playClickSound();
+        });
+
+
 // Prevent Spacebar and Arrow keys from scrolling the page during gameplay
 window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
