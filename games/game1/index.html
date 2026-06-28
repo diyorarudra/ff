@@ -296,6 +296,10 @@ document.addEventListener("DOMContentLoaded", () => {
       touchStartY = e.changedTouches[0].screenY;
     }, {passive: false});
 
+    canvasContainer.addEventListener('touchmove', e => {
+      e.preventDefault();
+    }, {passive: false});
+
     canvasContainer.addEventListener('touchend', e => {
       if(isGameOver) return;
       const touchEndX = e.changedTouches[0].screenX;
@@ -324,6 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Make a copy of grid for movement logic
       let newGrid = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
+      let mergedGrid = Array(SIZE).fill().map(() => Array(SIZE).fill(false));
       
       // Mark all current tiles as not new and not merged
       tiles.forEach(t => { t.isNew = false; t.merged = false; t.mergedFrom = null; });
@@ -352,7 +357,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if(
               tr + dr >= 0 && tr + dr < SIZE && 
               tc + dc >= 0 && tc + dc < SIZE && 
-              newGrid[tr + dr][tc + dc] === grid[r][c]
+              newGrid[tr + dr][tc + dc] === grid[r][c] &&
+              !mergedGrid[tr + dr][tc + dc]
             ) {
               // Find the tile currently at target in `tiles` array that has not merged yet
               let targetTile = tiles.find(t => t.targetR === tr+dr && t.targetC === tc+dc && !t.merged);
@@ -362,6 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 tr += dr;
                 tc += dc;
                 newGrid[tr][tc] = grid[r][c] * 2;
+                mergedGrid[tr][tc] = true;
                 pointsGained += grid[r][c] * 2;
                 
                 // Update the moving tile to merge into target
