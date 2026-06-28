@@ -91,6 +91,22 @@
   </style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const adObserver = new MutationObserver(() => {});
+    setTimeout(() => {
+        document.querySelectorAll('.ad-slot, .adsense-side-rail').forEach(slot => {
+            const ins = slot.querySelector('ins.adsbygoogle');
+            if (ins && ins.innerHTML.trim() === '') {
+                slot.style.setProperty('display', 'none', 'important');
+                slot.style.height = '0';
+                slot.style.minHeight = '0';
+            }
+        });
+    }, 2500);
+});
+</script>
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
 
@@ -150,7 +166,7 @@
           style="display:inline-block;width:160px;height:600px"
           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
           data-ad-slot="1111111111"></ins>
-     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
 </div>
 </div>
 
@@ -168,7 +184,7 @@
           data-ad-slot="2222222222"
           data-ad-format="auto"
           data-full-width-responsive="true"></ins>
-     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
   </div>
   </div>
 
