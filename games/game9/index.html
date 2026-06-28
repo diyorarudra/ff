@@ -116,8 +116,7 @@
         <button id="btnRight" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">&rarr;</button>
       </div>
       <div class="flex justify-end gap-2">
-        <button id="btnThrust" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">&uarr;</button>
-        <button id="btnFire" class="bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-cyan-500/40">&#9678;</button>
+        <button id="btnDown" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">&darr;</button>
       </div>
     </div>
   </div>
@@ -161,6 +160,13 @@ let grid = Array(rows).fill().map(() => Array(cols).fill(0));
 let piece = {x: 10, y: 0, color: '#f0f'};
 
 const keys = {left: false, right: false, down: false};
+['btnLeft', 'btnRight', 'btnDown'].forEach(id => {
+    let el = document.getElementById(id);
+    if(el) {
+        el.addEventListener('touchstart', e => { e.preventDefault(); if(id==='btnLeft') keys.left=true; if(id==='btnRight') keys.right=true; if(id==='btnDown') keys.down=true; });
+        el.addEventListener('touchend', e => { e.preventDefault(); if(id==='btnLeft') keys.left=false; if(id==='btnRight') keys.right=false; if(id==='btnDown') keys.down=false; });
+    }
+});
 window.addEventListener('keydown', e => {
   if (isGameOver) return;
   if(e.code==='ArrowLeft') { piece.x = Math.max(0, piece.x-1); }
