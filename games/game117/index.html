@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  n  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tile Tap &mdash; ffliveplay</title>
+  <meta name="description" content="Play Space Asteroids Culler instantly in your browser. Free HTML5 game on ffliveplay.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Tile Tap",
+    "genre": "Puzzle",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ffliveplay"
+    }
+  }
+  </script>
+  <style>
+    /* Prevent pull-to-refresh on mobile */
+    body { overscroll-behavior-y: none; }
+  </style>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const adObserver = new MutationObserver(() => {});
+    setTimeout(() => {
+        document.querySelectorAll('.ad-slot, .adsense-side-rail').forEach(slot => {
+            const ins = slot.querySelector('ins.adsbygoogle');
+            if (ins && ins.innerHTML.trim() === '') {
+                slot.style.setProperty('display', 'none', 'important');
+                slot.style.height = '0';
+                slot.style.minHeight = '0';
+            }
+        });
+    }, 2500);
+});
+</script>
+
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-white min-h-screen flex flex-col">
+
+  <nav class="navbar px-4 py-3 bg-nexus-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-bold font-heading">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle><path d="M6 12h4m-2-2v4"></path></svg><span class="gradient-text text-lg">ffliveplay</span>
+      </a>
+      <a href="../../index.html" style="background-color: #1a1f2e; border: 1px solid #2d3748; color: #ffffff; border-radius: 8px; padding: 8px 16px; display: inline-flex; align-items: center; text-decoration: none; font-family: sans-serif; font-size: 14px;" class="hover:opacity-90 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><rect x="2" y="6" width="20" height="12" rx="3"></rect><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"></path></svg>All Games</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+
+  <div class="adsense-side-rail left-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-right: 1rem; position: sticky; top: 100px;">
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="3333333333"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center lg:max-w-[800px]">
+<style>
+@media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
+</style>
+<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">🔊</button>
+
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-6 shadow-lg">
+      <div class="flex gap-4">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5">
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Score</div>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5">
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Best</div>
+          <div id="bestScore" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">New Game</button></div>    <div class="w-full flex justify-center mb-6 mt-4"><canvas id="gameCanvas_117" width="800" height="500" class="w-full max-w-full bg-[#131a26] rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/10 touch-none select-none block"></canvas>
+    </div>
+
+    <p class="text-center text-gray-300 mt-2 font-medium text-lg px-4">
+      Move mouse to rotate 360 degrees and click to fire raycast project vectors.
+    </p>
+  
+<div class="adsense-seo-block" style="width: 100%; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">Tile Tap Operations Manual</h3>
+        <p>Welcome to this advanced arcade simulation. This responsive gameplay architecture requires perfect timing and spatial awareness. As you interact with the primary controls, you must prioritize movement patterns over static defense. Success within this environment relies heavily upon the speed at which you execute command inputs. All tactical decisions is immediately calculated by our physics processor. To secure the highest possible tier ranking, players must adapt to the escalating difficulty curve. Advanced users typically employ a methodology of continuous lateral shifting. By maintaining a clear line of sight, you drastically reduce the probability of catastrophic failure. Also, the optimized render pipeline ensures that the physics interactions remain perfectly consistent. Remember to utilize the integrated pause functionality during intense periods of visual overload. Conquering this unique digital challenge serves as the perfect training ground for our competitive titles. Appreciate the flawless execution of this retro-inspired design while you climb the global rankings.</p>
+    </div>
+
+<div class="w-full mb-8 mt-4">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+  </div>
+</div>
+
+  
+      <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+</div>
+
+
+
+  
+
+  
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_117');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const bestScoreEl = document.getElementById('bestScore');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const gameWonOverlay = document.getElementById('gameWon');
+    
+    let hasStarted = false;
+    let isGameOver = false;
+    let score = 0;
+    
+    if(bestScoreEl) {
+        let bs = parseInt(localStorage.getItem('ffliveplay_game117_best')) || 0;
+        bestScoreEl.textContent = bs;
+    }
+
+    if (document.getElementById('tryAgainBtn')) {
+        document.getElementById('tryAgainBtn').addEventListener('click', () => {
+            if(gameOverOverlay) {
+                gameOverOverlay.style.opacity = '0';
+                gameOverOverlay.style.pointerEvents = 'none';
+            }
+            init();
+        });
+    }
+    
+    document.addEventListener('click', (e) => {
+        if(e.target && e.target.id === 'startBtn') {
+            document.getElementById('gameStart').style.display = 'none';
+            hasStarted = true;
+            init();
+        }
+    });
+
+    
+    let t=[],timer=0; function init(){t=[];score=0;timer=0;isGameOver=false;requestAnimationFrame(gameLoop);}
+    canvas.addEventListener('mousedown',e=>{let r=canvas.getBoundingClientRect();let x=e.clientX-r.left,y=e.clientY-r.top;
+    for(let i=t.length-1;i>=0;i--){if(Math.abs(t[i].x-x)<25&&Math.abs(t[i].y-y)<25){score++;if(scoreEl)scoreEl.textContent=score;t.splice(i,1);break;}}});
+    function update(){timer++;if(timer%40==0)t.push({x:Math.random()*350+25,y:Math.random()*350+25,l:100});
+    for(let i=t.length-1;i>=0;i--){t[i].l--;if(t[i].l<=0){isGameOver=true;if(gameOverOverlay){gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}}
+    function draw(){t.forEach(o=>{ctx.fillStyle='rgba(0,255,255,'+(o.l/100)+')';ctx.fillRect(o.x-25,o.y-25,50,50);});}
+
+    if (!document.getElementById('startBtn')) {
+        hasStarted = true;
+        init();
+    }
+
+    function gameLoop() {
+        if (!hasStarted || isGameOver) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        update();
+        draw();
+        
+        if(bestScoreEl) {
+            let bs = parseInt(localStorage.getItem('ffliveplay_game117_best')) || 0;
+            if(score > bs) {
+                localStorage.setItem('ffliveplay_game117_best', score);
+                bestScoreEl.textContent = score;
+            }
+        }
+        
+        requestAnimationFrame(gameLoop);
+    }
+// Mobile Touch-to-Mouse Polyfill
+(function() {
+    function touchToMouse(e) {
+        if (e.target.tagName === 'CANVAS') {
+            e.preventDefault();
+        } else {
+            return;
+        }
+        let type = '';
+        if (e.type === 'touchstart') type = 'mousedown';
+        if (e.type === 'touchmove') type = 'mousemove';
+        if (e.type === 'touchend') type = 'mouseup';
+        if (!type) return;
+        
+        let touch = e.changedTouches[0];
+        let mouseEvent = new MouseEvent(type, {
+            clientX: touch ? touch.clientX : 0,
+            clientY: touch ? touch.clientY : 0,
+            bubbles: true,
+            cancelable: true
+        });
+        e.target.dispatchEvent(mouseEvent);
+    }
+    document.addEventListener('touchstart', touchToMouse, {passive: false});
+    document.addEventListener('touchmove', touchToMouse, {passive: false});
+    document.addEventListener('touchend', touchToMouse, {passive: false});
+})();
+
+
+        // --- NATIVE WEB AUDIO ENGINE ---
+        let audioCtx = null;
+        let isMuted = false;
+
+        function initAudioEngine() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playClickSound() {
+            if (isMuted || !audioCtx) return;
+            let clickOsc = audioCtx.createOscillator();
+            let clickGain = audioCtx.createGain();
+            
+            clickOsc.type = 'sine';
+            clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            clickOsc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+            
+            clickGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            
+            clickOsc.connect(clickGain);
+            clickGain.connect(audioCtx.destination);
+            
+            clickOsc.start();
+            clickOsc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        const audioBtn = document.getElementById('audioToggleBtn');
+        if(audioBtn) {
+            const toggleAudio = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
+                if(!audioCtx) initAudioEngine();
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                isMuted = !isMuted;
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
+            };
+            audioBtn.addEventListener('click', toggleAudio);
+                        /* removed conflicting touchstart */
+            
+            // --- DRAG AND DROP INJECTION ---
+            let isDragging = false, startX, startY, initX, initY;
+            const onMove = (e) => {
+                if(!isDragging) return;
+                e.preventDefault();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                const dx = cx - startX;
+                const dy = cy - startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) audioBtn.dataset.wasDragged = 'true';
+                audioBtn.style.position = 'fixed';
+                audioBtn.style.margin = '0';
+                audioBtn.style.left = (initX + dx) + 'px';
+                audioBtn.style.top = (initY + dy) + 'px';
+            };
+            const onEnd = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            };
+            const onStart = (e) => {
+                isDragging = true;
+                audioBtn.dataset.wasDragged = 'false';
+                startX = e.touches ? e.touches[0].clientX : e.clientX;
+                startY = e.touches ? e.touches[0].clientY : e.clientY;
+                const rect = audioBtn.getBoundingClientRect();
+                initX = rect.left;
+                initY = rect.top;
+                document.addEventListener('mousemove', onMove, {passive: false});
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove, {passive: false});
+                document.addEventListener('touchend', onEnd);
+            };
+            audioBtn.addEventListener('mousedown', onStart);
+            audioBtn.addEventListener('touchstart', onStart, {passive: false});
+            audioBtn.addEventListener('click', (e) => {
+                if (audioBtn.dataset.wasDragged === 'true') {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    audioBtn.dataset.wasDragged = 'false';
+                }
+            }, true);
+        }
+        // Bind init and SFX to canvas interactions globally
+        document.addEventListener('mousedown', (e) => {
+            if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
+            if(e.target.tagName === 'CANVAS') playClickSound();
+        });
+        document.addEventListener('keydown', (e) => {
+            if(!audioCtx) initAudioEngine();
+            if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) playClickSound();
+        });
+</script>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
+</body>
+</html>
