@@ -304,19 +304,20 @@ function renderGameGrid(filter) {
       return Math.random() - 0.5; 
   });
 
+  
+  grid.style.display = 'grid';
+  grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
+  grid.style.gap = '1.5rem';
+  grid.style.padding = '2rem 0';
+  
   grid.innerHTML = list.map((game, i) => `
-    <a href="games/game${game.id}" class="game-card animate-fade-in-up" style="animation-delay:${(i % 10) * 0.04}s;opacity:0">
-      <div class="card-glow"></div>
-      <div class="card-thumbnail" style="background:linear-gradient(135deg, ${game.color}12, ${game.color}04)">
-        <span class="text-5xl md:text-6xl select-none">${game.icon}</span>
-        <div class="play-overlay"><span>▶</span></div>
+    <a href="games/game${game.id}/index.html" class="game-card bg-white rounded-lg drop-shadow-sm border border-gray-100 hover:shadow-lg transition-all animate-fade-in-up flex flex-col overflow-hidden" style="animation-delay:${(i % 10) * 0.04}s;">
+      <div class="w-full h-32 object-cover rounded-t-xl flex items-center justify-center bg-white/10" style="background: linear-gradient(135deg, ${game.color}22, ${game.color}44)">
+        ${getGameSvg(game)}
       </div>
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-2">
-          <h3 class="font-bold text-white text-base" style="font-family:var(--font-heading)">${game.title}</h3>
-          <span class="category-badge" style="background:${game.color}1a;color:${game.color}">${game.category}</span>
-        </div>
-        <p class="text-sm text-gray-400 leading-relaxed line-clamp-2">${game.desc}</p>
+      <div class="p-4 flex flex-col flex-grow items-center text-center">
+        <h3 class="font-bold text-gray-900 text-base mb-3" style="font-family:var(--font-heading)">${game.title}</h3>
+        <button class="play-now-btn bg-[#FFC42C] text-white rounded-lg py-2 px-5 font-bold hover:bg-[#eab308] transition-colors w-full mt-auto drop-shadow-sm">Play Now</button>
       </div>
     </a>`).join('');
 }
@@ -356,3 +357,16 @@ window.addEventListener('load', () => {
     }, 500);
   }
 });
+
+
+function getGameSvg(game) {
+    const cats = {
+        'brain': `<rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/><circle cx="12" cy="12" r="4" fill="#fff"/>`,
+        'action': `<path d="M12 2L22 20H2L12 2Z" fill="currentColor"/><circle cx="12" cy="14" r="3" fill="#fff"/>`,
+        'mystery': `<circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="4" fill="none"/><path d="M15 15L21 21" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>`,
+        'rhythm': `<path d="M9 18V5L21 3V16" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="18" cy="16" r="3" fill="currentColor"/>`,
+        'arcade': `<rect x="6" y="2" width="12" height="20" rx="2" fill="currentColor"/><rect x="8" y="5" width="8" height="6" fill="#fff"/>`,
+        'casual': `<circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 6V18M6 12H18" stroke="#fff" stroke-width="2"/>`
+    };
+    return `<svg class="w-16 h-16 opacity-90" style="color: ${game.color}" viewBox="0 0 24 24">${cats[game.category] || cats['casual']}</svg>`;
+}
