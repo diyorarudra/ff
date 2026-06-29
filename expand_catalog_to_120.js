@@ -103,6 +103,7 @@ const games = [
   { name: "Snake Classic", script: `
     let s=[{x:10,y:10}],dx=1,dy=0,f={x:15,y:15},t=0; function init(){s=[{x:10,y:10}];dx=1;dy=0;f={x:15,y:15};score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
     window.addEventListener('keydown',e=>{if(e.key=='ArrowUp'&&dy==0){dx=0;dy=-1;}if(e.key=='ArrowDown'&&dy==0){dx=0;dy=1;}if(e.key=='ArrowLeft'&&dx==0){dx=-1;dy=0;}if(e.key=='ArrowRight'&&dx==0){dx=1;dy=0;}});
+    let mx=0,my=0; canvas.addEventListener('mousedown',e=>{mx=e.clientX;my=e.clientY;}); canvas.addEventListener('mouseup',e=>{let ex=e.clientX,ey=e.clientY;if(Math.abs(ex-mx)>Math.abs(ey-my)){if(ex>mx&&dx==0){dx=1;dy=0;}else if(ex<mx&&dx==0){dx=-1;dy=0;}}else{if(ey>my&&dy==0){dx=0;dy=1;}else if(ey<my&&dy==0){dx=0;dy=-1;}}});
     function update(){t++;if(t%5!==0)return;let h={x:s[0].x+dx,y:s[0].y+dy};s.unshift(h);
     if(h.x==f.x&&h.y==f.y){score++;if(scoreEl)scoreEl.textContent=score;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else{s.pop();}
     if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.slice(1).some(p=>p.x==h.x&&p.y==h.y)){isGameOver=true;if(gameOverOverlay){gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}
@@ -160,6 +161,7 @@ const games = [
   { name: "Column Matcher", script: `
     let p=1,c=[]; function init(){p=1;c=[];score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
     window.addEventListener('keydown',e=>{if(e.key=='ArrowLeft'&&p>0)p--;if(e.key=='ArrowRight'&&p<2)p++;});
+    canvas.addEventListener('mousedown',e=>{let rx=e.clientX-canvas.getBoundingClientRect().left;if(rx<canvas.width/2&&p>0)p--;else if(rx>=canvas.width/2&&p<2)p++;});
     function update(){if(Math.random()<0.03)c.push({col:Math.floor(Math.random()*3),y:0});
     for(let i=c.length-1;i>=0;i--){c[i].y+=4;if(c[i].y>380){if(c[i].col==p){score++;if(scoreEl)scoreEl.textContent=score;c.splice(i,1);}else{isGameOver=true;if(gameOverOverlay){gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}}}
     function draw(){ctx.fillStyle='cyan';ctx.fillRect(p*133+46,380,40,20);ctx.fillStyle='red';c.forEach(o=>ctx.fillRect(o.col*133+46,o.y,40,40));}`
