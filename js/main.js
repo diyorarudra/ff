@@ -265,9 +265,8 @@ function renderGameGrid(filter) {
   let list = filter === 'all' ? [...GAMES] : GAMES.filter(g => g.category === filter);
 
   // Sorting Logic Rules
-  // Premium: Ludo (58), Play Chess (60), 3D Car Run (85), Quiz Games (79), Safe Cracker (38), 2048 (1)
-  // Low-Ranked: Hacker Challenge (84), Spider Solitaire (64), True or False (80), Solve Math Ex (81)
-  const premiumIds = [58, 60, 85, 79, 38, 1];
+  // Premium: Curated list of the most interesting/best games to show first
+  const premiumIds = [58, 60, 85, 79, 38, 1, 95, 92, 90, 88, 86, 77, 74, 69, 54, 55, 46, 50, 31, 34, 16, 6, 21, 24];
   const lowIds = [84, 64, 80, 81];
 
   list.sort((a, b) => {
@@ -280,7 +279,9 @@ function renderGameGrid(filter) {
       if (!aPremium && bPremium) return 1;
       if (aLow && !bLow) return 1;
       if (!aLow && bLow) return -1;
-      return a.id - b.id; // Keep default ID sorting for the rest
+      
+      // Randomize the rest so users see different interesting games instead of 1-100 ordered
+      return Math.random() - 0.5; 
   });
 
   grid.innerHTML = list.map((game, i) => `
