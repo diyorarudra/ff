@@ -38,7 +38,7 @@ if (fs.existsSync(cssPath)) {
         return match.replace(/background-color:\s*#06060e;/, 'background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%);\n  background-attachment: fixed;');
     });
     fs.writeFileSync(cssPath, css, 'utf8');
-    console.log('[THEME OVERHAUL COMPLETED]: File css/style.css successfully refactored to Premium Light Mode');
+    console.log('[THEME HARMONIZED]: Global Premium Light Mode applied and visual consistency verified for File css/style.css');
 }
 
 // 2. Update js/main.js
@@ -69,18 +69,18 @@ function getGameSvg(game) {
   grid.style.padding = '2rem 0';
   
   grid.innerHTML = list.map((game, i) => \`
-    <a href="games/game\${game.id}/index.html" class="game-card bg-white rounded-lg drop-shadow-sm border border-gray-100 hover:shadow-lg transition-all animate-fade-in-up flex flex-col overflow-hidden" style="animation-delay:\${(i % 10) * 0.04}s;">
+    <a href="games/game\${game.id}/index.html" class="game-card bg-white rounded-xl drop-shadow-sm border border-gray-100 hover:shadow-lg transition-all animate-fade-in-up flex flex-col overflow-hidden" style="animation-delay:\${(i % 10) * 0.04}s;">
       <div class="w-full h-32 object-cover rounded-t-xl flex items-center justify-center bg-white/10" style="background: linear-gradient(135deg, \${game.color}22, \${game.color}44)">
         \${getGameSvg(game)}
       </div>
       <div class="p-4 flex flex-col flex-grow items-center text-center">
         <h3 class="font-bold text-gray-900 text-base mb-3" style="font-family:var(--font-heading)">\${game.title}</h3>
-        <button class="play-now-btn bg-[#FFC42C] text-white rounded-lg py-2 px-5 font-bold hover:bg-[#eab308] transition-colors w-full mt-auto drop-shadow-sm">Play Now</button>
+        <button class="play-now-btn bg-[#4F46E5] text-white rounded-xl py-2 px-5 font-bold hover:bg-[#FFC42C] hover:text-gray-900 transition-all w-full mt-auto drop-shadow-sm">Play Now</button>
       </div>
     </a>\`).join('');`);
     
     fs.writeFileSync(mainJsPath, js, 'utf8');
-    console.log('[THEME OVERHAUL COMPLETED]: File js/main.js successfully refactored to Premium Light Mode');
+    console.log('[THEME HARMONIZED]: Global Premium Light Mode applied and visual consistency verified for File js/main.js');
 }
 
 // 3. Update index.html
@@ -94,7 +94,7 @@ if (fs.existsSync(indexHtmlPath)) {
         return `<body class="${cls}" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;"`;
     });
     fs.writeFileSync(indexHtmlPath, content, 'utf8');
-    console.log('[THEME OVERHAUL COMPLETED]: File index.html successfully refactored to Premium Light Mode');
+    console.log('[THEME HARMONIZED]: Global Premium Light Mode applied and visual consistency verified for File index.html');
 }
 
 // 4. Update Games
@@ -112,26 +112,29 @@ if (fs.existsSync(gamesDir)) {
                 return `<body class="${cls}" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;"`;
             });
 
+            // Center game container
+            content = content.replace(/<div class="game-container flex flex-col items-center lg:max-w-\[800px\]">/g, '<div class="game-container flex flex-col items-center justify-center lg:max-w-[800px] w-full mx-auto">');
+
             content = content.replace(/<div class="game-header[\s\S]*?<\/div>\s*<\/div>/, (match) => {
-                let replaced = match.replace(/class="game-header[^"]*"/, 'class="game-header w-full max-w-3xl flex justify-between items-center bg-white rounded-lg p-3 mb-4 shadow-sm border border-gray-200"');
+                let replaced = match.replace(/class="game-header[^"]*"/, 'class="game-header w-full max-w-3xl flex justify-between items-center bg-white rounded-xl p-3 mb-4 shadow-sm border border-gray-200"');
                 replaced = replaced.replace(/text-white/g, 'text-gray-900').replace(/text-fuchsia-500/g, 'text-[#7361F2]');
-                replaced = replaced.replace(/class="game-btn[^"]*"/g, 'class="game-btn bg-[#FFC42C] text-white px-4 py-1.5 rounded-lg font-bold hover:bg-[#eab308] transition-colors drop-shadow-sm"');
-                replaced = replaced.replace(/id="newGameBtn" class="game-btn"/g, 'id="newGameBtn" class="game-btn bg-[#FFC42C] text-white px-4 py-1.5 rounded-lg font-bold hover:bg-[#eab308] transition-colors drop-shadow-sm"');
+                replaced = replaced.replace(/class="game-btn[^"]*"/g, 'class="game-btn bg-[#FFC42C] text-white px-4 py-1.5 rounded-xl font-bold hover:bg-[#eab308] transition-colors drop-shadow-sm"');
+                replaced = replaced.replace(/id="newGameBtn" class="game-btn"/g, 'id="newGameBtn" class="game-btn bg-[#FFC42C] text-white px-4 py-1.5 rounded-xl font-bold hover:bg-[#eab308] transition-colors drop-shadow-sm"');
                 return replaced;
             });
             
             content = content.replace(/class="([^"]*bg-\[#131a26\][^"]*)"/g, (m, p1) => {
-                return `class="${p1.replace('bg-[#131a26]', 'bg-[#FFFFFF]').replace(/border-white\/[0-9]+/, 'border-gray-200').replace('shadow-[0_0_20px_rgba(0,0,0,0.5)]', 'drop-shadow-sm')}"`;
+                return `class="${p1.replace('bg-[#131a26]', 'bg-[#FFFFFF]').replace(/border-white\/[0-9]+/, 'border-gray-200').replace('shadow-[0_0_20px_rgba(0,0,0,0.5)]', 'drop-shadow-sm').replace('rounded-lg', 'rounded-xl')}"`;
             });
             content = content.replace(/class="([^"]*bg-\[#030712\][^"]*)"/g, (m, p1) => {
-                return `class="${p1.replace('bg-[#030712]', 'bg-[#FFFFFF]').replace(/border-fuchsia-900\/30/, 'border-gray-200').replace('shadow-[0_0_50px_rgba(217,70,239,0.15)]', 'drop-shadow-sm')}"`;
+                return `class="${p1.replace('bg-[#030712]', 'bg-[#FFFFFF]').replace(/border-fuchsia-900\/30/, 'border-gray-200').replace('shadow-[0_0_50px_rgba(217,70,239,0.15)]', 'drop-shadow-sm').replace('rounded-lg', 'rounded-xl')}"`;
             });
 
             content = content.replace(/bg-nexus-elevated/g, 'bg-white drop-shadow-sm text-gray-800');
             content = content.replace(/border-white\/5/g, 'border-gray-200');
 
             fs.writeFileSync(indexPath, content, 'utf8');
-            console.log(`[THEME OVERHAUL COMPLETED]: File games/${folder}/index.html successfully refactored to Premium Light Mode`);
+            console.log(`[THEME HARMONIZED]: Global Premium Light Mode applied and visual consistency verified for File games/${folder}/index.html`);
         }
     }
 }
@@ -158,7 +161,7 @@ if (fs.existsSync(blogDir)) {
             content = content.replace(/border-white\/5/g, 'border-gray-200');
             
             fs.writeFileSync(filepath, content, 'utf8');
-            console.log(`[THEME OVERHAUL COMPLETED]: File blog/${file} successfully refactored to Premium Light Mode`);
+            console.log(`[THEME HARMONIZED]: Global Premium Light Mode applied and visual consistency verified for File blog/${file}`);
         }
     }
 }

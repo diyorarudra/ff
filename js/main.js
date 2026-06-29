@@ -310,14 +310,20 @@ function renderGameGrid(filter) {
   grid.style.gap = '1.5rem';
   grid.style.padding = '2rem 0';
   
+  
+  grid.style.display = 'grid';
+  grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
+  grid.style.gap = '1.5rem';
+  grid.style.padding = '2rem 0';
+  
   grid.innerHTML = list.map((game, i) => `
-    <a href="games/game${game.id}/index.html" class="game-card bg-white rounded-lg drop-shadow-sm border border-gray-100 hover:shadow-lg transition-all animate-fade-in-up flex flex-col overflow-hidden" style="animation-delay:${(i % 10) * 0.04}s;">
+    <a href="games/game${game.id}/index.html" class="game-card bg-white rounded-xl drop-shadow-sm border border-gray-100 hover:shadow-lg transition-all animate-fade-in-up flex flex-col overflow-hidden" style="animation-delay:${(i % 10) * 0.04}s;">
       <div class="w-full h-32 object-cover rounded-t-xl flex items-center justify-center bg-white/10" style="background: linear-gradient(135deg, ${game.color}22, ${game.color}44)">
         ${getGameSvg(game)}
       </div>
       <div class="p-4 flex flex-col flex-grow items-center text-center">
         <h3 class="font-bold text-gray-900 text-base mb-3" style="font-family:var(--font-heading)">${game.title}</h3>
-        <button class="play-now-btn bg-[#FFC42C] text-white rounded-lg py-2 px-5 font-bold hover:bg-[#eab308] transition-colors w-full mt-auto drop-shadow-sm">Play Now</button>
+        <button class="play-now-btn bg-[#4F46E5] text-white rounded-xl py-2 px-5 font-bold hover:bg-[#FFC42C] hover:text-gray-900 transition-all w-full mt-auto drop-shadow-sm">Play Now</button>
       </div>
     </a>`).join('');
 }
