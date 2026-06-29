@@ -120,8 +120,28 @@ const GAMES = [
   { id: 97, title: 'Maze Escape', category: 'mystery', desc: 'Navigate the procedurally generated labyrinth.', icon: '🏃', color: '#14b8a6' },
   { id: 98, title: 'Color Tap Runner', category: 'rhythm', desc: 'Tap the matching color lanes to keep the runner moving.', icon: '🚥', color: '#facc15' },
   { id: 99, title: 'Word Scramble Suite', category: 'brain', desc: 'Unscramble letters to find the hidden vocabulary words.', icon: '🔤', color: '#ec4899' },
-  { id: 100, title: 'Space Asteroids Culler', category: 'action', desc: 'Clear the asteroid field using your spaceship blasters.', icon: '☄️', color: '#94a3b8' }
-
+  { id: 100, title: 'Space Asteroids Culler', category: 'action', desc: 'Clear the asteroid field using your spaceship blasters.', icon: '☄️', color: '#94a3b8' },
+  // Category 9 — Expansion Phase 3 (Games 101-120)
+  { id: 101, title: 'Solar Orbit Collector', category: 'action', desc: 'Navigate orbits to collect energy cores.', icon: '☀️', color: '#facc15' },
+  { id: 102, title: 'Neon Cyber Runner', category: 'action', desc: 'Dodge obstacles in a retro-futuristic grid.', icon: '🏃', color: '#06b6d4' },
+  { id: 103, title: 'Grid Block Sorter', category: 'brain', desc: 'Sort falling blocks into matching slots.', icon: '🔲', color: '#a855f7' },
+  { id: 104, title: 'Space Dasher', category: 'action', desc: 'Dash between stars while avoiding asteroids.', icon: '🚀', color: '#ef4444' },
+  { id: 105, title: 'Geometry Defense', category: 'action', desc: 'Defend your core from geometric enemies.', icon: '🔺', color: '#22c55e' },
+  { id: 106, title: 'Color Switcher', category: 'casual', desc: 'Match your color to pass through barriers.', icon: '🎨', color: '#ec4899' },
+  { id: 107, title: 'Gravity Flip', category: 'action', desc: 'Invert gravity to survive the endless tunnel.', icon: '🔄', color: '#8b5cf6' },
+  { id: 108, title: 'Flappy Cube', category: 'action', desc: 'Keep your cube airborne through tight gaps.', icon: '🧊', color: '#3b82f6' },
+  { id: 109, title: 'Ping Pong Solo', category: 'arcade', desc: 'Master the paddle in this solo reflex challenge.', icon: '🏓', color: '#f97316' },
+  { id: 110, title: 'Target Tap', category: 'casual', desc: 'React quickly to tap shrinking targets.', icon: '🎯', color: '#ef4444' },
+  { id: 111, title: 'Asteroid Dodger', category: 'action', desc: 'Weave through a chaotic asteroid field.', icon: '☄️', color: '#64748b' },
+  { id: 112, title: 'Snake Classic', category: 'arcade', desc: 'The original growing serpent survival game.', icon: '🐍', color: '#10b981' },
+  { id: 113, title: 'Jumper', category: 'action', desc: 'Leap across floating platforms to ascend.', icon: '🦘', color: '#facc15' },
+  { id: 114, title: 'Maze Escape', category: 'mystery', desc: 'Find the exit before the walls close in.', icon: '🚪', color: '#dc2626' },
+  { id: 115, title: 'Orbit Catcher', category: 'casual', desc: 'Catch falling particles in your orbital ring.', icon: '⭕', color: '#38bdf8' },
+  { id: 116, title: 'Avoidance', category: 'action', desc: 'Evade an ever-growing swarm of trackers.', icon: '🚫', color: '#ef4444' },
+  { id: 117, title: 'Tile Tap', category: 'casual', desc: 'Tap the correct fading tiles in sequence.', icon: '📱', color: '#22c55e' },
+  { id: 118, title: 'Shooter', category: 'action', desc: 'Lock and fire in a classic retro blaster.', icon: '🔫', color: '#8b5cf6' },
+  { id: 119, title: 'Column Matcher', category: 'brain', desc: 'Align columns rapidly to clear the board.', icon: '📊', color: '#0ea5e9' },
+  { id: 120, title: 'Survival Zone', category: 'action', desc: 'Stay within the shrinking safe zone.', icon: '🛡️', color: '#facc15' }
 ];
 
 const CATEGORIES = [
@@ -135,7 +155,7 @@ const CATEGORIES = [
 ];
 
 // Featured game IDs for the hero carousel
-const FEATURED_IDS = [85, 46, 71, 16, 23, 74];
+const FEATURED_IDS = [23, 14, 46, 71, 16, 74];
 
 /* ---- Initialise on DOM ready ---- */
 document.addEventListener('DOMContentLoaded', () => {
