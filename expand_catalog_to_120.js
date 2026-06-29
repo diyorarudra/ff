@@ -199,7 +199,7 @@ for (let i = 0; i < 20; i++) {
         const overlayMatches = html.match(/<!-- Overlays -->/);
         if (overlayMatches) {
             const overlaysEnd = overlayMatches.index + 17;
-            const startOverlay = `n      <div id="gameStart" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center rounded-xl z-20 pointer-events-auto">n        <div class="text-3xl font-bold mb-6 text-white font-heading">Ready to Play?</div>n        <button id="startBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform active:scale-95">Start Game</button>n      </div>`;
+            const startOverlay = `\n      <div id="gameStart" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center rounded-xl z-20 pointer-events-auto">\n        <div class="text-3xl font-bold mb-6 text-white font-heading">Ready to Play?</div>\n        <button id="startBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform active:scale-95">Start Game</button>\n      </div>`;
             html = html.substring(0, overlaysEnd) + startOverlay + html.substring(overlaysEnd);
         }
     }
