@@ -1,7 +1,7 @@
 {
-  "name": "gamiday",
+  "name": "ffliveplay",
   "version": "1.0.0",
-  "description": "GamiDay HTML5 Gaming Platform",
+  "description": "ffliveplay HTML5 Gaming Platform",
   "main": "index.html",
   "scripts": {
     "start": "serve .",

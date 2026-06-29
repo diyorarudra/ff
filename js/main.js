@@ -1,5 +1,5 @@
 /* ============================================
-   GamiDay — Main Portal JavaScript
+   ffliveplay — Main Portal JavaScript
    ============================================ */
 
 // ---- Game Registry (all 30 titles) ----
