@@ -329,7 +329,7 @@ function renderGameGrid(filter = currentFilter, searchTerm = currentSearch) {
   grid.innerHTML = list.map((game, i) => `
     <a href="games/game${game.id}/index.html" class="game-card bg-white rounded-2xl border-0 hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden animate-fade-in-up shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] group relative">
       <div class="w-full h-36 relative overflow-hidden bg-gray-50">
-        <img src="/assets/thumbnails/game${game.id}.jpg?v=6" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="${game.title} free online browser game thumbnail" onerror="this.onerror=null; this.src='/assets/thumbnails/default-arcade.jpg?v=6';">
+        <img src="/assets/thumbnails/game${game.id}.jpg?v=6" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="${game.title} free online browser game thumbnail" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='/assets/thumbnails/default-arcade.jpg?v=6';">
       </div>
       <div class="p-4 flex flex-col flex-grow items-center text-center bg-white rounded-b-2xl">
         <span class="category-badge mb-1.5 uppercase tracking-widest font-extrabold text-[#7361F2]" style="font-size:0.65rem;">${game.category}</span>
@@ -374,16 +374,3 @@ window.addEventListener('load', () => {
     }, 500);
   }
 });
-
-
-function getGameSvg(game) {
-    const cats = {
-        'brain': `<rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/><circle cx="12" cy="12" r="4" fill="#fff"/>`,
-        'action': `<path d="M12 2L22 20H2L12 2Z" fill="currentColor"/><circle cx="12" cy="14" r="3" fill="#fff"/>`,
-        'mystery': `<circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="4" fill="none"/><path d="M15 15L21 21" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>`,
-        'rhythm': `<path d="M9 18V5L21 3V16" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="18" cy="16" r="3" fill="currentColor"/>`,
-        'arcade': `<rect x="6" y="2" width="12" height="20" rx="2" fill="currentColor"/><rect x="8" y="5" width="8" height="6" fill="#fff"/>`,
-        'casual': `<circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 6V18M6 12H18" stroke="#fff" stroke-width="2"/>`
-    };
-    return `<svg class="w-16 h-16 opacity-90" style="color: ${game.color}" viewBox="0 0 24 24">${cats[game.category] || cats['casual']}</svg>`;
-}
