@@ -80,16 +80,19 @@ document.addEventListener("DOMContentLoaded", () => {
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+
   <nav class="navbar px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
   <div class="max-w-7xl mx-auto flex items-center justify-between">
     <a href="/index.html" class="flex items-center gap-2 font-bold font-heading text-gray-900">
       <svg class="w-8 h-8 text-[#7361F2]" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1" fill="#fff"></circle><circle cx="14" cy="12" r="1" fill="#fff"></circle><path d="M6 12h4m-2-2v4" stroke="#fff" stroke-width="2"></path></svg>
-      <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">GamiDay</span>
+      <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">ffliveplay</span>
     </a>
     <div class="hidden md:flex items-center gap-8 font-semibold text-[#111]">
       <a href="/index.html" class="hover:text-[#7361F2] transition-colors">Home</a>
-      <a href="#" class="hover:text-[#7361F2] transition-colors">Affiliates</a>
-      <a href="#" class="hover:text-[#7361F2] transition-colors">Developers</a>
       <a href="/compliance/about-us.html" class="hover:text-[#7361F2] transition-colors">About Us</a>
       <a href="#" class="hover:text-[#7361F2] transition-colors">Contact Us</a>
     </div>
@@ -98,9 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <input type="text" placeholder="Search games..." class="border border-gray-200 rounded-full py-1.5 pl-9 pr-4 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 w-48 transition-all">
         <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </div>
-      <button class="w-8 h-8 rounded-full bg-[#FFC42C] flex items-center justify-center text-white shadow-sm hover:scale-105 transition-transform">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-      </button>
+      
     </div>
   </div>
 </nav>
@@ -407,5 +408,18 @@ window.addEventListener('keydown', function(e) {
     }
 }, { passive: false });
 </script>
+
+<script>
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.classList.add('fade-out');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 500);
+  }
+});
+</script>
+
 </body>
 </html>

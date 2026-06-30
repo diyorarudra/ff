@@ -162,6 +162,12 @@ img { max-width: 100%; height: auto; }
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
 }
 
+/* Fix text colors when navbar is dark */
+.navbar.scrolled .text-\[\#111\],
+.navbar.scrolled .text-gray-900 {
+  color: #ffffff !important;
+}
+
 #hamburger span {
   display: block;
   transition: all 0.3s ease;
@@ -448,6 +454,20 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ===================== GAME PAGE ===================== */
+
+/* Fix text visibility in white game headers while ignoring dark boxes (like in Image 3) */
+.game-header.bg-white {
+  color: #111827 !important;
+}
+.game-header.bg-white span[class*="text-gray-"]:not(.bg-nexus-dark *) {
+  color: #4b5563 !important;
+}
+.game-header.bg-white span[class*="text-cyan-"]:not(.bg-nexus-dark *) {
+  color: #0891b2 !important;
+}
+.game-header.bg-white span[class*="text-purple-"]:not(.bg-nexus-dark *) {
+  color: #7e22ce !important;
+}
 .game-wrapper {
   min-height: 100vh;
   display: flex;

@@ -5,7 +5,7 @@ const NAV_TEMPLATE = `<nav class="navbar px-4 py-3 bg-white shadow-sm sticky top
   <div class="max-w-7xl mx-auto flex items-center justify-between">
     <a href="/index.html" class="flex items-center gap-2 font-bold font-heading text-gray-900">
       <svg class="w-8 h-8 text-[#7361F2]" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1" fill="#fff"></circle><circle cx="14" cy="12" r="1" fill="#fff"></circle><path d="M6 12h4m-2-2v4" stroke="#fff" stroke-width="2"></path></svg>
-      <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">GamiDay</span>
+      <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">ffliveplay</span>
     </a>
     <div class="hidden md:flex items-center gap-8 font-semibold text-[#111]">
       <a href="/index.html" class="hover:text-[#7361F2] transition-colors">Home</a>

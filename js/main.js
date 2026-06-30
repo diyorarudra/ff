@@ -162,10 +162,22 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   // initCarousel(); // Removed for premium grid layout
   renderFilters();
+  initSearch();
   renderGameGrid('all');
   initScrollAnimations();
   initCardGlow();
 });
+
+/* ================= SEARCH ================= */
+function initSearch() {
+  const searchInput = document.querySelector('input[placeholder="Search games..."]');
+  if (!searchInput) return;
+
+  searchInput.addEventListener('input', (e) => {
+    const term = e.target.value;
+    renderGameGrid(currentFilter, term);
+  });
+}
 
 /* ================= NAVBAR ================= */
 function initNavbar() {
@@ -277,12 +289,22 @@ function renderFilters() {
   });
 }
 
+let currentFilter = 'all';
+let currentSearch = '';
+
 /* ================= GAME GRID ================= */
-function renderGameGrid(filter) {
+function renderGameGrid(filter = currentFilter, searchTerm = currentSearch) {
+  currentFilter = filter;
+  currentSearch = searchTerm;
+
   const grid = document.getElementById('game-grid');
   if (!grid) return;
 
-  let list = filter === 'all' ? [...GAMES] : GAMES.filter(g => g.category === filter);
+  let list = currentFilter === 'all' ? [...GAMES] : GAMES.filter(g => g.category === currentFilter);
+  
+  if (currentSearch) {
+      list = list.filter(g => g.title.toLowerCase().includes(currentSearch.toLowerCase()) || g.desc.toLowerCase().includes(currentSearch.toLowerCase()));
+  }
 
   // Sorting Logic Rules
   // Premium: Curated list of the most interesting/best games to show first
@@ -332,16 +354,17 @@ function renderGameGrid(filter) {
   grid.style.display = 'grid';
   grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
   grid.style.gap = '1.5rem';
-  grid.style.padding = '2rem 0';
+  // grid.style.padding removed to fix spacing
   
   grid.innerHTML = list.map((game, i) => `
-    <a href="games/game${game.id}/index.html" class="game-card bg-white rounded-xl border border-gray-100 hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden animate-fade-in-up" style="box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); animation-delay:${(i % 10) * 0.04}s;">
-      <div class="w-full h-36 bg-white">
-        <img src="/assets/thumbnails/game${game.id}.jpg" class="w-full h-36 object-cover rounded-t-xl" alt="${game.title}" onerror="this.onerror=null; this.src='/assets/thumbnails/default-arcade.jpg';">
+    <a href="games/game${game.id}/index.html" class="game-card bg-white rounded-2xl border-0 hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden animate-fade-in-up shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] group relative">
+      <div class="w-full h-36 relative overflow-hidden bg-gray-50">
+        <img src="/assets/thumbnails/game${game.id}.jpg?v=6" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="${game.title}" onerror="this.onerror=null; this.src='/assets/thumbnails/default-arcade.jpg?v=6';">
       </div>
-      <div class="p-4 flex flex-col flex-grow items-center text-center bg-white rounded-b-xl">
-        <h3 class="font-bold text-gray-900 text-lg mb-3" style="font-family:var(--font-heading)">${game.title}</h3>
-        <button class="play-now-btn bg-[#7361F2] text-white rounded-xl py-2.5 px-5 font-bold hover:bg-[#FFC42C] transition-all w-full mt-auto">Play Now</button>
+      <div class="p-4 flex flex-col flex-grow items-center text-center bg-white rounded-b-2xl">
+        <span class="category-badge mb-1.5 uppercase tracking-widest font-extrabold text-[#7361F2]" style="font-size:0.65rem;">${game.category}</span>
+        <h3 class="font-extrabold text-gray-800 text-[17px] mb-4 line-clamp-1" style="font-family:var(--font-heading)">${game.title}</h3>
+        <button class="bg-[#ef4444] text-white rounded-xl py-2 px-6 text-sm font-bold shadow-md hover:bg-[#dc2626] hover:shadow-lg transition-all w-full mt-auto active:scale-95">Play Now</button>
       </div>
     </a>`).join('');
 }

@@ -8,7 +8,9 @@
     "dev": "serve ."
   },
   "dependencies": {
+    "canvas": "^3.2.3",
     "jsdom": "^29.1.1",
+    "pureimage": "^0.4.18",
     "serve": "^14.2.1"
   }
 }
