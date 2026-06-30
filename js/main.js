@@ -326,36 +326,6 @@ function renderGameGrid(filter = currentFilter, searchTerm = currentSearch) {
       return Math.random() - 0.5; 
   });
 
-  
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
-  grid.style.gap = '1.5rem';
-  grid.style.padding = '2rem 0';
-  
-  
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
-  grid.style.gap = '1.5rem';
-  grid.style.padding = '2rem 0';
-  
-  
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
-  grid.style.gap = '1.5rem';
-  grid.style.padding = '2rem 0';
-  
-  
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
-  grid.style.gap = '1.5rem';
-  grid.style.padding = '2rem 0';
-  
-  
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
-  grid.style.gap = '1.5rem';
-  // grid.style.padding removed to fix spacing
-  
   grid.innerHTML = list.map((game, i) => `
     <a href="games/game${game.id}/index.html" class="game-card bg-white rounded-2xl border-0 hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden animate-fade-in-up shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] group relative">
       <div class="w-full h-36 relative overflow-hidden bg-gray-50">
