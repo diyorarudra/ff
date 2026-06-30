@@ -209,13 +209,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentLapStart = 0;
     let hasCrossedHalfway = false; // Prevent cheating by turning around
     
-    const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false, w: false, a: false, s: false, d: false };
+    const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false, KeyW: false, KeyA: false, KeyS: false, KeyD: false };
     
     window.addEventListener('keydown', (e) => { 
-        if(keys.hasOwnProperty(e.key)) { keys[e.key] = true; e.preventDefault(); }
+        if(keys.hasOwnProperty(e.code)) { keys[e.code] = true; e.preventDefault(); }
     });
     window.addEventListener('keyup', (e) => { 
-        if(keys.hasOwnProperty(e.key)) { keys[e.key] = false; e.preventDefault(); }
+        if(keys.hasOwnProperty(e.code)) { keys[e.code] = false; e.preventDefault(); }
     });
     
     // --- MOBILE BUTTON BINDINGS ---
@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, {passive: false});
     
     function getInput() {
-        let input = { up: keys.ArrowUp || keys.w, down: keys.ArrowDown || keys.s, left: keys.ArrowLeft || keys.a, right: keys.ArrowRight || keys.d };
+        let input = { up: keys.ArrowUp || keys.KeyW, down: keys.ArrowDown || keys.KeyS, left: keys.ArrowLeft || keys.KeyA, right: keys.ArrowRight || keys.KeyD };
         if(touchJoystick.active) {
             let dx = touchJoystick.currX - touchJoystick.startX;
             let dy = touchJoystick.currY - touchJoystick.startY;
