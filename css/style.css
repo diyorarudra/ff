@@ -168,6 +168,10 @@ img { max-width: 100%; height: auto; }
   color: #ffffff !important;
 }
 
+.navbar.scrolled #hamburger span {
+  background-color: #ffffff !important;
+}
+
 #hamburger span {
   display: block;
   transition: all 0.3s ease;
