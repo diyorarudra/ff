@@ -218,18 +218,18 @@ function initCarousel() {
   track.innerHTML = featured.map(game => {
     const catLabel = CATEGORIES.find(c => c.id === game.category)?.label || game.category;
     return `
-      <div class="carousel-slide" style="background:linear-gradient(135deg, ${game.color}18, ${game.color}06); box-shadow: 0 0 20px #8b5cf6; border-radius: 1rem; width: 95%; max-width: 900px; margin: 0 auto; overflow: hidden;">
+      <div class="carousel-slide bg-white" style="box-shadow: 0 15px 40px rgba(0,0,0,0.12); border-radius: 1.5rem; width: 95%; max-width: 900px; margin: 0 auto; overflow: hidden; border: 1px solid rgba(0,0,0,0.05);">
         <div class="flex flex-col md:flex-row items-center justify-between p-6 md:p-12 min-h-[280px] md:min-h-[380px]">
           <div class="flex-1 text-center md:text-left mb-6 md:mb-0">
-            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4"
-                  style="background:${game.color}25;color:${game.color}">${catLabel}</span>
-            <h2 class="text-3xl md:text-5xl font-bold mb-3" style="font-family:var(--font-heading)">${game.title}</h2>
-            <p class="text-gray-400 text-lg mb-6 max-w-md">${game.desc}</p>
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 uppercase tracking-wider"
+                  style="background:${game.color}15;color:${game.color}">${catLabel}</span>
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-3 text-gray-900" style="font-family:var(--font-heading)">${game.title}</h2>
+            <p class="text-gray-500 text-lg mb-6 max-w-md font-medium">${game.desc}</p>
             <a href="games/game${game.id}"
-               class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all hover:scale-105 hover:shadow-lg"
+               class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-white transition-all hover:-translate-y-1 hover:shadow-lg"
                style="background:${game.color}">▶ Play Now</a>
           </div>
-          <div class="text-7xl md:text-[9rem] opacity-80 select-none drop-shadow-lg">${game.icon}</div>
+          <div class="text-7xl md:text-[9rem] opacity-90 select-none drop-shadow-xl hover:scale-110 transition-transform duration-500">${game.icon}</div>
         </div>
       </div>`;
   }).join('');
