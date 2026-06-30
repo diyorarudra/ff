@@ -329,7 +329,7 @@ function renderGameGrid(filter = currentFilter, searchTerm = currentSearch) {
   grid.innerHTML = list.map((game, i) => `
     <a href="games/game${game.id}/index.html" class="game-card bg-white rounded-2xl border-0 hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden animate-fade-in-up shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] group relative">
       <div class="w-full h-36 relative overflow-hidden bg-gray-50">
-        <img src="/assets/thumbnails/game${game.id}.jpg?v=6" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="${game.title}" onerror="this.onerror=null; this.src='/assets/thumbnails/default-arcade.jpg?v=6';">
+        <img src="/assets/thumbnails/game${game.id}.jpg?v=6" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="${game.title} free online browser game thumbnail" onerror="this.onerror=null; this.src='/assets/thumbnails/default-arcade.jpg?v=6';">
       </div>
       <div class="p-4 flex flex-col flex-grow items-center text-center bg-white rounded-b-2xl">
         <span class="category-badge mb-1.5 uppercase tracking-widest font-extrabold text-[#7361F2]" style="font-size:0.65rem;">${game.category}</span>
