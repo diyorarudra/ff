@@ -160,7 +160,7 @@ const FEATURED_IDS = [23, 14, 46, 71, 55, 74];
 /* ---- Initialise on DOM ready ---- */
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
-  // initCarousel(); // Removed for premium grid layout
+  initCarousel();
   renderFilters();
   initSearch();
   renderGameGrid('all');
