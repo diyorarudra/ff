@@ -112,11 +112,29 @@ document.addEventListener("DOMContentLoaded", () => {
       <a href="#" class="hover:text-[#7361F2] transition-colors">Contact Us</a>
     </div>
     <div class="flex items-center gap-4">
-      <div class="relative hidden sm:block">
+      <div class="relative hidden md:block">
         <input type="text" placeholder="Search games..." class="border border-gray-200 rounded-full py-1.5 pl-9 pr-4 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 w-48 transition-all">
         <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </div>
-      
+      <!-- Hamburger -->
+      <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu">
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300 w-full bg-white absolute top-full left-0 shadow-md">
+    <div class="flex flex-col gap-4 pt-4 pb-4 px-4 border-t border-gray-100">
+      <div class="relative w-full">
+        <input type="text" placeholder="Search games..." class="w-full border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-4 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <a href="/index.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">Home</a>
+      <a href="/compliance/about-us.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">About Us</a>
+      <a href="/compliance/contact.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2">Contact Us</a>
     </div>
   </div>
 </nav>

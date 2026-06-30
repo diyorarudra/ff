@@ -170,12 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ================= SEARCH ================= */
 function initSearch() {
-  const searchInput = document.querySelector('input[placeholder="Search games..."]');
-  if (!searchInput) return;
-
-  searchInput.addEventListener('input', (e) => {
-    const term = e.target.value;
-    renderGameGrid(currentFilter, term);
+  const searchInputs = document.querySelectorAll('input[placeholder="Search games..."]');
+  searchInputs.forEach(input => {
+    input.addEventListener('input', (e) => {
+      const term = e.target.value;
+      renderGameGrid(currentFilter, term);
+    });
   });
 }
 
