@@ -258,7 +258,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function init() {
       canvas.width = 600;
-      canvas.height = (rows/cols) * 600;
+      if (window.innerWidth >= 768 && cols === 4 && rows === 4) {
+        canvas.height = 450;
+      } else {
+        canvas.height = (rows/cols) * 600;
+      }
       
       cardW = (canvas.width - padding * (cols + 1)) / cols;
       cardH = (canvas.height - padding * (rows + 1)) / rows;
