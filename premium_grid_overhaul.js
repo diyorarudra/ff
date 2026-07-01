@@ -5,7 +5,7 @@ const path = require('path');
 const indexHtmlPath = path.join(__dirname, 'index.html');
 if (fs.existsSync(indexHtmlPath)) {
     let content = fs.readFileSync(indexHtmlPath, 'utf8');
-    
+      
     // Remove the carousel section
     content = content.replace(/<!-- ===== HERO CAROUSEL ===== -->[\s\S]*?<\/section>/, '');
     
