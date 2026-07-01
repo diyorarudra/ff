@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-1.5 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button></div>
     </div>
 
-    <div class="relative w-full md:flex md:justify-center md:items-center bg-white drop-shadow-sm text-gray-800 rounded-xl p-3 shadow-2xl overflow-hidden border border-gray-200"><canvas id="gameCanvas_4" class="block w-full h-full md:w-auto md:h-auto md:max-w-full cursor-pointer md:mx-auto"></canvas>
+    <div class="relative w-full bg-white drop-shadow-sm text-gray-800 rounded-xl p-3 shadow-2xl overflow-hidden border border-gray-200"><canvas id="gameCanvas_4" class="block w-full h-full cursor-pointer"></canvas>
       
       <!-- Overlays -->
       <div id="gameWon" class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 z-10 rounded-xl">
@@ -257,13 +257,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('playAgainBtn').addEventListener('click', init);
 
     function init() {
-      if (window.innerWidth < 768) {
-        canvas.width = 600;
-        canvas.height = (rows/cols) * 600;
-      } else {
-        canvas.width = cols * 100;
-        canvas.height = rows * 100;
-      }
+      canvas.width = 600;
+      canvas.height = (rows/cols) * 600;
       
       cardW = (canvas.width - padding * (cols + 1)) / cols;
       cardH = (canvas.height - padding * (rows + 1)) / rows;
