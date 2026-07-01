@@ -512,7 +512,7 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
         // Bind init and SFX to canvas interactions globally
         document.addEventListener('mousedown', (e) => {
             if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
-            if(e.target.tagName === 'CANVAS') playClickSound();
+            if(e.target.tagName === 'CANVAS' || e.target.classList.contains('cell')) playClickSound();
         });
         document.addEventListener('keydown', (e) => {
             if(!audioCtx) initAudioEngine();
