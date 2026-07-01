@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Internal resolution
     canvas.width = 800;
-    canvas.height = 450;
+    canvas.height = window.innerWidth < 768 ? 600 : 450;
 
     let scoreP1 = 0;
     let scoreP2 = 0;
