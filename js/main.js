@@ -36,7 +36,7 @@ const GAMES = [
   { id: 21, title: 'Retro Snake',      category: 'arcade',  desc: 'Grow your snake longer without crashing into yourself.',       icon: '🐍', color: '#22c55e' },
   { id: 22, title: 'Pac Chase',        category: 'arcade',  desc: 'Eat dots and dodge smart ghosts in the classic maze.',         icon: '👻', color: '#facc15' },
   { id: 23, title: 'Tic-Tac-Toe',      category: 'arcade',  desc: 'Challenge an unbeatable Minimax AI opponent.',                 icon: '❌', color: '#3b82f6' },
-  { id: 24, title: 'Pong',             category: 'arcade',  desc: 'Classic paddle duel against a dynamic AI opponent.',            icon: '🏓', color: '#475569' },
+  { id: 24, title: 'Pong',             category: 'arcade',  desc: 'Classic paddle duel against a dynamic AI opponent.',            icon: '🏓', color: '#ec4899' },
   { id: 25, title: 'Block Stacker',    category: 'arcade',  desc: 'Stack falling tetrominoes and clear completed lines.',          icon: '🟦', color: '#06b6d4' },
 
   // Category 6 — Casual Tap & Reflex
