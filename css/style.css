@@ -58,6 +58,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  background-color: #7C67DD;
 }
 
 body {
