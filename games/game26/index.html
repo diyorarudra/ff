@@ -139,66 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
           data-ad-slot="3333333333"></ins>
      <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
   </div>
-<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col md:flex-row items-start justify-center gap-6 lg:max-w-[800px]">
-    <h1 class="text-3xl md:text-4xl font-extrabold font-heading text-white text-center mb-4">Play Whack-a-Mole Online</h1>
-<style>
-@media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
-</style>
-<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">🔊</button>
-
-    
-    <!-- Left panel (Score / Next) -->
-    <div class="w-full md:w-48 flex flex-col gap-4">
-      <div class="bg-nexus-card p-4 rounded-xl border border-white/10 shadow-lg">
-        <div class="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">Score</div>
-        <div id="score" class="text-3xl font-bold text-cyan-400 font-heading">0</div>
-        
-        <div class="text-xs text-gray-400 uppercase tracking-widest font-bold mt-4 mb-1">Lines</div>
-        <div id="lines" class="text-xl font-bold text-purple-400 font-heading">0</div>
-        
-        <div class="text-xs text-gray-400 uppercase tracking-widest font-bold mt-4 mb-1">Level</div>
-        <div id="level" class="text-xl font-bold text-yellow-400 font-heading">1</div>
-      </div>
-      
-      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white w-full py-3 rounded-xl font-bold shadow-md transition-transform active:scale-95">Restart</button></div>
-
-    <!-- Center (Board) -->
-    <div class="relative mx-auto" style="width: 250px; height: 500px;"><canvas id="gameCanvas_26" width="250" height="500" class="rounded-lg w-full h-full block"></canvas>
-      
-      <div id="gameOver" class="absolute inset-0 bg-red-900/90 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 rounded-lg">
-        <div class="text-3xl font-bold mb-2 font-heading text-white">Game Over</div>
-        <p class="text-gray-200 mb-4">Score: <span id="finalScore" class="font-bold">0</span></p>
-        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-2 rounded-lg font-bold shadow-lg hover:scale-105 pointer-events-auto">Try Again</button>
-      </div>
-
-      <div id="startScreen" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 z-10 rounded-lg p-4 text-center">
-        <div class="text-3xl font-bold font-heading text-cyan-400 mb-4">Block Drop</div>
-        <button id="beginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-black px-6 py-2 rounded-lg font-bold shadow-lg pointer-events-auto">PLAY</button>
-      </div>
-    </div>
-    
-    <!-- Right Panel (Mobile Controls) -->
-    <div class="w-full md:w-48 grid grid-cols-3 grid-rows-3 gap-2 mt-4 md:mt-0 max-w-[250px] mx-auto md:mx-0">
-      <div></div>
-      <button id="btnRot" class="bg-nexus-card border border-white/10 rounded-lg flex items-center justify-center h-16 text-xl active:bg-white/20">↻</button>
-      <div></div>
-      
-      <button id="btnLeft" class="bg-nexus-card border border-white/10 rounded-lg flex items-center justify-center h-16 text-xl active:bg-white/20">←</button>
-      <button id="btnDown" class="bg-nexus-card border border-white/10 rounded-lg flex items-center justify-center h-16 text-xl active:bg-white/20">↓</button>
-      <button id="btnRight" class="bg-nexus-card border border-white/10 rounded-lg flex items-center justify-center h-16 text-xl active:bg-white/20">→</button>
-      
-      <div class="col-span-3 mt-2">
-        <button id="btnDrop" class="bg-nexus-card border border-white/10 rounded-lg flex items-center justify-center h-12 w-full text-sm uppercase tracking-widest font-bold active:bg-white/20 text-cyan-400">Hard Drop</button>
-      </div>
-    </div>
-
-  
-<div class="adsense-seo-block" style="width: 100%; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
-        <h3 style="color: #fff; margin-top: 0;">ffliveplay Module 26 Operations Manual</h3>
-        <p>Welcome to ffliveplay Room 26, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
-    </div>
-
-<div class="w-full mb-8 mt-4">
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center lg:max-w-[800px]">
+    <h1 class="text-3xl md:text-4xl font-extrabold font-heading text-white text-center w-full mb-4">Play Whack-a-Mole Online</h1>
     <div class="ad-slot ad-slot-in-article bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
 
      <ins class="adsbygoogle"
