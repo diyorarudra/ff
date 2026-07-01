@@ -132,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </style>
 <button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">🔊</button>
 
+      <div class="relative w-full rounded-lg overflow-hidden shadow-2xl mt-4">
       <!-- HUD over canvas -->
       <div class="absolute top-4 left-4 z-10 font-bold font-heading">
           <div class="text-gray-400 text-sm">SURVIVAL TIME</div>
@@ -152,11 +153,12 @@ document.addEventListener("DOMContentLoaded", () => {
           <button id="startBtn" class="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold font-heading rounded text-xl shadow-[0_0_20px_rgba(239,68,68,0.5)]">INITIATE COMBAT</button>
       </div><canvas id="gameCanvas_50" width="800" height="600" class="w-full h-[600px] bg-[#FFFFFF] rounded-lg shadow-2xl border border-red-900/30 touch-none"></canvas>
       
-      <div class="game-over-overlay z-30" id="gameOver" style="display:none">
-        <div class="game-over-panel bg-black border border-red-600">
+      <div class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm" id="gameOver" style="display:none">
+        <div class="game-over-panel bg-black border border-red-600 p-8 rounded-lg text-center">
           <h2 id="endTitle" class="text-4xl font-black font-heading mb-2 text-red-500 [text-shadow:0_0_15px_#ef4444]">SYSTEM FAILURE</h2>
           <p class="text-gray-400 mb-6">You survived for <span id="finalScore" class="text-white font-bold">0.00s</span>.</p>
-          <button id="restartBtn" class="game-btn w-full bg-red-600 hover:bg-red-700 border-none text-white">Retry Sequence</button></div>
+          <button id="restartBtn" class="game-btn w-full bg-red-600 hover:bg-red-700 border-none text-white px-6 py-3 rounded font-bold">Retry Sequence</button></div>
+      </div>
       </div>
     </div>
   
