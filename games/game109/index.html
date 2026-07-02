@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
@@ -130,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <style>
 @media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
 </style>
-<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">🔊</button>
+<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">ðŸ”Š</button>
 
     
     <div class="game-header w-full max-w-3xl flex justify-between items-center bg-white rounded-xl p-3 mb-4 shadow-sm border border-gray-200">
@@ -313,7 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(!audioCtx) initAudioEngine();
                 if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
                 isMuted = !isMuted;
-                audioBtn.textContent = isMuted ? '🔇' : '🔊';
+                audioBtn.textContent = isMuted ? 'ðŸ”‡' : 'ðŸ”Š';
             };
             audioBtn.addEventListener('click', toggleAudio);
                         /* removed conflicting touchstart */
@@ -405,10 +406,10 @@ window.addEventListener('load', () => {
   <p class="leading-relaxed mb-5">Use your keyboard, mouse, swipe, or tap controls depending on the game screen. Most FFLivePlay games show their main control hint near the play area.</p>
   <h2 class="text-2xl font-bold font-heading mb-3">Related Games</h2>
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <a href="/games/game21/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#22c55e15"><div class="text-7xl opacity-90 drop-shadow-md select-none">🐍</div></div><span class="block p-3 font-bold text-gray-800">Retro Snake</span></a>
-    <a href="/games/game22/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#facc1515"><div class="text-7xl opacity-90 drop-shadow-md select-none">👻</div></div><span class="block p-3 font-bold text-gray-800">Pac Chase</span></a>
-    <a href="/games/game23/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#3b82f615"><div class="text-7xl opacity-90 drop-shadow-md select-none">❌</div></div><span class="block p-3 font-bold text-gray-800">Tic-Tac-Toe</span></a>
-    <a href="/games/game24/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#47556915"><div class="text-7xl opacity-90 drop-shadow-md select-none">🏓</div></div><span class="block p-3 font-bold text-gray-800">Pong</span></a>
+    <a href="/games/game21/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#22c55e15"><div class="text-7xl opacity-90 drop-shadow-md select-none">ðŸ</div></div><span class="block p-3 font-bold text-gray-800">Retro Snake</span></a>
+    <a href="/games/game22/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#facc1515"><div class="text-7xl opacity-90 drop-shadow-md select-none">ðŸ‘»</div></div><span class="block p-3 font-bold text-gray-800">Pac Chase</span></a>
+    <a href="/games/game23/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#3b82f615"><div class="text-7xl opacity-90 drop-shadow-md select-none">âŒ</div></div><span class="block p-3 font-bold text-gray-800">Tic-Tac-Toe</span></a>
+    <a href="/games/game24/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#47556915"><div class="text-7xl opacity-90 drop-shadow-md select-none">ðŸ“</div></div><span class="block p-3 font-bold text-gray-800">Pong</span></a>
   </div>
   <h2 class="text-2xl font-bold font-heading mb-3 mt-6">More Game Categories</h2>
   <p class="flex flex-wrap gap-x-4 gap-y-2 font-semibold mb-5">
