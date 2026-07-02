@@ -307,7 +307,7 @@ function renderGameGrid(filter = currentFilter, searchTerm = currentSearch) {
   }
 
   // Sorting Logic Rules
-  const fixedFirstIds = [75, 118, 15, 65, 63, 80, 92, 77, 93, 12]; // Array of game IDs to always show first in this exact order
+  const fixedFirstIds = [15, 65, 63, 80, 92, 77, 93, 12]; // Array of game IDs to always show first in this exact order
   // Premium: Curated list of the most interesting/best games to show first
   const premiumIds = [58, 60, 85, 79, 38, 1, 95, 92, 90, 88, 86, 77, 74, 69, 54, 55, 46, 50, 31, 34, 16, 6, 21, 24];
   const lowIds = [84, 64, 80, 81];
