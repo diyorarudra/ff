@@ -307,11 +307,21 @@ function renderGameGrid(filter = currentFilter, searchTerm = currentSearch) {
   }
 
   // Sorting Logic Rules
+  const fixedFirstIds = [75, 118, 15, 65, 63, 80, 92, 77, 93, 12]; // Array of game IDs to always show first in this exact order
   // Premium: Curated list of the most interesting/best games to show first
   const premiumIds = [58, 60, 85, 79, 38, 1, 95, 92, 90, 88, 86, 77, 74, 69, 54, 55, 46, 50, 31, 34, 16, 6, 21, 24];
   const lowIds = [84, 64, 80, 81];
 
   list.sort((a, b) => {
+      // 1. Check fixed first games
+      const aFixedIdx = fixedFirstIds.indexOf(a.id);
+      const bFixedIdx = fixedFirstIds.indexOf(b.id);
+      
+      if (aFixedIdx !== -1 && bFixedIdx !== -1) return aFixedIdx - bFixedIdx;
+      if (aFixedIdx !== -1) return -1;
+      if (bFixedIdx !== -1) return 1;
+
+      // 2. Check premium/low tier games
       const aPremium = premiumIds.includes(a.id);
       const bPremium = premiumIds.includes(b.id);
       const aLow = lowIds.includes(a.id);
@@ -322,7 +332,7 @@ function renderGameGrid(filter = currentFilter, searchTerm = currentSearch) {
       if (aLow && !bLow) return 1;
       if (!aLow && bLow) return -1;
       
-      // Randomize the rest so users see different interesting games instead of 1-100 ordered
+      // 3. Randomize the rest so users see different interesting games instead of 1-100 ordered
       return Math.random() - 0.5; 
   });
 
