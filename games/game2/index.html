@@ -141,17 +141,17 @@ document.addEventListener("DOMContentLoaded", () => {
 <style>
 @media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
 </style>
-<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">ðŸ”Š</button>
+<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">Ã°Å¸â€Å </button>
 
     
     <div class="game-header w-full max-w-3xl flex justify-between items-center bg-white rounded-xl p-3 mb-4 shadow-sm border border-gray-200">
       <div class="flex gap-4 items-center">
         <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-2">
-          <span class="text-red-500 text-lg">ðŸ’£</span>
+          <span class="text-red-500 text-lg">Ã°Å¸â€™Â£</span>
           <div id="mineCount" class="text-xl font-bold text-gray-900 font-heading w-8 text-center">40</div>
         </div>
         <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-2">
-          <span class="text-cyan-400 text-lg">â³</span>
+          <span class="text-cyan-400 text-lg">Ã¢ÂÂ³</span>
           <div id="timer" class="text-xl font-bold text-white font-heading w-12 text-center">000</div>
         </div>
       </div>
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <option value="medium" selected>Med (16x16)</option>
           <option value="hard">Hard (24x20)</option>
         </select>
-        <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">ðŸ”„ Restart</button></div>
+        <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Ã°Å¸â€â€ž Restart</button></div>
     </div>
 
     <div class="text-xs text-gray-400 mb-2 w-full text-center">Desktop: Left/Right click | Mobile: Tap to reveal, Long-press to flag</div>
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       mineCountEl.textContent = MINES;
       timerEl.textContent = '000';
-      restartBtn.innerHTML = 'ðŸ”„ Restart';
+      restartBtn.innerHTML = 'Ã°Å¸â€â€ž Restart';
       
       gameOverOverlay.style.opacity = '0';
       gameOverOverlay.style.pointerEvents = 'none';
@@ -376,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function gameOver(isWin) {
       state = isWin ? 'WON' : 'LOST';
       clearInterval(timerInterval);
-      restartBtn.innerHTML = isWin ? 'ËœÅ½ Play Again' : 'ËœÂµ Try Again';
+      restartBtn.innerHTML = isWin ? 'Ã‹Å“Ã…Â½ Play Again' : 'Ã‹Å“Ã‚Âµ Try Again';
       
       // Reveal all mines if lost
       if (!isWin) {
@@ -505,7 +505,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ctx.fillRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2);
               ctx.fillStyle = '#fff';
               ctx.font = '16px sans-serif';
-              ctx.fillText('â€™Â£', x + CELL_SIZE/2, y + CELL_SIZE/2 + 2);
+              ctx.fillText('Ã¢â‚¬â„¢Ã‚Â£', x + CELL_SIZE/2, y + CELL_SIZE/2 + 2);
             } else if (cell.neighborMines > 0) {
               // Number
               ctx.fillStyle = NUM_COLORS[cell.neighborMines];
@@ -531,7 +531,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (cell.isFlagged) {
               ctx.fillStyle = '#ef4444';
               ctx.font = '14px sans-serif';
-              ctx.fillText('Å¡&hearts;', x + CELL_SIZE/2, y + CELL_SIZE/2 + 1);
+              ctx.fillText('Ã…Â¡&hearts;', x + CELL_SIZE/2, y + CELL_SIZE/2 + 1);
             }
           }
         }
@@ -577,7 +577,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(!audioCtx) initAudioEngine();
                 if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
                 isMuted = !isMuted;
-                audioBtn.textContent = isMuted ? 'ðŸ”‡' : 'ðŸ”Š';
+                audioBtn.textContent = isMuted ? 'Ã°Å¸â€â€¡' : 'Ã°Å¸â€Å ';
             };
             audioBtn.addEventListener('click', toggleAudio);
                         /* removed conflicting touchstart */
@@ -669,10 +669,10 @@ window.addEventListener('load', () => {
   <p class="leading-relaxed mb-5">Use your keyboard, mouse, swipe, or tap controls depending on the game screen. Most FFLivePlay games show their main control hint near the play area.</p>
   <h2 class="text-2xl font-bold font-heading mb-3">Related Games</h2>
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <a href="/games/game1/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#eab30815"><div class="text-7xl opacity-90 drop-shadow-md select-none">ðŸ”¢</div></div><span class="block p-3 font-bold text-gray-800">2048</span></a>
-    <a href="/games/game3/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#8b5cf615"><div class="text-7xl opacity-90 drop-shadow-md select-none">ðŸ§©</div></div><span class="block p-3 font-bold text-gray-800">Sudoku</span></a>
-    <a href="/games/game4/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#06b6d415"><div class="text-7xl opacity-90 drop-shadow-md select-none">ðŸƒ</div></div><span class="block p-3 font-bold text-gray-800">Memory Match</span></a>
-    <a href="/games/game5/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#f9731615"><div class="text-7xl opacity-90 drop-shadow-md select-none">ðŸ”²</div></div><span class="block p-3 font-bold text-gray-800">Slider Puzzle</span></a>
+    <a href="/games/game1/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#eab30815"><div class="text-7xl opacity-90 drop-shadow-md select-none">Ã°Å¸â€Â¢</div></div><span class="block p-3 font-bold text-gray-800">2048</span></a>
+    <a href="/games/game3/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#8b5cf615"><div class="text-7xl opacity-90 drop-shadow-md select-none">Ã°Å¸Â§Â©</div></div><span class="block p-3 font-bold text-gray-800">Sudoku</span></a>
+    <a href="/games/game4/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#06b6d415"><div class="text-7xl opacity-90 drop-shadow-md select-none">Ã°Å¸Æ’Â</div></div><span class="block p-3 font-bold text-gray-800">Memory Match</span></a>
+    <a href="/games/game5/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#f9731615"><div class="text-7xl opacity-90 drop-shadow-md select-none">Ã°Å¸â€Â²</div></div><span class="block p-3 font-bold text-gray-800">Slider Puzzle</span></a>
   </div>
   <h2 class="text-2xl font-bold font-heading mb-3 mt-6">More Game Categories</h2>
   <p class="flex flex-wrap gap-x-4 gap-y-2 font-semibold mb-5">
@@ -683,4 +683,15 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+<script>
+  const hamburgerBtn = document.getElementById('hamburger');
+  const mobileMenuDiv = document.getElementById('mobile-menu');
+  if (hamburgerBtn && mobileMenuDiv) {
+    hamburgerBtn.addEventListener('click', () => {
+      mobileMenuDiv.classList.toggle('open');
+      hamburgerBtn.classList.toggle('active');
+    });
+  }
+</script>
 </html>
