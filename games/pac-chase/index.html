@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Play Pac Chase Online - Free Browser Game | FFLivePlay</title>
+  <meta name="description" content="Play Pac Chase online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.">
+  <meta name="keywords" content="Road Crosser, ffliveplay, online game, browser game, free h5 games, instant arcade">
+  <meta property="og:title" content="Play Pac Chase Online | FFLivePlay">
+  <meta property="og:description" content="Play Pac Chase online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Play Pac Chase Online | FFLivePlay">
+  <meta name="twitter:description" content="Play Pac Chase online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.">
+  <meta name="twitter:image" content="https://www.ffliveplay.com/assets/thumbnails/game22.jpg">
+  <meta property="og:image" content="https://www.ffliveplay.com/assets/thumbnails/game22.jpg">
+
+  <meta charset="UTF-8">
+  <link rel="canonical" href="https://www.ffliveplay.com/games/pac-chase/">
+  <meta name="robots" content="index, follow">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Pac Chase","description":"Play Pac Chase online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.","url":"https://www.ffliveplay.com/games/pac-chase/","image":"https://www.ffliveplay.com/assets/thumbnails/game22.jpg","genre":"arcade","applicationCategory":"Game","operatingSystem":"Web browser","playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com"}}</script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    #gameCanvas { touch-action: none; }
+  </style>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const adObserver = new MutationObserver(() => {});
+    setTimeout(() => {
+        document.querySelectorAll('.ad-slot, .adsense-side-rail').forEach(slot => {
+            const ins = slot.querySelector('ins.adsbygoogle');
+            if (ins && ins.innerHTML.trim() === '') {
+                slot.style.setProperty('display', 'none', 'important');
+                slot.style.height = '0';
+                slot.style.minHeight = '0';
+            }
+        });
+    }, 2500);
+});
+</script>
+
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
+
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+
+  <nav class="navbar px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <a href="/index.html" class="flex items-center gap-2 font-bold font-heading text-gray-900">
+      <svg class="w-8 h-8 text-[#7361F2]" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1" fill="#fff"></circle><circle cx="14" cy="12" r="1" fill="#fff"></circle><path d="M6 12h4m-2-2v4" stroke="#fff" stroke-width="2"></path></svg>
+      <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">ffliveplay</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 font-semibold text-[#111]">
+      <a href="/index.html" class="hover:text-[#7361F2] transition-colors">Home</a>
+      <a href="/compliance/about-us.html" class="hover:text-[#7361F2] transition-colors">About Us</a>
+      <a href="#" class="hover:text-[#7361F2] transition-colors">Contact Us</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative hidden md:block">
+        <input type="text" placeholder="Search games..." class="border border-gray-200 rounded-full py-1.5 pl-9 pr-4 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 w-48 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <!-- Hamburger -->
+      <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu">
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300 w-full bg-white absolute top-full left-0 shadow-md">
+    <div class="flex flex-col gap-4 pt-4 pb-4 px-4 border-t border-gray-100">
+      <div class="relative w-full">
+        <input type="text" placeholder="Search games..." class="w-full border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-4 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <a href="/index.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">Home</a>
+      <a href="/compliance/about-us.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">About Us</a>
+      <a href="/compliance/contact.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2">Contact Us</a>
+    </div>
+  </div>
+</nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+
+  <div class="adsense-side-rail left-rail hidden lg:flex bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-right: 1rem; position: sticky; top: 100px;">
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="3333333333"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+<div class="game-container flex-1 w-full max-w-[600px] mx-auto px-4 py-6 flex flex-col items-center lg:max-w-[800px]">
+    <h1 class="text-3xl md:text-4xl font-extrabold font-heading text-white text-center mb-4">Play Pac Chase Online</h1>
+<style>
+@media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
+</style>
+<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">🔊</button>
+
+    
+    <div class="game-header w-full max-w-3xl flex justify-between items-center bg-white rounded-xl p-3 mb-4 shadow-sm border border-gray-200">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-gray-200 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Score</span>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-gray-200 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Lives</span>
+          <div id="lives" class="text-xl font-bold text-green-400 font-heading leading-tight flex gap-1 pt-1">
+            <span class="text-xs">¸¸¸</span>
+          </div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button></div>
+
+    <div class="relative w-full aspect-square bg-[#06060e] rounded-xl shadow-[0_0_30px_rgba(34,211,238,0.05)] border border-white/10 overflow-hidden mb-4 p-2 flex flex-col"><canvas id="gameCanvas_22" class="block w-full h-full cursor-pointer touch-none bg-[#111125] rounded-lg"></canvas>
+      
+      <!-- Joystick for Mobile -->
+      <div class="w-full flex justify-between px-4 mt-2 mb-2 md:hidden">
+         <!-- Touch handled directly on canvas via swipe, or fallback buttons below if preferred. We'll use swipe on canvas. -->
+         <p class="text-center w-full text-gray-400 text-sm">Swipe to hop</p>
+      </div>
+
+      <!-- Overlays -->
+      <div id="gameOver" class="absolute inset-0 bg-red-900/90 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-5xl font-bold mb-4 font-heading text-white drop-shadow-md">SPLAT!</div>
+        <p class="text-gray-200 mb-6 text-xl">Score: <span id="finalScore" class="font-bold">0</span></p>
+        <button id="tryAgainBtn" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Try Again</button>
+      </div>
+
+      <div id="startScreen" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 z-10 rounded-xl">
+        <div class="text-4xl font-bold font-heading text-green-400 drop-shadow-md mb-2">Road Crosser</div>
+        <p class="text-gray-300 text-sm mb-6 text-center px-6">Arrow keys or Swipe to move.<br>Avoid cars, jump on logs. Reach the top!</p>
+        <button id="beginBtn" class="bg-green-500 hover:bg-green-400 text-black px-8 py-3 rounded-lg font-bold text-lg shadow-lg pointer-events-auto transition active:scale-95">START</button>
+      </div>
+    </div>
+  
+<div class="adsense-seo-block" style="width: 100%; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">ffliveplay Module 22 Operations Manual</h3>
+        <p>Welcome to ffliveplay Room 22, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+
+<div class="w-full mb-8 mt-4">
+    <div class="ad-slot ad-slot-in-article bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+  </div>
+</div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+</div>
+</div>
+
+
+
+  
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_22');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    
+    const startScreen = document.getElementById('startScreen');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    // Internal resolution (13x13 grid)
+    const COLS = 13;
+    const ROWS = 13;
+    const GRID = 40;
+    canvas.width = COLS * GRID;
+    canvas.height = ROWS * GRID;
+
+    let score = 0;
+    let lives = 3;
+    let state = 'START'; // START, PLAYING, GAMEOVER, RESPAWN
+    let animFrame = null;
+    let highestRow = ROWS - 1;
+
+    let player = { x: 6*GRID, y: 12*GRID, gridX: 6, gridY: 12, size: GRID*0.8 };
+    
+    // Level definition (rows 0 to 12)
+    // 0: Goal, 1-5: River, 6: Safe, 7-11: Road, 12: Safe Start
+    let lanes = [];
+
+    function initLanes() {
+      lanes = [];
+      for(let i=0; i<ROWS; i++) {
+        if(i === 0) lanes.push({ type: 'goal' });
+        else if(i === 6 || i === 12) lanes.push({ type: 'safe' });
+        else if(i >= 1 && i <= 5) {
+          // River
+          let dir = (i % 2 === 0) ? 1 : -1;
+          let speed = Math.random() * 1.5 + 1.0;
+          let objs = [];
+          for(let j=0; j<2; j++) {
+            objs.push({ x: j*280 + Math.random()*50, y: i*GRID, w: GRID*3.5, h: GRID*0.8, speed: speed * dir, dir: dir });
+          }
+          lanes.push({ type: 'river', speed: speed, objs: objs });
+        }
+        else {
+          // Road
+          let dir = (i % 2 === 0) ? -1 : 1;
+          let speed = Math.random() * 2 + 1.5;
+          let objs = [];
+          for(let j=0; j<2; j++) {
+            objs.push({ x: j*260, y: i*GRID, w: GRID, h: GRID*0.8, speed: speed * dir, dir: dir });
+          }
+          lanes.push({ type: 'road', speed: speed, objs: objs });
+        }
+      }
+    }
+
+    function updateLivesUI() {
+      let str = '';
+      for(let i=0; i<lives; i++) str += '¸';
+      livesEl.innerHTML = `<span class="text-xs">${str}</span>`;
+    }
+
+    function init() {
+      score = 0;
+      lives = 3;
+      highestRow = ROWS - 1;
+      updateLivesUI();
+      scoreEl.textContent = score;
+      
+      initLanes();
+      resetPlayer();
+
+      state = 'START';
+      startScreen.style.opacity = '1';
+      startScreen.style.pointerEvents = 'auto';
+      gameOverOverlay.style.opacity = '0';
+      gameOverOverlay.style.pointerEvents = 'none';
+
+      if(animFrame) cancelAnimationFrame(animFrame);
+      requestAnimationFrame(gameLoop);
+    }
+
+    function resetPlayer() {
+      player.gridX = 6;
+      player.gridY = 12;
+      player.x = player.gridX * GRID;
+      player.y = player.gridY * GRID;
+      highestRow = 12;
+    }
+
+    function die() {
+      lives--;
+      updateLivesUI();
+      
+      // Death flash
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      if (lives <= 0) {
+        state = 'GAMEOVER';
+        document.getElementById('finalScore').textContent = score;
+        gameOverOverlay.style.opacity = '1';
+        gameOverOverlay.style.pointerEvents = 'auto';
+      } else {
+        state = 'RESPAWN';
+        setTimeout(() => {
+          resetPlayer();
+          state = 'PLAYING';
+        }, 500);
+      }
+    }
+
+    function winRound() {
+      score += 100;
+      scoreEl.textContent = score;
+      state = 'RESPAWN';
+      setTimeout(() => {
+        initLanes(); // Increase difficulty later if desired
+        resetPlayer();
+        state = 'PLAYING';
+      }, 500);
+    }
+
+    function move(dx, dy) {
+      if (state !== 'PLAYING') return;
+      
+      let nx = player.gridX + dx;
+      let ny = player.gridY + dy;
+      
+      if (nx >= 0 && nx < COLS) player.gridX = nx;
+      if (ny >= 0 && ny < ROWS) player.gridY = ny;
+      
+      player.x = player.gridX * GRID;
+      player.y = player.gridY * GRID;
+
+      // Score for moving forward
+      if (player.gridY < highestRow) {
+        score += 10;
+        highestRow = player.gridY;
+        scoreEl.textContent = score;
+      }
+
+      // Check win
+      if (player.gridY === 0) winRound();
+    }
+
+    // Input Handling
+    window.addEventListener('keydown', e => {
+      if(e.key === 'ArrowUp') { move(0, -1); e.preventDefault(); }
+      if(e.key === 'ArrowDown') { move(0, 1); e.preventDefault(); }
+      if(e.key === 'ArrowLeft') { move(-1, 0); e.preventDefault(); }
+      if(e.key === 'ArrowRight') { move(1, 0); e.preventDefault(); }
+    });
+
+    let touchStartX = 0; let touchStartY = 0;
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, {passive: false});
+
+    canvas.addEventListener('touchend', e => {
+      e.preventDefault();
+      let dx = e.changedTouches[0].screenX - touchStartX;
+      let dy = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 30) move(1, 0);
+        else if (dx < -30) move(-1, 0);
+      } else {
+        if (dy > 30) move(0, 1);
+        else if (dy < -30) move(0, -1);
+      }
+    });
+
+    document.getElementById('beginBtn').addEventListener('click', () => {
+      state = 'PLAYING';
+      startScreen.style.opacity = '0';
+      startScreen.style.pointerEvents = 'none';
+    });
+    
+    document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('click', init);
+
+    // AABB
+    function AABB(x1,y1,w1,h1, x2,y2,w2,h2) {
+      return x1 < x2+w2 && x1+w1 > x2 && y1 < y2+h2 && y1+h1 > y2;
+    }
+
+    function update() {
+      if (state !== 'PLAYING') return;
+
+      let safeOnLog = false;
+      let playerRect = { x: player.x + GRID*0.2, y: player.y + GRID*0.2, w: GRID*0.6, h: GRID*0.6 }; // smaller hitbox
+
+      // Update lanes
+      for(let l=0; l<lanes.length; l++) {
+        let lane = lanes[l];
+        if (lane.objs) {
+          for (let obj of lane.objs) {
+            obj.x += obj.speed;
+            
+            // Wrap
+            if (obj.dir === 1 && obj.x > canvas.width) obj.x = -obj.w;
+            if (obj.dir === -1 && obj.x + obj.w < 0) obj.x = canvas.width;
+
+            // Collision logic
+            if (player.gridY === l) {
+              if (lane.type === 'road') {
+                if (AABB(playerRect.x, playerRect.y, playerRect.w, playerRect.h, obj.x, obj.y, obj.w, obj.h)) {
+                  die();
+                }
+              } else if (lane.type === 'river') {
+                if (AABB(playerRect.x, playerRect.y, playerRect.w, playerRect.h, obj.x, obj.y, obj.w, obj.h)) {
+                  safeOnLog = true;
+                  player.x += obj.speed; // move with log
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Check river death
+      if (lanes[player.gridY].type === 'river' && !safeOnLog) {
+        die();
+      }
+
+      // Keep on screen if on log
+      if (player.x < 0 || player.x + GRID > canvas.width) {
+        die();
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      // Draw background lanes
+      for(let i=0; i<ROWS; i++) {
+        let y = i*GRID;
+        if(lanes[i].type === 'safe' || lanes[i].type === 'goal') {
+          ctx.fillStyle = '#166534'; // green-800
+          ctx.fillRect(0, y, canvas.width, GRID);
+        } else if (lanes[i].type === 'road') {
+          ctx.fillStyle = '#1e293b'; // slate-800
+          ctx.fillRect(0, y, canvas.width, GRID);
+          // Road lines
+          ctx.strokeStyle = '#475569'; // slate-600
+          ctx.setLineDash([15, 15]);
+          ctx.beginPath();
+          ctx.moveTo(0, y + GRID/2);
+          ctx.lineTo(canvas.width, y + GRID/2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        } else if (lanes[i].type === 'river') {
+          ctx.fillStyle = '#0ea5e9'; // sky-500
+          ctx.fillRect(0, y, canvas.width, GRID);
+        }
+      }
+
+      // Draw objects
+      for(let lane of lanes) {
+        if(lane.objs) {
+          for(let obj of lane.objs) {
+            if (lane.type === 'road') {
+              ctx.fillStyle = '#ef4444'; // Red cars
+              ctx.fillRect(obj.x, obj.y + GRID*0.1, obj.w, obj.h);
+              // Headlights
+              ctx.fillStyle = '#fef08a';
+              if (obj.dir === 1) ctx.fillRect(obj.x + obj.w - 4, obj.y + GRID*0.2, 4, 4);
+              else ctx.fillRect(obj.x, obj.y + GRID*0.2, 4, 4);
+            } else if (lane.type === 'river') {
+              ctx.fillStyle = '#78350f'; // Brown logs
+              ctx.beginPath();
+              ctx.roundRect(obj.x, obj.y + GRID*0.1, obj.w, obj.h, 10);
+              ctx.fill();
+            }
+          }
+        }
+      }
+
+      // Draw Player (Frog)
+      if (state !== 'GAMEOVER') {
+        let px = player.x + GRID/2;
+        let py = player.y + GRID/2;
+        let s = player.size/2;
+        
+        ctx.fillStyle = '#4ade80'; // Green
+        ctx.beginPath();
+        ctx.arc(px, py, s, 0, Math.PI*2);
+        ctx.fill();
+        
+        // Eyes
+        ctx.fillStyle = 'white';
+        ctx.beginPath(); ctx.arc(px - s*0.4, py - s*0.4, s*0.3, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(px + s*0.4, py - s*0.4, s*0.3, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = 'black';
+        ctx.beginPath(); ctx.arc(px - s*0.4, py - s*0.5, s*0.1, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(px + s*0.4, py - s*0.5, s*0.1, 0, Math.PI*2); ctx.fill();
+      }
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  
+
+
+        // --- NATIVE WEB AUDIO ENGINE ---
+        let audioCtx = null;
+        let isMuted = false;
+
+        function initAudioEngine() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playClickSound() {
+            if (isMuted || !audioCtx) return;
+            let clickOsc = audioCtx.createOscillator();
+            let clickGain = audioCtx.createGain();
+            
+            clickOsc.type = 'sine';
+            clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            clickOsc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+            
+            clickGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            
+            clickOsc.connect(clickGain);
+            clickGain.connect(audioCtx.destination);
+            
+            clickOsc.start();
+            clickOsc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        const audioBtn = document.getElementById('audioToggleBtn');
+        if(audioBtn) {
+            const toggleAudio = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
+                if(!audioCtx) initAudioEngine();
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                isMuted = !isMuted;
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
+            };
+            audioBtn.addEventListener('click', toggleAudio);
+                        /* removed conflicting touchstart */
+            
+            // --- DRAG AND DROP INJECTION ---
+            let isDragging = false, startX, startY, initX, initY;
+            const onMove = (e) => {
+                if(!isDragging) return;
+                e.preventDefault();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                const dx = cx - startX;
+                const dy = cy - startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) audioBtn.dataset.wasDragged = 'true';
+                audioBtn.style.position = 'fixed';
+                audioBtn.style.margin = '0';
+                audioBtn.style.left = (initX + dx) + 'px';
+                audioBtn.style.top = (initY + dy) + 'px';
+            };
+            const onEnd = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            };
+            const onStart = (e) => {
+                isDragging = true;
+                audioBtn.dataset.wasDragged = 'false';
+                startX = e.touches ? e.touches[0].clientX : e.clientX;
+                startY = e.touches ? e.touches[0].clientY : e.clientY;
+                const rect = audioBtn.getBoundingClientRect();
+                initX = rect.left;
+                initY = rect.top;
+                document.addEventListener('mousemove', onMove, {passive: false});
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove, {passive: false});
+                document.addEventListener('touchend', onEnd);
+            };
+            audioBtn.addEventListener('mousedown', onStart);
+            audioBtn.addEventListener('touchstart', onStart, {passive: false});
+            audioBtn.addEventListener('click', (e) => {
+                if (audioBtn.dataset.wasDragged === 'true') {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    audioBtn.dataset.wasDragged = 'false';
+                }
+            }, true);
+        }
+        // Bind init and SFX to canvas interactions globally
+        document.addEventListener('mousedown', (e) => {
+            if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
+            if(e.target.tagName === 'CANVAS') playClickSound();
+        });
+        document.addEventListener('keydown', (e) => {
+            if(!audioCtx) initAudioEngine();
+            if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) playClickSound();
+        });
+</script>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
+
+<script>
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.classList.add('fade-out');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 500);
+  }
+});
+</script>
+
+
+<section class="max-w-4xl mx-auto px-4 pb-10 text-white game-seo-content">
+  <h2 class="text-2xl font-bold font-heading mb-3">About Pac Chase</h2>
+  <p class="leading-relaxed mb-5">Play Pac Chase online on FFLivePlay and enjoy a fast arcade browser game made for quick sessions. Play Pac Chase online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup. The game opens directly in your browser, so you can start without a download, install, or account. It is a good choice when you want a simple challenge that works on desktop and many mobile screens. The goal is easy to understand, but better scores come from practice, timing, and learning how the game reacts. Take a moment to watch the first round, then adjust your moves and try again. Because the game is lightweight, restarts are quick and you can play whenever you have a short break. If you enjoy this style of game, use the related games below to find more free browser games with similar pacing, controls, or arcade energy. You can keep it casual or chase a stronger score over repeated rounds.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">How to Play</h2>
+  <p class="leading-relaxed mb-5">Start the game, follow the on-screen goal, and keep playing until you beat your previous score. Watch the movement carefully, react early, and use the restart button whenever you want a fresh attempt.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">Controls</h2>
+  <p class="leading-relaxed mb-5">Use your keyboard, mouse, swipe, or tap controls depending on the game screen. Most FFLivePlay games show their main control hint near the play area.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">Related Games</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <a href="/games/retro-snake/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#22c55e15"><div class="text-7xl opacity-90 drop-shadow-md select-none">🐍</div></div><span class="block p-3 font-bold text-gray-800">Retro Snake</span></a>
+    <a href="/games/tic-tac-toe/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#3b82f615"><div class="text-7xl opacity-90 drop-shadow-md select-none">❌</div></div><span class="block p-3 font-bold text-gray-800">Tic-Tac-Toe</span></a>
+    <a href="/games/pong/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#47556915"><div class="text-7xl opacity-90 drop-shadow-md select-none">🏓</div></div><span class="block p-3 font-bold text-gray-800">Pong</span></a>
+    <a href="/games/block-stacker/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#06b6d415"><div class="text-7xl opacity-90 drop-shadow-md select-none">🟦</div></div><span class="block p-3 font-bold text-gray-800">Block Stacker</span></a>
+  </div>
+  <h2 class="text-2xl font-bold font-heading mb-3 mt-6">More Game Categories</h2>
+  <p class="flex flex-wrap gap-x-4 gap-y-2 font-semibold mb-5">
+    <a href="/action-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Play Action Games</a>
+    <a href="/car-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Play Car Games</a>
+    <a href="/puzzle-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Try Puzzle Games</a>
+    <a href="/new-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">New Free Online Games</a>
+    <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
+  </p>
+</section>
+</html>

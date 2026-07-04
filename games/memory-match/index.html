@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Play Memory Match Online - Free Browser Game | FFLivePlay</title>
+  <meta name="description" content="Play Memory Match online for free on FFLivePlay. Enjoy this brain browser game instantly with no download or signup.">
+  <meta name="keywords" content="Memory Match, ffliveplay, online game, browser game, free h5 games, instant arcade">
+  <meta property="og:title" content="Play Memory Match Online | FFLivePlay">
+  <meta property="og:description" content="Play Memory Match online for free on FFLivePlay. Enjoy this brain browser game instantly with no download or signup.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Play Memory Match Online | FFLivePlay">
+  <meta name="twitter:description" content="Play Memory Match online for free on FFLivePlay. Enjoy this brain browser game instantly with no download or signup.">
+  <meta name="twitter:image" content="https://www.ffliveplay.com/assets/thumbnails/game4.jpg">
+  <meta property="og:image" content="https://www.ffliveplay.com/assets/thumbnails/game4.jpg">
+
+  <meta charset="UTF-8">
+  <link rel="canonical" href="https://www.ffliveplay.com/games/memory-match/">
+  <meta name="robots" content="index, follow">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Memory Match","description":"Play Memory Match online for free on FFLivePlay. Enjoy this brain browser game instantly with no download or signup.","url":"https://www.ffliveplay.com/games/memory-match/","image":"https://www.ffliveplay.com/assets/thumbnails/game4.jpg","genre":"brain","applicationCategory":"Game","operatingSystem":"Web browser","playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com"}}</script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+  </style>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const adObserver = new MutationObserver(() => {});
+    setTimeout(() => {
+        document.querySelectorAll('.ad-slot, .adsense-side-rail').forEach(slot => {
+            const ins = slot.querySelector('ins.adsbygoogle');
+            if (ins && ins.innerHTML.trim() === '') {
+                slot.style.setProperty('display', 'none', 'important');
+                slot.style.height = '0';
+                slot.style.minHeight = '0';
+            }
+        });
+    }, 2500);
+});
+</script>
+
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
+
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+
+  <nav class="navbar px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <a href="/index.html" class="flex items-center gap-2 font-bold font-heading text-gray-900">
+      <svg class="w-8 h-8 text-[#7361F2]" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1" fill="#fff"></circle><circle cx="14" cy="12" r="1" fill="#fff"></circle><path d="M6 12h4m-2-2v4" stroke="#fff" stroke-width="2"></path></svg>
+      <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">ffliveplay</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 font-semibold text-[#111]">
+      <a href="/index.html" class="hover:text-[#7361F2] transition-colors">Home</a>
+      <a href="/compliance/about-us.html" class="hover:text-[#7361F2] transition-colors">About Us</a>
+      <a href="#" class="hover:text-[#7361F2] transition-colors">Contact Us</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative hidden md:block">
+        <input type="text" placeholder="Search games..." class="border border-gray-200 rounded-full py-1.5 pl-9 pr-4 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 w-48 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <!-- Hamburger -->
+      <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu">
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300 w-full bg-white absolute top-full left-0 shadow-md">
+    <div class="flex flex-col gap-4 pt-4 pb-4 px-4 border-t border-gray-100">
+      <div class="relative w-full">
+        <input type="text" placeholder="Search games..." class="w-full border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-4 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <a href="/index.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">Home</a>
+      <a href="/compliance/about-us.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">About Us</a>
+      <a href="/compliance/contact.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2">Contact Us</a>
+    </div>
+  </div>
+</nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+
+  <div class="adsense-side-rail left-rail hidden lg:flex bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-right: 1rem; position: sticky; top: 100px;">
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="3333333333"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+<div class="game-container flex-1 w-full max-w-[600px] mx-auto px-4 py-6 flex flex-col items-center lg:max-w-[800px]">
+    <h1 class="text-3xl md:text-4xl font-extrabold font-heading text-white text-center mb-4">Play Memory Match Online</h1>
+<style>
+@media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
+</style>
+<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">🔊</button>
+
+    
+    <div class="game-header w-full max-w-3xl flex justify-between items-center bg-white rounded-xl p-3 mb-4 shadow-sm border border-gray-200">
+      <div class="flex gap-4 items-center">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-gray-200 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Moves</span>
+          <div id="movesCount" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-gray-200 flex flex-col items-center">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Best</span>
+          <div id="bestMoves" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <select id="gridSize" class="bg-white drop-shadow-sm text-gray-800 border border-gray-200 text-sm text-gray-800 rounded-lg px-2 py-1.5 outline-none focus:border-cyan-400 cursor-pointer">
+          <option value="4x3">Easy (4x3)</option>
+          <option value="4x4" selected>Med (4x4)</option>
+          <option value="6x4">Hard (6x4)</option>
+        </select>
+        <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-1.5 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">Restart</button></div>
+    </div>
+
+    <div class="relative w-full bg-white drop-shadow-sm text-gray-800 rounded-xl p-3 shadow-2xl overflow-hidden border border-gray-200"><canvas id="gameCanvas_4" class="block w-full h-full cursor-pointer"></canvas>
+      
+      <!-- Overlays -->
+      <div id="gameWon" class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 z-10 rounded-xl">
+        <div class="text-5xl font-bold mb-2 font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 drop-shadow-md">Matched!</div>
+        <p class="text-gray-200 font-medium mb-6 drop-shadow-md">You found all pairs.</p>
+        <button id="playAgainBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform pointer-events-auto active:scale-95">Play Again</button>
+      </div>
+    </div>
+  
+<div class="adsense-seo-block" style="width: 100%; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">ffliveplay Module 4 Operations Manual</h3>
+        <p>Welcome to ffliveplay Room 4, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+
+<div class="w-full mb-8 mt-4">
+    <div class="ad-slot ad-slot-in-article bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+  </div>
+</div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+</div>
+</div>
+
+
+
+  
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_4');
+    const ctx = canvas.getContext('2d');
+    const movesEl = document.getElementById('movesCount');
+    const bestEl = document.getElementById('bestMoves');
+    const restartBtn = document.getElementById('restartBtn');
+    const gridSelect = document.getElementById('gridSize');
+    const gameWonOverlay = document.getElementById('gameWon');
+    
+    // Abstract shapes to draw on canvas
+    const SHAPES = [
+      { id: 0, draw: drawCircle, color: '#ef4444' }, // Red
+      { id: 1, draw: drawSquare, color: '#3b82f6' }, // Blue
+      { id: 2, draw: drawTriangle, color: '#22c55e' }, // Green
+      { id: 3, draw: drawDiamond, color: '#a855f7' }, // Purple
+      { id: 4, draw: drawStar, color: '#eab308' }, // Yellow
+      { id: 5, draw: drawHexagon, color: '#06b6d4' }, // Cyan
+      { id: 6, draw: drawHeart, color: '#f43f5e' }, // Pink
+      { id: 7, draw: drawCross, color: '#f97316' }, // Orange
+      { id: 8, draw: drawMoon, color: '#8b5cf6' }, // Violet
+      { id: 9, draw: drawPentagon, color: '#10b981' }, // Emerald
+      { id: 10, draw: drawPlus, color: '#f472b6' }, // Rose
+      { id: 11, draw: drawRing, color: '#cbd5e1' } // Slate
+    ];
+
+    let cards = [];
+    let cols = 4, rows = 4;
+    let padding = 10;
+    let cardW = 0, cardH = 0;
+    
+    let flippedCards = [];
+    let isAnimating = false;
+    let moves = 0;
+    let pairsFound = 0;
+    
+    let animFrame = null;
+    let lastTime = 0;
+
+    function setGrid() {
+      const val = gridSelect.value;
+      if (val === '4x3') { cols = 4; rows = 3; }
+      if (val === '4x4') { cols = 4; rows = 4; }
+      if (val === '6x4') { cols = 6; rows = 4; }
+      init();
+    }
+
+    gridSelect.addEventListener('change', setGrid);
+    restartBtn.addEventListener('click', init);
+    document.getElementById('playAgainBtn').addEventListener('click', init);
+
+    function init() {
+      canvas.width = 600;
+      if (window.innerWidth >= 768 && cols === 4 && rows === 4) {
+        canvas.height = 450;
+      } else {
+        canvas.height = (rows/cols) * 600;
+      }
+      
+      cardW = (canvas.width - padding * (cols + 1)) / cols;
+      cardH = (canvas.height - padding * (rows + 1)) / rows;
+
+      moves = 0;
+      pairsFound = 0;
+      flippedCards = [];
+      isAnimating = false;
+      movesEl.textContent = moves;
+      
+      const key = `ffliveplay_game4_best_${gridSelect.value}`;
+      bestEl.textContent = localStorage.getItem(key) || '-';
+
+      gameWonOverlay.style.opacity = '0';
+      gameWonOverlay.style.pointerEvents = 'none';
+
+      // Generate pairs
+      let totalPairs = (cols * rows) / 2;
+      let deck = [];
+      for (let i = 0; i < totalPairs; i++) {
+        deck.push(SHAPES[i], SHAPES[i]);
+      }
+      
+      // Shuffle
+      deck.sort(() => Math.random() - 0.5);
+
+      cards = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          cards.push({
+            r: r, c: c,
+            x: padding + c * (cardW + padding),
+            y: padding + r * (cardH + padding),
+            shape: deck[r * cols + c],
+            isFlipped: false,
+            isMatched: false,
+            animFlip: 0 // 0 = face down, 1 = face up
+          });
+        }
+      }
+
+      if (animFrame) cancelAnimationFrame(animFrame);
+      lastTime = performance.now();
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    // Input Handling
+    canvas.addEventListener('mousedown', handleInteraction);
+
+    function handleInteraction(e) {
+      if (isAnimating) return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
+
+      // Find clicked card
+      for (let card of cards) {
+        if (x > card.x && x < card.x + cardW && y > card.y && y < card.y + cardH) {
+          if (!card.isFlipped && !card.isMatched) {
+            flipCard(card);
+          }
+          break;
+        }
+      }
+    }
+
+    function flipCard(card) {
+      card.isFlipped = true;
+      flippedCards.push(card);
+      
+      if (flippedCards.length === 2) {
+        moves++;
+        movesEl.textContent = moves;
+        isAnimating = true;
+        
+        setTimeout(() => {
+          checkMatch();
+        }, 800);
+      }
+    }
+
+    function checkMatch() {
+      let c1 = flippedCards[0];
+      let c2 = flippedCards[1];
+      
+      if (c1.shape.id === c2.shape.id) {
+        c1.isMatched = true;
+        c2.isMatched = true;
+        pairsFound++;
+        checkWin();
+      } else {
+        c1.isFlipped = false;
+        c2.isFlipped = false;
+      }
+      
+      flippedCards = [];
+      isAnimating = false;
+    }
+
+    function checkWin() {
+      if (pairsFound === (cols * rows) / 2) {
+        const key = `ffliveplay_game4_best_${gridSelect.value}`;
+        const best = parseInt(localStorage.getItem(key)) || Infinity;
+        if (moves < best) {
+          localStorage.setItem(key, moves);
+          bestEl.textContent = moves;
+        }
+        
+        gameWonOverlay.style.opacity = '1';
+        gameWonOverlay.style.pointerEvents = 'auto';
+      }
+    }
+
+    // Rendering Helpers
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+    }
+
+    function drawCircle(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, s/2, 0, Math.PI*2); ctx.fill();
+    }
+    function drawSquare(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.fillRect(x - s/2, y - s/2, s, s);
+    }
+    function drawTriangle(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(x, y - s/2); ctx.lineTo(x + s/2, y + s/2); ctx.lineTo(x - s/2, y + s/2); ctx.fill();
+    }
+    function drawDiamond(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(x, y - s/2); ctx.lineTo(x + s/2, y); ctx.lineTo(x, y + s/2); ctx.lineTo(x - s/2, y); ctx.fill();
+    }
+    function drawStar(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.beginPath();
+      for(let i=0; i<5; i++) {
+        ctx.lineTo(Math.cos( (18+i*72)/180*Math.PI ) * s/2 + x, -Math.sin( (18+i*72)/180*Math.PI ) * s/2 + y);
+        ctx.lineTo(Math.cos( (54+i*72)/180*Math.PI ) * s/4 + x, -Math.sin( (54+i*72)/180*Math.PI ) * s/4 + y);
+      }
+      ctx.fill();
+    }
+    function drawHexagon(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.beginPath();
+      for (let i=0; i<6; i++) { ctx.lineTo(x + s/2 * Math.cos(i * Math.PI/3), y + s/2 * Math.sin(i * Math.PI/3)); } ctx.fill();
+    }
+    function drawHeart(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.beginPath();
+      let d = Math.min(cardW, cardH) * 0.4;
+      ctx.moveTo(x, y + d/4);
+      ctx.bezierCurveTo(x, y - d/4, x - d/2, y - d/2, x - d/2, y);
+      ctx.bezierCurveTo(x - d/2, y + d/4, x, y + d/2, x, y + d/1.5);
+      ctx.bezierCurveTo(x, y + d/2, x + d/2, y + d/4, x + d/2, y);
+      ctx.bezierCurveTo(x + d/2, y - d/2, x, y - d/4, x, y + d/4);
+      ctx.fill();
+    }
+    function drawCross(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.fillRect(x - s/6, y - s/2, s/3, s); ctx.fillRect(x - s/2, y - s/6, s, s/3);
+    }
+    function drawMoon(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, s/2, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x + s/6, y - s/6, s/2.2, 0, Math.PI*2); ctx.fill();
+    }
+    function drawPentagon(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.beginPath();
+      for (let i=0; i<5; i++) { ctx.lineTo(x + s/2 * Math.sin(i * 2*Math.PI/5), y - s/2 * Math.cos(i * 2*Math.PI/5)); } ctx.fill();
+    }
+    function drawPlus(ctx, x, y, s, color) {
+      ctx.fillStyle = color; ctx.fillRect(x - s/2, y - s/8, s, s/4); ctx.fillRect(x - s/8, y - s/2, s/4, s);
+    }
+    function drawRing(ctx, x, y, s, color) {
+      ctx.strokeStyle = color; ctx.lineWidth = s/4; ctx.beginPath(); ctx.arc(x, y, s/3, 0, Math.PI*2); ctx.stroke();
+    }
+
+    function gameLoop(time) {
+      let dt = time - lastTime;
+      lastTime = time;
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      cards.forEach(card => {
+        // Animation logic
+        let targetAnim = card.isFlipped || card.isMatched ? 1 : 0;
+        card.animFlip += (targetAnim - card.animFlip) * 0.15; // lerp
+
+        let scaleX = Math.abs(Math.cos(card.animFlip * Math.PI)); // simulates 3D flip over Y axis
+        let isFaceUp = card.animFlip > 0.5;
+        
+        const cx = card.x + cardW/2;
+        const cy = card.y + cardH/2;
+        
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(scaleX, 1);
+        ctx.translate(-cx, -cy);
+
+        if (isFaceUp) {
+          // Front of card
+          ctx.fillStyle = card.isMatched ? '#1e293b' : '#fff'; // Darken slightly if matched
+          roundRect(ctx, card.x, card.y, cardW, cardH, 12);
+          ctx.fill();
+          
+          if(card.isMatched) {
+            ctx.shadowColor = card.shape.color;
+            ctx.shadowBlur = 10;
+          }
+          
+          // Draw Shape
+          let sSize = Math.min(cardW, cardH) * 0.5;
+          card.shape.draw(ctx, cx, cy, sSize, card.shape.color);
+          ctx.shadowBlur = 0;
+          
+        } else {
+          // Back of card
+          ctx.fillStyle = '#312e81'; // Indigo dark
+          roundRect(ctx, card.x, card.y, cardW, cardH, 12);
+          ctx.fill();
+          
+          // Pattern
+          ctx.strokeStyle = '#3730a3';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(card.x + 10, card.y + 10);
+          ctx.lineTo(card.x + cardW - 10, card.y + cardH - 10);
+          ctx.moveTo(card.x + cardW - 10, card.y + 10);
+          ctx.lineTo(card.x + 10, card.y + cardH - 10);
+          ctx.stroke();
+          
+          ctx.fillStyle = '#4f46e5';
+          ctx.font = 'bold 24px Inter';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('?', cx, cy);
+        }
+        
+        ctx.restore();
+      });
+
+      animFrame = requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  
+
+// Mobile Touch-to-Mouse Polyfill
+(function() {
+    function touchToMouse(e) {
+        if (e.target.tagName === 'CANVAS') {
+            e.preventDefault();
+        } else {
+            return;
+        }
+        let type = '';
+        if (e.type === 'touchstart') type = 'mousedown';
+        if (e.type === 'touchmove') type = 'mousemove';
+        if (e.type === 'touchend') type = 'mouseup';
+        if (!type) return;
+        
+        let touch = e.changedTouches[0];
+        let mouseEvent = new MouseEvent(type, {
+            clientX: touch ? touch.clientX : 0,
+            clientY: touch ? touch.clientY : 0,
+            bubbles: true,
+            cancelable: true
+        });
+        e.target.dispatchEvent(mouseEvent);
+    }
+    document.addEventListener('touchstart', touchToMouse, {passive: false});
+    document.addEventListener('touchmove', touchToMouse, {passive: false});
+    document.addEventListener('touchend', touchToMouse, {passive: false});
+})();
+
+
+        // --- NATIVE WEB AUDIO ENGINE ---
+        let audioCtx = null;
+        let isMuted = false;
+
+        function initAudioEngine() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playClickSound() {
+            if (isMuted || !audioCtx) return;
+            let clickOsc = audioCtx.createOscillator();
+            let clickGain = audioCtx.createGain();
+            
+            clickOsc.type = 'sine';
+            clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            clickOsc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+            
+            clickGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            
+            clickOsc.connect(clickGain);
+            clickGain.connect(audioCtx.destination);
+            
+            clickOsc.start();
+            clickOsc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        const audioBtn = document.getElementById('audioToggleBtn');
+        if(audioBtn) {
+            const toggleAudio = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
+                if(!audioCtx) initAudioEngine();
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                isMuted = !isMuted;
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
+            };
+            audioBtn.addEventListener('click', toggleAudio);
+                        /* removed conflicting touchstart */
+            
+            // --- DRAG AND DROP INJECTION ---
+            let isDragging = false, startX, startY, initX, initY;
+            const onMove = (e) => {
+                if(!isDragging) return;
+                e.preventDefault();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                const dx = cx - startX;
+                const dy = cy - startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) audioBtn.dataset.wasDragged = 'true';
+                audioBtn.style.position = 'fixed';
+                audioBtn.style.margin = '0';
+                audioBtn.style.left = (initX + dx) + 'px';
+                audioBtn.style.top = (initY + dy) + 'px';
+            };
+            const onEnd = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            };
+            const onStart = (e) => {
+                isDragging = true;
+                audioBtn.dataset.wasDragged = 'false';
+                startX = e.touches ? e.touches[0].clientX : e.clientX;
+                startY = e.touches ? e.touches[0].clientY : e.clientY;
+                const rect = audioBtn.getBoundingClientRect();
+                initX = rect.left;
+                initY = rect.top;
+                document.addEventListener('mousemove', onMove, {passive: false});
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove, {passive: false});
+                document.addEventListener('touchend', onEnd);
+            };
+            audioBtn.addEventListener('mousedown', onStart);
+            audioBtn.addEventListener('touchstart', onStart, {passive: false});
+            audioBtn.addEventListener('click', (e) => {
+                if (audioBtn.dataset.wasDragged === 'true') {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    audioBtn.dataset.wasDragged = 'false';
+                }
+            }, true);
+        }
+        // Bind init and SFX to canvas interactions globally
+        document.addEventListener('mousedown', (e) => {
+            if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
+            if(e.target.tagName === 'CANVAS') playClickSound();
+        });
+        document.addEventListener('keydown', (e) => {
+            if(!audioCtx) initAudioEngine();
+            if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) playClickSound();
+        });
+</script>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
+
+<script>
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.classList.add('fade-out');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 500);
+  }
+});
+</script>
+
+
+<section class="max-w-4xl mx-auto px-4 pb-10 text-white game-seo-content">
+  <h2 class="text-2xl font-bold font-heading mb-3">About Memory Match</h2>
+  <p class="leading-relaxed mb-5">Play Memory Match online on FFLivePlay and enjoy a fast brain browser game made for quick sessions. Play Memory Match online for free on FFLivePlay. Enjoy this brain browser game instantly with no download or signup. The game opens directly in your browser, so you can start without a download, install, or account. It is a good choice when you want a simple challenge that works on desktop and many mobile screens. The goal is easy to understand, but better scores come from practice, timing, and learning how the game reacts. Take a moment to watch the first round, then adjust your moves and try again. Because the game is lightweight, restarts are quick and you can play whenever you have a short break. If you enjoy this style of game, use the related games below to find more free browser games with similar pacing, controls, or arcade energy. You can keep it casual or chase a stronger score over repeated rounds.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">How to Play</h2>
+  <p class="leading-relaxed mb-5">Start the game, follow the on-screen goal, and keep playing until you beat your previous score. Watch the movement carefully, react early, and use the restart button whenever you want a fresh attempt.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">Controls</h2>
+  <p class="leading-relaxed mb-5">Use your keyboard, mouse, swipe, or tap controls depending on the game screen. Most FFLivePlay games show their main control hint near the play area.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">Related Games</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <a href="/games/2048/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#eab30815"><div class="text-7xl opacity-90 drop-shadow-md select-none">🔢</div></div><span class="block p-3 font-bold text-gray-800">2048</span></a>
+    <a href="/games/minesweeper/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#ef444415"><div class="text-7xl opacity-90 drop-shadow-md select-none">💣</div></div><span class="block p-3 font-bold text-gray-800">Minesweeper</span></a>
+    <a href="/games/sudoku/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#8b5cf615"><div class="text-7xl opacity-90 drop-shadow-md select-none">🧩</div></div><span class="block p-3 font-bold text-gray-800">Sudoku</span></a>
+    <a href="/games/slider-puzzle/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#f9731615"><div class="text-7xl opacity-90 drop-shadow-md select-none">🔲</div></div><span class="block p-3 font-bold text-gray-800">Slider Puzzle</span></a>
+  </div>
+  <h2 class="text-2xl font-bold font-heading mb-3 mt-6">More Game Categories</h2>
+  <p class="flex flex-wrap gap-x-4 gap-y-2 font-semibold mb-5">
+    <a href="/action-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Play Action Games</a>
+    <a href="/car-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Play Car Games</a>
+    <a href="/puzzle-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Try Puzzle Games</a>
+    <a href="/new-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">New Free Online Games</a>
+    <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
+  </p>
+</section>
+</html>

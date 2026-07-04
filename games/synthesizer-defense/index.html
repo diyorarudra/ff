@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Play Synthesizer Defense Online - Free Browser Game | FFLivePlay</title>
+  <meta name="description" content="Play Synthesizer Defense online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.">
+  <meta name="keywords" content="Synthesizer Defense —, ffliveplay, online game, browser game, free h5 games, instant arcade">
+  <meta property="og:title" content="Play Synthesizer Defense Online | FFLivePlay">
+  <meta property="og:description" content="Play Synthesizer Defense online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Play Synthesizer Defense Online | FFLivePlay">
+  <meta name="twitter:description" content="Play Synthesizer Defense online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.">
+  <meta name="twitter:image" content="https://www.ffliveplay.com/assets/thumbnails/game48.jpg">
+  <meta property="og:image" content="https://www.ffliveplay.com/assets/thumbnails/game48.jpg">
+
+  <meta charset="UTF-8">
+  <link rel="canonical" href="https://www.ffliveplay.com/games/synthesizer-defense/">
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Synthesizer Defense","description":"Play Synthesizer Defense online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.","url":"https://www.ffliveplay.com/games/synthesizer-defense/","image":"https://www.ffliveplay.com/assets/thumbnails/game48.jpg","genre":"arcade","applicationCategory":"Game","operatingSystem":"Web browser","playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com"}}</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const adObserver = new MutationObserver(() => {});
+    setTimeout(() => {
+        document.querySelectorAll('.ad-slot, .adsense-side-rail').forEach(slot => {
+            const ins = slot.querySelector('ins.adsbygoogle');
+            if (ins && ins.innerHTML.trim() === '') {
+                slot.style.setProperty('display', 'none', 'important');
+                slot.style.height = '0';
+                slot.style.minHeight = '0';
+            }
+        });
+    }, 2500);
+});
+</script>
+
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="font-body game-wrapper" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
+
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+
+  <nav class="navbar px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <a href="/index.html" class="flex items-center gap-2 font-bold font-heading text-gray-900">
+      <svg class="w-8 h-8 text-[#7361F2]" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1" fill="#fff"></circle><circle cx="14" cy="12" r="1" fill="#fff"></circle><path d="M6 12h4m-2-2v4" stroke="#fff" stroke-width="2"></path></svg>
+      <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">ffliveplay</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 font-semibold text-[#111]">
+      <a href="/index.html" class="hover:text-[#7361F2] transition-colors">Home</a>
+      <a href="/compliance/about-us.html" class="hover:text-[#7361F2] transition-colors">About Us</a>
+      <a href="#" class="hover:text-[#7361F2] transition-colors">Contact Us</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative hidden md:block">
+        <input type="text" placeholder="Search games..." class="border border-gray-200 rounded-full py-1.5 pl-9 pr-4 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 w-48 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <!-- Hamburger -->
+      <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu">
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300 w-full bg-white absolute top-full left-0 shadow-md">
+    <div class="flex flex-col gap-4 pt-4 pb-4 px-4 border-t border-gray-100">
+      <div class="relative w-full">
+        <input type="text" placeholder="Search games..." class="w-full border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-4 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <a href="/index.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">Home</a>
+      <a href="/compliance/about-us.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">About Us</a>
+      <a href="/compliance/contact.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2">Contact Us</a>
+    </div>
+  </div>
+</nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+
+  <div class="adsense-side-rail left-rail hidden lg:flex bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-right: 1rem; position: sticky; top: 100px;">
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="3333333333"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+<div class="game-container flex flex-col items-center justify-center lg:max-w-[800px] w-full mx-auto">
+    <h1 class="text-3xl md:text-4xl font-extrabold font-heading text-white text-center mb-4">Play Synthesizer Defense Online</h1>
+<style>
+@media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
+</style>
+<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">🔊</button>
+
+    <div class="game-header w-full max-w-3xl flex justify-between items-center bg-white rounded-xl p-3 mb-4 shadow-sm border border-gray-200">
+      <div class="flex gap-6 items-center">
+        <div>Wave: <span id="waveDisplay" class="font-bold text-yellow-400">1</span></div>
+        <div>Energy: <span id="energyDisplay" class="font-bold text-cyan-400">50</span> ⚡</div>
+        <div>System Core: <span id="livesDisplay" class="font-bold text-red-500">100%</span></div>
+      </div>
+      <button id="startWaveBtn" class="game-btn bg-yellow-600 hover:bg-yellow-700">START WAVE</button>
+    </div>
+    
+    <div class="mt-4 w-full max-w-4xl flex gap-4">
+       <!-- Tower Selection Sidebar -->
+       <div class="w-48 bg-[#09090b] rounded-lg border border-white/10 p-4 flex flex-col gap-4">
+           <h3 class="font-heading font-bold text-white text-center border-b border-white/10 pb-2">DEFENSE NODES</h3>
+           
+           <div class="tower-btn cursor-pointer bg-gray-800 p-3 rounded text-center border-2 border-transparent hover:border-cyan-500 selected" data-type="basic">
+               <div class="w-6 h-6 bg-cyan-500 mx-auto rounded-full mb-1"></div>
+               <div class="text-xs font-bold text-white">PULSER</div>
+               <div class="text-xs text-cyan-400">15 ⚡</div>
+           </div>
+           
+           <div class="tower-btn cursor-pointer bg-gray-800 p-3 rounded text-center border-2 border-transparent hover:border-purple-500" data-type="heavy">
+               <div class="w-6 h-6 bg-purple-500 mx-auto rounded-sm mb-1"></div>
+               <div class="text-xs font-bold text-white">CANNON</div>
+               <div class="text-xs text-cyan-400">40 ⚡</div>
+           </div>
+           
+           <div class="text-xs text-gray-500 mt-auto text-center">Select node, then click grid to build.</div>
+       </div>
+       
+       <!-- Main Grid --><canvas id="gameCanvas_48" width="600" height="400" class="flex-1 bg-[#111] border border-cyan-900/30 rounded-lg cursor-crosshair"></canvas>
+    </div>
+    
+    <div class="game-over-overlay" id="gameOver" style="display:none">
+      <div class="game-over-panel bg-gray-900 border border-red-600">
+        <h2 id="endTitle" class="text-3xl font-bold font-heading mb-2 text-red-500">SYSTEM BREACHED</h2>
+        <p class="text-gray-400 mb-6">Survived to Wave: <span id="finalScore" class="text-yellow-400 font-bold">0</span></p>
+        <button id="restartBtn" class="game-btn w-full bg-red-600 hover:bg-red-700">Reboot System</button></div>
+    </div>
+  
+<div class="adsense-seo-block" style="width: 100%; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+        <h3 style="color: #fff; margin-top: 0;">ffliveplay Module 48 Operations Manual</h3>
+        <p>Welcome to ffliveplay Room 48, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+    </div>
+
+<div class="max-w-[820px] mx-auto px-4 mt-6">
+    <div class="ad-slot ad-slot-in-article">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+  </div>
+</div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+</div>
+</div>
+
+
+
+  
+
+  <script>
+    const canvas = document.getElementById('gameCanvas_48');
+    const ctx = canvas.getContext('2d');
+    const waveDisplay = document.getElementById('waveDisplay');
+    const energyDisplay = document.getElementById('energyDisplay');
+    const livesDisplay = document.getElementById('livesDisplay');
+    const startWaveBtn = document.getElementById('startWaveBtn');
+    const gameOverOverlay = document.getElementById('gameOver');
+    
+    const ROWS = 5;
+    const COLS = 8;
+    const CELL_W = canvas.width / COLS;
+    const CELL_H = canvas.height / ROWS;
+    
+    let isGameOver = false;
+    let animationId;
+    let lastTime = 0;
+    
+    // Game State
+    let energy = 50;
+    let coreHealth = 100;
+    let wave = 1;
+    let waveActive = false;
+    
+    let towers = [];
+    let enemies = [];
+    let projectiles = [];
+    let particles = [];
+    
+    let enemiesToSpawn = 0;
+    let spawnTimer = 0;
+    let spawnInterval = 1.5;
+    
+    let selectedTowerType = 'basic';
+    
+    // Tower Stats
+    const TOWER_TYPES = {
+        basic: { cost: 15, color: '#06b6d4', range: 150, damage: 20, fireRate: 1.0, type: 'circle' },
+        heavy: { cost: 40, color: '#a855f7', range: 250, damage: 50, fireRate: 2.0, type: 'square' }
+    };
+    
+    // Select UI logic
+    document.querySelectorAll('.tower-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('border-cyan-500', 'border-purple-500'));
+            let type = btn.getAttribute('data-type');
+            if (type === 'basic') btn.classList.add('border-cyan-500');
+            if (type === 'heavy') btn.classList.add('border-purple-500');
+            selectedTowerType = type;
+        });
+    });
+    // Set initial
+    document.querySelector('[data-type="basic"]').classList.add('border-cyan-500');
+    
+    function spawnEnemy() {
+        let r = Math.floor(Math.random() * ROWS);
+        let hp = 50 + (wave * 20); // HP scales with wave
+        let speed = 40 + (wave * 5); // Speed scales
+        
+        enemies.push({
+            x: -20,
+            y: r * CELL_H + CELL_H/2,
+            hp: hp,
+            maxHp: hp,
+            speed: speed,
+            color: '#ef4444' // Red noise
+        });
+        enemiesToSpawn--;
+    }
+    
+    function fireProjectile(t, target) {
+        // Calculate angle
+        let dx = target.x - t.x;
+        let dy = target.y - t.y;
+        let angle = Math.atan2(dy, dx);
+        
+        projectiles.push({
+            x: t.x,
+            y: t.y,
+            vx: Math.cos(angle) * 300, // speed
+            vy: Math.sin(angle) * 300,
+            damage: t.stats.damage,
+            color: t.stats.color,
+            target: target // homing
+        });
+        
+        t.lastFired = 0;
+    }
+    
+    function loop(timestamp) {
+        if(isGameOver) return;
+        const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
+        lastTime = timestamp;
+        
+        if (waveActive) {
+            // Spawning
+            if (enemiesToSpawn > 0) {
+                spawnTimer += dt;
+                if (spawnTimer >= spawnInterval) {
+                    spawnEnemy();
+                    spawnTimer = 0;
+                }
+            }
+            
+            // Move Enemies
+            for(let i = enemies.length -1; i >= 0; i--) {
+                let e = enemies[i];
+                e.x += e.speed * dt;
+                
+                // Reach end
+                if (e.x > canvas.width) {
+                    coreHealth -= 10;
+                    if (coreHealth <= 0) {
+                        coreHealth = 0;
+                        loseGame();
+                    }
+                    livesDisplay.textContent = coreHealth + '%';
+                    enemies.splice(i, 1);
+                }
+            }
+            
+            // Tower Logic
+            towers.forEach(t => {
+                t.lastFired += dt;
+                if (t.lastFired >= t.stats.fireRate) {
+                    // Find target
+                    let closest = null;
+                    let minDist = t.stats.range;
+                    
+                    enemies.forEach(e => {
+                        let dist = Math.hypot(e.x - t.x, e.y - t.y);
+                        // Prioritize enemies further right
+                        if (dist <= minDist) {
+                            closest = e;
+                            minDist = dist; // Simplification
+                        }
+                    });
+                    
+                    if (closest) {
+                        fireProjectile(t, closest);
+                    }
+                }
+            });
+            
+            // Projectiles
+            for(let i = projectiles.length -1; i >= 0; i--) {
+                let p = projectiles[i];
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+                
+                // Collision check (simple radius)
+                let hit = false;
+                for(let j = enemies.length -1; j >= 0; j--) {
+                    let e = enemies[j];
+                    if (Math.hypot(p.x - e.x, p.y - e.y) < 15) {
+                        e.hp -= p.damage;
+                        hit = true;
+                        
+                        // Particle explosion
+                        for(let k=0; k<5; k++) {
+                            particles.push({
+                                x: e.x, y: e.y,
+                                vx: (Math.random()-0.5)*100, vy: (Math.random()-0.5)*100,
+                                life: 0.5, color: p.color
+                            });
+                        }
+                        
+                        if (e.hp <= 0) {
+                            energy += 5; // Reward
+                            energyDisplay.textContent = energy;
+                            enemies.splice(j, 1);
+                        }
+                        break; // Destroy projectile
+                    }
+                }
+                
+                if(hit || p.x > canvas.width || p.x < 0 || p.y < 0 || p.y > canvas.height) {
+                    projectiles.splice(i, 1);
+                }
+            }
+            
+            // Wave End condition
+            if (enemiesToSpawn === 0 && enemies.length === 0) {
+                waveActive = false;
+                wave++;
+                startWaveBtn.style.display = 'block';
+                startWaveBtn.textContent = `START WAVE ${wave}`;
+            }
+        }
+        
+        // Particles
+        for(let i=particles.length-1; i>=0; i--) {
+            particles[i].x += particles[i].vx * dt;
+            particles[i].y += particles[i].vy * dt;
+            particles[i].life -= dt;
+            if (particles[i].life <= 0) particles.splice(i, 1);
+        }
+        
+        draw();
+        animationId = requestAnimationFrame(loop);
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Grid
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        for(let r=0; r<=ROWS; r++) {
+            ctx.beginPath(); ctx.moveTo(0, r*CELL_H); ctx.lineTo(canvas.width, r*CELL_H); ctx.stroke();
+        }
+        for(let c=0; c<=COLS; c++) {
+            ctx.beginPath(); ctx.moveTo(c*CELL_W, 0); ctx.lineTo(c*CELL_W, canvas.height); ctx.stroke();
+        }
+        
+        // Core area
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+        ctx.fillRect(canvas.width - 20, 0, 20, canvas.height);
+        
+        // Towers
+        towers.forEach(t => {
+            ctx.fillStyle = t.stats.color;
+            if(t.stats.type === 'circle') {
+                ctx.beginPath(); ctx.arc(t.x, t.y, 12, 0, Math.PI*2); ctx.fill();
+            } else {
+                ctx.fillRect(t.x - 12, t.y - 12, 24, 24);
+            }
+            
+            // Range ring (very faint)
+            ctx.strokeStyle = t.stats.color;
+            ctx.globalAlpha = 0.1;
+            ctx.beginPath(); ctx.arc(t.x, t.y, t.stats.range, 0, Math.PI*2); ctx.stroke();
+            ctx.globalAlpha = 1.0;
+        });
+        
+        // Enemies (Glitchy squares)
+        enemies.forEach(e => {
+            ctx.fillStyle = e.color;
+            let offset = (Math.random() > 0.8) ? (Math.random()*4-2) : 0; // glitch jitter
+            ctx.fillRect(e.x - 10 + offset, e.y - 10, 20, 20);
+            
+            // Health bar
+            ctx.fillStyle = '#7f1d1d';
+            ctx.fillRect(e.x - 10, e.y - 15, 20, 3);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(e.x - 10, e.y - 15, 20 * (e.hp / e.maxHp), 3);
+        });
+        
+        // Projectiles
+        projectiles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill();
+        });
+        
+        // Particles
+        particles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.life * 2;
+            ctx.fillRect(p.x, p.y, 3, 3);
+            ctx.globalAlpha = 1.0;
+        });
+    }
+    
+    // Building
+    canvas.addEventListener('mousedown', (e) => {
+        if(isGameOver) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        
+        let c = Math.floor(x / CELL_W);
+        let r = Math.floor(y / CELL_H);
+        
+        // Check if occupied
+        let occupied = towers.some(t => t.r === r && t.c === c);
+        
+        if (!occupied) {
+            let stats = TOWER_TYPES[selectedTowerType];
+            if (energy >= stats.cost) {
+                energy -= stats.cost;
+                energyDisplay.textContent = energy;
+                
+                towers.push({
+                    r: r, c: c,
+                    x: c * CELL_W + CELL_W/2,
+                    y: r * CELL_H + CELL_H/2,
+                    stats: stats,
+                    lastFired: 0
+                });
+                draw();
+            }
+        }
+    });
+    
+    startWaveBtn.addEventListener('click', () => {
+        if (!waveActive && !isGameOver) {
+            waveActive = true;
+            enemiesToSpawn = 5 + (wave * 3);
+            spawnInterval = Math.max(0.5, 2.0 - (wave * 0.1));
+            startWaveBtn.style.display = 'none';
+            waveDisplay.textContent = wave;
+        }
+    });
+    
+    function loseGame() {
+        isGameOver = true;
+        document.getElementById('finalScore').textContent = wave;
+        gameOverOverlay.style.display = 'flex';
+    }
+    
+    function init() {
+        energy = 50;
+        coreHealth = 100;
+        wave = 1;
+        waveActive = false;
+        isGameOver = false;
+        
+        towers = [];
+        enemies = [];
+        projectiles = [];
+        particles = [];
+        
+        energyDisplay.textContent = energy;
+        livesDisplay.textContent = coreHealth + '%';
+        waveDisplay.textContent = wave;
+        startWaveBtn.style.display = 'block';
+        startWaveBtn.textContent = 'START WAVE 1';
+        gameOverOverlay.style.display = 'none';
+        
+        lastTime = performance.now();
+        cancelAnimationFrame(animationId);
+        loop(lastTime);
+    }
+    
+    document.getElementById('restartBtn').addEventListener('click', init);
+    
+    init();
+  
+window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
+
+
+// Mobile Touch-to-Mouse Polyfill
+(function() {
+    function touchToMouse(e) {
+        if (e.target.tagName === 'CANVAS') {
+            e.preventDefault();
+        } else {
+            return;
+        }
+        let type = '';
+        if (e.type === 'touchstart') type = 'mousedown';
+        if (e.type === 'touchmove') type = 'mousemove';
+        if (e.type === 'touchend') type = 'mouseup';
+        if (!type) return;
+        
+        let touch = e.changedTouches[0];
+        let mouseEvent = new MouseEvent(type, {
+            clientX: touch ? touch.clientX : 0,
+            clientY: touch ? touch.clientY : 0,
+            bubbles: true,
+            cancelable: true
+        });
+        e.target.dispatchEvent(mouseEvent);
+    }
+    document.addEventListener('touchstart', touchToMouse, {passive: false});
+    document.addEventListener('touchmove', touchToMouse, {passive: false});
+    document.addEventListener('touchend', touchToMouse, {passive: false});
+})();
+
+
+        // --- NATIVE WEB AUDIO ENGINE ---
+        let audioCtx = null;
+        let isMuted = false;
+
+        function initAudioEngine() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playClickSound() {
+            if (isMuted || !audioCtx) return;
+            let clickOsc = audioCtx.createOscillator();
+            let clickGain = audioCtx.createGain();
+            
+            clickOsc.type = 'sine';
+            clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            clickOsc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+            
+            clickGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            
+            clickOsc.connect(clickGain);
+            clickGain.connect(audioCtx.destination);
+            
+            clickOsc.start();
+            clickOsc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        const audioBtn = document.getElementById('audioToggleBtn');
+        if(audioBtn) {
+            const toggleAudio = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
+                if(!audioCtx) initAudioEngine();
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                isMuted = !isMuted;
+                audioBtn.textContent = isMuted ? '🔇' : '🔊';
+            };
+            audioBtn.addEventListener('click', toggleAudio);
+                        /* removed conflicting touchstart */
+            
+            // --- DRAG AND DROP INJECTION ---
+            let isDragging = false, startX, startY, initX, initY;
+            const onMove = (e) => {
+                if(!isDragging) return;
+                e.preventDefault();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                const dx = cx - startX;
+                const dy = cy - startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) audioBtn.dataset.wasDragged = 'true';
+                audioBtn.style.position = 'fixed';
+                audioBtn.style.margin = '0';
+                audioBtn.style.left = (initX + dx) + 'px';
+                audioBtn.style.top = (initY + dy) + 'px';
+            };
+            const onEnd = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            };
+            const onStart = (e) => {
+                isDragging = true;
+                audioBtn.dataset.wasDragged = 'false';
+                startX = e.touches ? e.touches[0].clientX : e.clientX;
+                startY = e.touches ? e.touches[0].clientY : e.clientY;
+                const rect = audioBtn.getBoundingClientRect();
+                initX = rect.left;
+                initY = rect.top;
+                document.addEventListener('mousemove', onMove, {passive: false});
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove, {passive: false});
+                document.addEventListener('touchend', onEnd);
+            };
+            audioBtn.addEventListener('mousedown', onStart);
+            audioBtn.addEventListener('touchstart', onStart, {passive: false});
+            audioBtn.addEventListener('click', (e) => {
+                if (audioBtn.dataset.wasDragged === 'true') {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    audioBtn.dataset.wasDragged = 'false';
+                }
+            }, true);
+        }
+        // Bind init and SFX to canvas interactions globally
+        document.addEventListener('mousedown', (e) => {
+            if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
+            if(e.target.tagName === 'CANVAS') playClickSound();
+        });
+        document.addEventListener('keydown', (e) => {
+            if(!audioCtx) initAudioEngine();
+            if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) playClickSound();
+        });
+</script>
+
+<script>
+
+        // --- FRAME-1 STATE CUSHION ---
+        if (typeof window.__cushionInjected === 'undefined') {
+            window.__cushionInjected = true;
+            let __hasStarted = false;
+            let __cushionFrames = 0;
+            let __realRAF = window.requestAnimationFrame;
+            window.requestAnimationFrame = function(cb) {
+                if (!__hasStarted && __cushionFrames++ > 0) {
+                    let c = document.querySelector('canvas');
+                    if (c) {
+                        let cx = c.getContext('2d');
+                        cx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+                        cx.fillRect(0, 0, c.width, c.height);
+                        cx.fillStyle = '#38bdf8';
+                        cx.font = 'bold 30px sans-serif';
+                        cx.textAlign = 'center';
+                        cx.fillText('TAP TO START', c.width/2, c.height/2);
+                    }
+                    let poller = function() {
+                        if (__hasStarted) {
+                            __realRAF(cb);
+                        } else {
+                            setTimeout(poller, 50);
+                        }
+                    };
+                    setTimeout(poller, 50);
+                    return;
+                }
+                return __realRAF(cb);
+            };
+            let startHandler = function() { __hasStarted = true; };
+            window.addEventListener('mousedown', startHandler);
+            window.addEventListener('keydown', startHandler);
+            window.addEventListener('touchstart', startHandler, {passive: true});
+        }
+        // -----------------------------
+
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
+
+<script>
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.classList.add('fade-out');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 500);
+  }
+});
+</script>
+
+
+<section class="max-w-4xl mx-auto px-4 pb-10 text-white game-seo-content">
+  <h2 class="text-2xl font-bold font-heading mb-3">About Synthesizer Defense</h2>
+  <p class="leading-relaxed mb-5">Play Synthesizer Defense online on FFLivePlay and enjoy a fast arcade browser game made for quick sessions. Play Synthesizer Defense online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup. The game opens directly in your browser, so you can start without a download, install, or account. It is a good choice when you want a simple challenge that works on desktop and many mobile screens. The goal is easy to understand, but better scores come from practice, timing, and learning how the game reacts. Take a moment to watch the first round, then adjust your moves and try again. Because the game is lightweight, restarts are quick and you can play whenever you have a short break. If you enjoy this style of game, use the related games below to find more free browser games with similar pacing, controls, or arcade energy. You can keep it casual or chase a stronger score over repeated rounds.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">How to Play</h2>
+  <p class="leading-relaxed mb-5">Start the game, follow the on-screen goal, and keep playing until you beat your previous score. Watch the movement carefully, react early, and use the restart button whenever you want a fresh attempt.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">Controls</h2>
+  <p class="leading-relaxed mb-5">Use your keyboard, mouse, swipe, or tap controls depending on the game screen. Most FFLivePlay games show their main control hint near the play area.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">Related Games</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <a href="/games/retro-snake/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#22c55e15"><div class="text-7xl opacity-90 drop-shadow-md select-none">🐍</div></div><span class="block p-3 font-bold text-gray-800">Retro Snake</span></a>
+    <a href="/games/pac-chase/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#facc1515"><div class="text-7xl opacity-90 drop-shadow-md select-none">👻</div></div><span class="block p-3 font-bold text-gray-800">Pac Chase</span></a>
+    <a href="/games/tic-tac-toe/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#3b82f615"><div class="text-7xl opacity-90 drop-shadow-md select-none">❌</div></div><span class="block p-3 font-bold text-gray-800">Tic-Tac-Toe</span></a>
+    <a href="/games/pong/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#47556915"><div class="text-7xl opacity-90 drop-shadow-md select-none">🏓</div></div><span class="block p-3 font-bold text-gray-800">Pong</span></a>
+  </div>
+  <h2 class="text-2xl font-bold font-heading mb-3 mt-6">More Game Categories</h2>
+  <p class="flex flex-wrap gap-x-4 gap-y-2 font-semibold mb-5">
+    <a href="/action-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Play Action Games</a>
+    <a href="/car-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Play Car Games</a>
+    <a href="/puzzle-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Try Puzzle Games</a>
+    <a href="/new-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">New Free Online Games</a>
+    <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
+  </p>
+</section>
+</html>
