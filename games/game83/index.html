@@ -217,7 +217,10 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillStyle='#334155'; ctx.fillRect(canvas.width/2 - 100, 150, 200, 60);
             ctx.fillStyle='#fff'; ctx.font='bold 32px sans-serif'; ctx.fillText(inp, canvas.width/2, 195);
         }
+        let lastKeyTime = 0, lastKey = '';
         window.addEventListener('keydown', e => {
+            if (e.key === lastKey && performance.now() - lastKeyTime < 30) return;
+            lastKey = e.key; lastKeyTime = performance.now();
             if(isOver) return;
             if(e.key==='Backspace') inp=inp.slice(0,-1);
             else if(e.key==='Enter') {
@@ -226,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(v===ans) { msg="CORRECT! Guesses: "+score; isOver=true; }
                 else { msg=v>ans?"Too High!":"Too Low!"; inp=""; }
             }
-            else if(e.key.match(/[0-9]/) && inp.length<3) inp+=e.key;
+            else if(e.key && e.key.match(/^[0-9]$/) && inp.length<3) inp+=e.key;
             draw();
         });
         restartBtn.addEventListener('click', init); init();
