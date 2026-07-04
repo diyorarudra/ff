@@ -207,7 +207,7 @@ function initCarousel() {
                   style="background:${game.color}15;color:${game.color}">${catLabel}</span>
             <h2 class="text-3xl md:text-5xl font-extrabold mb-3 text-gray-900" style="font-family:var(--font-heading)">${game.title}</h2>
             <p class="text-gray-500 text-lg mb-6 max-w-md font-medium">${game.desc}</p>
-            <a href="games/game${game.id}"
+            <a href="games/${game.slug}/index.html"
                class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold !text-white transition-all hover:-translate-y-1 hover:shadow-lg hover:!text-white"
                style="background:${game.color}">▶ Play Now</a>
           </div>
