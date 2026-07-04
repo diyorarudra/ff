@@ -430,6 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
       data.totalScore += data.clickPower;
       updateUI();
       spawnFloatNum(e, data.clickPower);
+      if (typeof playClickSound === 'function') playClickSound();
       
       // Haptic feedback if supported
       if(navigator.vibrate) navigator.vibrate(10);
