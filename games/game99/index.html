@@ -224,14 +224,17 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillStyle='#334155'; ctx.fillRect(canvas.width/2 - 200, 250, 400, 60);
             ctx.fillStyle='#fff'; ctx.font='bold 32px sans-serif'; ctx.letterSpacing='normal'; ctx.fillText(input || "Type word here...", canvas.width/2, 290);
         }
+        let lastKeyTime = 0, lastKey = '';
         window.addEventListener('keydown', e => {
+            if (e.key === lastKey && performance.now() - lastKeyTime < 30) return;
+            lastKey = e.key; lastKeyTime = performance.now();
             if(isOver) return;
             if(e.key==='Backspace') input = input.slice(0,-1);
             else if(e.key==='Enter') {
                 if(input === word) { score+=100; updateScoreUI(score); nextWord(); }
                 else { input = ""; } // Clears wrong guess
             }
-            else if(e.key.length===1 && e.key.match(/[a-z]/i)) input += e.key.toUpperCase();
+            else if(e.key && e.key.length===1 && e.key.match(/[a-z]/i)) input += e.key.toUpperCase();
             draw();
         });
         restartBtn.addEventListener('click', init); init();
