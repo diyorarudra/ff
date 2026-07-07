@@ -260,9 +260,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     newCard = { c: Math.floor(Math.random()*4), n: pile.n }; // Match number
                 }
-                hand.push(newCard); 
-                updateScoreUI(hand.length); 
-                msg="Drew a playable card!"; 
+                pile = newCard; // Auto-play the drawn card
+                msg="Drew and played a match!"; 
                 draw(); 
             }
         });
