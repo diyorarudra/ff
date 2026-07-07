@@ -253,7 +253,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     if(card.c===pile.c || card.n===pile.n) { pile = card; hand.splice(idx,1); updateScoreUI(hand.length); if(hand.length===0){isOver=true; msg="UNO! YOU WIN!";} }
                     else msg = "Invalid play!"; draw();
                 }
-            } else if (y >= 100 && y <= 240 && x >= canvas.width/2-110 && x <= canvas.width/2-10) { hand.push({c:Math.floor(Math.random()*4), n:Math.floor(Math.random()*9)+1}); updateScoreUI(hand.length); msg="Drew a card."; draw(); }
+            } else if (y >= 100 && y <= 240 && x >= canvas.width/2-110 && x <= canvas.width/2-10) { 
+                let newCard;
+                if (Math.random() < 0.5) {
+                    newCard = { c: pile.c, n: Math.floor(Math.random()*9)+1 }; // Match color
+                } else {
+                    newCard = { c: Math.floor(Math.random()*4), n: pile.n }; // Match number
+                }
+                hand.push(newCard); 
+                updateScoreUI(hand.length); 
+                msg="Drew a playable card!"; 
+                draw(); 
+            }
         });
         restartBtn.addEventListener('click', init); init();
     
