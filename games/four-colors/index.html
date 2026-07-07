@@ -218,7 +218,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if(isOver){ ctx.fillStyle='#fff'; ctx.font='bold 36px sans-serif'; ctx.textAlign='center'; ctx.fillText(msg, canvas.width/2, canvas.height/2); return; }
             
             // Draw Deck
+            let hasValid = hand.some(c => c.c === pile.c || c.n === pile.n);
             ctx.fillStyle='#1e293b'; ctx.fillRect(canvas.width/2-110, 100, 100, 140);
+            if(!hasValid) {
+                ctx.lineWidth=4; ctx.strokeStyle='#facc15'; ctx.strokeRect(canvas.width/2-110, 100, 100, 140);
+                if(msg === "Match color or number!" || msg === "Invalid play!") msg = "No valid cards. Click DRAW.";
+            }
             ctx.fillStyle='#334155'; ctx.fillRect(canvas.width/2-105, 105, 90, 130);
             ctx.fillStyle='#fff'; ctx.font='bold 20px sans-serif'; ctx.textAlign='center'; ctx.fillText('DRAW', canvas.width/2-60, 180);
 
