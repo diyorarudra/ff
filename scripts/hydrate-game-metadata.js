@@ -32,12 +32,12 @@ function processGames() {
                 }
 
                 // 1. Dynamic Page Titles
-                content = content.replace(/<title>.*?<\/title>/gi, `<title>${gameName} - Play Free Online Game | FFLivePlay</title>`);
-                content = content.replace(/<meta\s+property=["']og:title["'].*?>/gi, `<meta property="og:title" content="${gameName} - Play Free Online Game | FFLivePlay">`);
-                content = content.replace(/<meta\s+name=["']twitter:title["'].*?>/gi, `<meta name="twitter:title" content="${gameName} - Play Free Online Game | FFLivePlay">`);
+                content = content.replace(/<title>.*?<\/title>/gi, `<title>${gameName} - Play Free Online Game | FF Live Play</title>`);
+                content = content.replace(/<meta\s+property=["']og:title["'].*?>/gi, `<meta property="og:title" content="${gameName} - Play Free Online Game | FF Live Play">`);
+                content = content.replace(/<meta\s+name=["']twitter:title["'].*?>/gi, `<meta name="twitter:title" content="${gameName} - Play Free Online Game | FF Live Play">`);
 
                 // 2. Granular Meta Descriptions
-                const descText = `Play ${gameName} online for free instantly on FFLivePlay. Experience high-performance, no-download ${gameName} browser gameplay directly in your viewport.`;
+                const descText = `Play ${gameName} online for free instantly on FF Live Play. Experience high-performance, no-download ${gameName} browser gameplay directly in your viewport.`;
                 content = content.replace(/<meta\s+name=["']description["'].*?>/gi, `<meta name="description" content="${descText}">`);
                 content = content.replace(/<meta\s+property=["']og:description["'].*?>/gi, `<meta property="og:description" content="${descText}">`);
                 content = content.replace(/<meta\s+name=["']twitter:description["'].*?>/gi, `<meta name="twitter:description" content="${descText}">`);
