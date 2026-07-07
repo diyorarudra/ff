@@ -5,7 +5,8 @@
   "main": "index.html",
   "scripts": {
     "start": "serve .",
-    "dev": "serve ."
+    "dev": "serve .",
+    "postbuild": "node scripts/hydrate-game-metadata.js && node scripts/verify-game-seo.js"
   },
   "dependencies": {
     "canvas": "^3.2.3",
