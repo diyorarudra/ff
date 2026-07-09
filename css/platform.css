@@ -2,7 +2,6 @@
 
 /* Header UI Elements */
 .header-economy {
-    display: flex;
     align-items: center;
     gap: 12px;
 }
