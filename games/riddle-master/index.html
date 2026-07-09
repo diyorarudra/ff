@@ -4,14 +4,14 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="shortcut icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
-        <title>Hindi Word Master - Play Free Online Game | FF Live Play</title>
-  <meta name="description" content="Play Hindi Word Master online for free instantly on FF Live Play. Experience high-performance, no-download Hindi Word Master browser gameplay directly in your viewport.">
-  <meta name="keywords" content="Hindi Word Master, ffliveplay, online game, browser game, free h5 games, instant arcade">
-  <meta property="og:title" content="Hindi Word Master - Play Free Online Game | FF Live Play">
-  <meta property="og:description" content="Play Hindi Word Master online for free instantly on FF Live Play. Experience high-performance, no-download Hindi Word Master browser gameplay directly in your viewport.">
+        <title>Riddle Master - Play Free Online Game | FF Live Play</title>
+  <meta name="description" content="Play Riddle Master online for free instantly on FF Live Play. Experience high-performance, no-download Riddle Master browser gameplay directly in your viewport.">
+  <meta name="keywords" content="Riddle Master, ffliveplay, online game, browser game, free h5 games, instant arcade">
+  <meta property="og:title" content="Riddle Master - Play Free Online Game | FF Live Play">
+  <meta property="og:description" content="Play Riddle Master online for free instantly on FF Live Play. Experience high-performance, no-download Riddle Master browser gameplay directly in your viewport.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Hindi Word Master - Play Free Online Game | FF Live Play">
-  <meta name="twitter:description" content="Play Hindi Word Master online for free instantly on FF Live Play. Experience high-performance, no-download Hindi Word Master browser gameplay directly in your viewport.">
+  <meta name="twitter:title" content="Riddle Master - Play Free Online Game | FF Live Play">
+  <meta name="twitter:description" content="Play Riddle Master online for free instantly on FF Live Play. Experience high-performance, no-download Riddle Master browser gameplay directly in your viewport.">
   <meta name="twitter:image" content="https://www.ffliveplay.com/assets/thumbnails/tic-tac-toe.png">
   <meta property="og:image" content="https://www.ffliveplay.com/assets/thumbnails/tic-tac-toe.png">
 
@@ -53,7 +53,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/style.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Hindi Word Master","description":"Play Hindi Word Master online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.","url":"https://www.ffliveplay.com/games/tic-tac-toe/","image":"https://www.ffliveplay.com/assets/thumbnails/game23.jpg","genre":"arcade","applicationCategory":"Game","operatingSystem":"Web browser","playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Riddle Master","description":"Play Riddle Master online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.","url":"https://www.ffliveplay.com/games/tic-tac-toe/","image":"https://www.ffliveplay.com/assets/thumbnails/game23.jpg","genre":"arcade","applicationCategory":"Game","operatingSystem":"Web browser","playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com"}}</script>
   <style>
     body { overscroll-behavior-y: none; user-select: none; }
     .cell {
@@ -91,7 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
-  <link rel="stylesheet" href="/games/hindi-word-master/style.css">
+  <link rel="stylesheet" href="/css/game-rewards.css">
+  <link rel="stylesheet" href="/games/riddle-master/style.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -150,15 +151,15 @@ document.addEventListener("DOMContentLoaded", () => {
      <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
   </div>
 <div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center lg:max-w-[800px]">
-    <h1 class="text-3xl md:text-4xl font-extrabold font-heading text-white text-center mb-4">Play Hindi Word Master Online</h1>
+    <h1 class="text-3xl md:text-4xl font-extrabold font-heading text-white text-center mb-4">Play Riddle Master Online</h1>
 
 <div class="new-game-wrapper" style="width:100%; display:flex; justify-content:center; align-items:center; flex:1; min-height: 600px; padding: 20px 0;">
 <div id="game-container">
         <!-- Start Screen -->
         <div id="screen-start" class="screen active">
-            <h1 class="game-title">Hindi Word Master</h1>
-            <p class="instructions">उलझे हुए अक्षरों को सही क्रम में लगाकर शब्द बनाएँ। (Unscramble the Hindi letters to form the correct word.) 10 Rounds. 3 Lives.</p>
-            <button id="btn-start" class="btn primary">Start / शुरू करें</button>
+            <h1 class="game-title">Riddle Master</h1>
+            <p class="instructions">Read the riddle and type the correct English answer! 10 Rounds. 3 Lives.</p>
+            <button id="btn-start" class="btn primary">Start</button>
         </div>
 
         <!-- Game Screen -->
@@ -173,11 +174,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div id="hint-display" class="hint-text hidden"></div>
                 <div id="scrambled-word" class="scrambled-text"></div>
                 
-                <input type="text" id="word-input" class="word-input" placeholder="यहाँ शब्द लिखें (Type here)..." autocomplete="off" lang="hi">
+                <input type="text" id="word-input" class="word-input" placeholder="Type here..." autocomplete="off" lang="en">
                 
                 <div class="controls">
                     <button id="btn-submit" class="btn success">Submit</button>
-                    <button id="btn-hint" class="btn warning">Hint / संकेत</button>
+                    <button id="btn-hint" class="btn warning">Hint</button>
                 </div>
                 
                 <div id="feedback" class="feedback-text"></div>
@@ -187,8 +188,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <!-- End Screen -->
         <div id="screen-end" class="screen">
             <h1 id="end-title" class="game-title">Game Over</h1>
-            <p class="final-score">Final Score / अंतिम स्कोर: <span id="val-final-score">0</span></p>
-            <button id="btn-restart" class="btn primary">Play Again / फिर से खेलें</button>
+            <p class="final-score">Final Score: <span id="val-final-score">0</span></p>
+            <button id="btn-restart" class="btn primary">Play Again</button>
         </div>
     </div>
 </div>
@@ -246,8 +247,8 @@ window.addEventListener('load', () => {
 
 
 <section class="max-w-4xl mx-auto px-4 pb-10 text-white game-seo-content">
-  <h2 class="text-2xl font-bold font-heading mb-3">About Hindi Word Master</h2>
-  <p class="leading-relaxed mb-5">Play Hindi Word Master online on FFLivePlay and enjoy a fast arcade browser game made for quick sessions. Play Hindi Word Master online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup. The game opens directly in your browser, so you can start without a download, install, or account. It is a good choice when you want a simple challenge that works on desktop and many mobile screens. The goal is easy to understand, but better scores come from practice, timing, and learning how the game reacts. Take a moment to watch the first round, then adjust your moves and try again. Because the game is lightweight, restarts are quick and you can play whenever you have a short break. If you enjoy this style of game, use the related games below to find more free browser games with similar pacing, controls, or arcade energy. You can keep it casual or chase a stronger score over repeated rounds.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">About Riddle Master</h2>
+  <p class="leading-relaxed mb-5">Play Riddle Master online on FFLivePlay and enjoy a fast arcade browser game made for quick sessions. Play Riddle Master online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup. The game opens directly in your browser, so you can start without a download, install, or account. It is a good choice when you want a simple challenge that works on desktop and many mobile screens. The goal is easy to understand, but better scores come from practice, timing, and learning how the game reacts. Take a moment to watch the first round, then adjust your moves and try again. Because the game is lightweight, restarts are quick and you can play whenever you have a short break. If you enjoy this style of game, use the related games below to find more free browser games with similar pacing, controls, or arcade energy. You can keep it casual or chase a stronger score over repeated rounds.</p>
   <h2 class="text-2xl font-bold font-heading mb-3">How to Play</h2>
   <p class="leading-relaxed mb-5">Start the game, follow the on-screen goal, and keep playing until you beat your previous score. Watch the movement carefully, react early, and use the restart button whenever you want a fresh attempt.</p>
   <h2 class="text-2xl font-bold font-heading mb-3">Controls</h2>
@@ -268,7 +269,8 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
-  <script src="/games/hindi-word-master/script.js"></script>
+  <script src="/games/riddle-master/script.js"></script>
+  <script defer src="/js/game-rewards.js"></script>
 
 <script>
 // --- NATIVE WEB AUDIO ENGINE ---

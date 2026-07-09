@@ -19,6 +19,7 @@ const GAMES = [
   { id: 13, title: 'Interrogation', category: 'mystery', desc: 'Crack the case with Mastermind-style deduction clues.', icon: '🕵️', color: '#7c3aed', slug: 'interrogation', tags: ["mystery","html5","free"], difficulty: 'easy', estimatedPlayTime: 3, rewardCoins: 10, isExistingGame: true, isNewAddedGame: false, isTrending: false, isNew: false, playCount: 790, rating: 3.7, instructions: 'Tap or click to play. Follow the on-screen prompts.', seoTitle: 'Interrogation - Play Free Online Game | FF Live Play', seoDescription: 'Play Interrogation online for free instantly on FF Live Play. Experience high-performance, no-download Interrogation browser gameplay directly in your viewport.' },
   { id: 14, title: 'Crime Scramble', category: 'mystery', desc: 'Reassemble the crime scene photo in a timed jigsaw.', icon: '🧩', color: '#dc2626', slug: 'crime-scramble', tags: ["mystery","html5","free"], difficulty: 'easy', estimatedPlayTime: 3, rewardCoins: 10, isExistingGame: true, isNewAddedGame: false, isTrending: false, isNew: false, playCount: 255, rating: 4.8, instructions: 'Tap or click to play. Follow the on-screen prompts.', seoTitle: 'Crime Scramble - Play Free Online Game | FF Live Play', seoDescription: 'Play Crime Scramble online for free instantly on FF Live Play. Experience high-performance, no-download Crime Scramble browser gameplay directly in your viewport.' },
   { id: 15, title: 'Cipher Decoder', category: 'mystery', desc: 'Break the cryptogram cipher to reveal the hidden message.', icon: '🔐', color: '#059669', slug: 'cipher-decoder', tags: ["mystery","html5","free"], difficulty: 'easy', estimatedPlayTime: 3, rewardCoins: 10, isExistingGame: true, isNewAddedGame: false, isTrending: false, isNew: false, playCount: 1028, rating: 4.3, instructions: 'Tap or click to play. Follow the on-screen prompts.', seoTitle: 'Cipher Decoder - Play Free Online Game | FF Live Play', seoDescription: 'Play Cipher Decoder online for free instantly on FF Live Play. Experience high-performance, no-download Cipher Decoder browser gameplay directly in your viewport.' },
+  { id: 128, title: 'GK Quiz India', category: 'quiz', desc: 'Test your General Knowledge about India. Geography, History, Science, Sports, and Culture. 10 Questions.', icon: '🇮🇳', color: '#3b82f6', slug: 'gk-quiz-india', tags: ["gk","india","quiz","knowledge"], difficulty: 'medium', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 2750, rating: 4.7, instructions: 'Select the correct answer for general knowledge questions. Read the explanations to learn more!', seoTitle: 'Play GK Quiz India Online Free', seoDescription: 'Challenge your general knowledge with GK Quiz India. Play for free on FF Live Play.' },
   { id: 16, title: 'Beat Dancer', category: 'rhythm', desc: 'Tap falling arrows right on the beat for high combos.', icon: '🎵', color: '#e11d48', slug: 'beat-dancer', tags: ["rhythm","html5","free"], difficulty: 'easy', estimatedPlayTime: 3, rewardCoins: 10, isExistingGame: true, isNewAddedGame: false, isTrending: false, isNew: false, playCount: 1075, rating: 3.6, instructions: 'Tap or click to play. Follow the on-screen prompts.', seoTitle: 'Beat Dancer - Play Free Online Game | FF Live Play', seoDescription: 'Play Beat Dancer online for free instantly on FF Live Play. Experience high-performance, no-download Beat Dancer browser gameplay directly in your viewport.' },
   { id: 17, title: 'Lip-Sync Match', category: 'rhythm', desc: 'Catch moving waveform segments inside the target zone.', icon: '🎤', color: '#f472b6', slug: 'lip-sync-match', tags: ["rhythm","html5","free"], difficulty: 'easy', estimatedPlayTime: 3, rewardCoins: 10, isExistingGame: true, isNewAddedGame: false, isTrending: true, isNew: false, playCount: 1032, rating: 4.4, instructions: 'Tap or click to play. Follow the on-screen prompts.', seoTitle: 'Lip-Sync Match - Play Free Online Game | FF Live Play', seoDescription: 'Play Lip-Sync Match online for free instantly on FF Live Play. Experience high-performance, no-download Lip-Sync Match browser gameplay directly in your viewport.' },
   { id: 18, title: 'Spotlight', category: 'rhythm', desc: 'Match colors as the cinematic stage lights shift.', icon: '🎭', color: '#fbbf24', slug: 'spotlight', tags: ["rhythm","html5","free"], difficulty: 'easy', estimatedPlayTime: 3, rewardCoins: 10, isExistingGame: true, isNewAddedGame: false, isTrending: false, isNew: false, playCount: 870, rating: 4.5, instructions: 'Tap or click to play. Follow the on-screen prompts.', seoTitle: 'Spotlight - Play Free Online Game | FF Live Play', seoDescription: 'Play Spotlight online for free instantly on FF Live Play. Experience high-performance, no-download Spotlight browser gameplay directly in your viewport.' },
@@ -126,12 +127,11 @@ const GAMES = [
   { id: 120, title: 'Survival Zone', category: 'action', desc: 'Stay within the shrinking safe zone.', icon: '🛡️', color: '#facc15', slug: 'survival-zone', tags: ["action","html5","free"], difficulty: 'easy', estimatedPlayTime: 3, rewardCoins: 10, isExistingGame: true, isNewAddedGame: false, isTrending: false, isNew: false, playCount: 828, rating: 3.5, instructions: 'Tap or click to play. Follow the on-screen prompts.', seoTitle: 'Survival Zone - Play Free Online Game | FF Live Play', seoDescription: 'Play Survival Zone online for free instantly on FF Live Play. Experience high-performance, no-download Survival Zone browser gameplay directly in your viewport.' },
   { id: 121, title: 'Daily Word Puzzle', category: 'word', desc: 'Unscramble the letters to find the correct word. 10 rounds per session.', icon: '🔤', color: '#6366f1', slug: 'daily-word-puzzle', tags: ["word","puzzle","daily","english"], difficulty: 'medium', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 1245, rating: 4.5, instructions: 'Look at the scrambled letters and type the correct word. Use a hint if you are stuck!', seoTitle: 'Play Daily Word Puzzle Online Free', seoDescription: 'Challenge your vocabulary with Daily Word Puzzle. Play online for free on FF Live Play.' },
   { id: 122, title: 'Word Connect', category: 'word', desc: 'Connect letters to form hidden words! Complete all 5 levels to win.', icon: '🔗', color: '#8b5cf6', slug: 'word-connect', tags: ["word","puzzle","connect"], difficulty: 'medium', estimatedPlayTime: 10, rewardCoins: 25, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 3211, rating: 4.8, instructions: 'Tap the letters to form words and fill all the slots to complete a level.', seoTitle: 'Play Word Connect Online Free', seoDescription: 'Connect letters and discover hidden words in Word Connect. Play for free on FF Live Play.' },
-  { id: 123, title: 'Hindi Word Master', category: 'word', desc: 'उलझे हुए अक्षरों को सही क्रम में लगाकर शब्द बनाएँ। (Unscramble the Hindi letters)', icon: '🇮🇳', color: '#ec4899', slug: 'hindi-word-master', tags: ["word","hindi","puzzle","educational"], difficulty: 'easy', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 2840, rating: 4.7, instructions: 'Unscramble the Hindi letters to guess the correct word. Use hints if needed.', seoTitle: 'Play Hindi Word Master Online Free', seoDescription: 'Improve your Hindi vocabulary with Hindi Word Master. Play instantly for free on FF Live Play.' },
+  { id: 123, title: 'Riddle Master', category: 'word', desc: 'Read the fun riddle and guess the correct English answer.', icon: '🧠', color: '#ec4899', slug: 'riddle-master', tags: ["word","riddle","puzzle","educational"], difficulty: 'medium', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 2840, rating: 4.7, instructions: 'Read the riddle and type the correct answer. Use hints if needed.', seoTitle: 'Play Riddle Master Online Free', seoDescription: 'Challenge your brain with Riddle Master. Play instantly for free on FF Live Play.' },
   { id: 124, title: 'English Word Challenge', category: 'word', desc: 'Unscramble the English words correctly. 10 Rounds. 3 Lives.', icon: '🇬🇧', color: '#3b82f6', slug: 'english-word-challenge', tags: ["word","english","puzzle","educational"], difficulty: 'easy', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 1950, rating: 4.6, instructions: 'Type the correct English word from the scrambled letters provided.', seoTitle: 'Play English Word Challenge Online Free', seoDescription: 'Test your English vocabulary with English Word Challenge. Play free on FF Live Play.' },
   { id: 125, title: 'Daily Brain Training', category: 'brain', desc: 'Train your brain with quick mini-games. Complete 10 rounds of Math, Memory, Speed, and Logic!', icon: '🧠', color: '#8b5cf6', slug: 'daily-brain-training', tags: ["brain","memory","math","logic","speed"], difficulty: 'medium', estimatedPlayTime: 10, rewardCoins: 25, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 4500, rating: 4.9, instructions: 'Follow the on-screen instructions for each mini-game round. Be quick and accurate!', seoTitle: 'Play Daily Brain Training Online Free', seoDescription: 'Keep your mind sharp with Daily Brain Training mini-games. Play free on FF Live Play.' },
   { id: 126, title: 'Bollywood Quiz Battle', category: 'quiz', desc: 'Test your Bollywood knowledge! Answer 10 questions. Be fast for bonus points. 3 strikes and you are out.', icon: '🎬', color: '#f43f5e', slug: 'bollywood-quiz-battle', tags: ["quiz","bollywood","india","trivia"], difficulty: 'easy', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 2200, rating: 4.6, instructions: 'Read the question and select the correct answer. Faster answers earn more points.', seoTitle: 'Play Bollywood Quiz Battle Online Free', seoDescription: 'Challenge your Bollywood knowledge with Bollywood Quiz Battle. Play for free on FF Live Play.' },
   { id: 127, title: 'Cricket Quiz League', category: 'cricket', desc: 'Test your cricket knowledge! Answer 10 questions. Get a streak of 3 for bonus points.', icon: '🏏', color: '#22c55e', slug: 'cricket-quiz-league', tags: ["cricket","sports","quiz","india"], difficulty: 'medium', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 3100, rating: 4.8, instructions: 'Read the question and select the correct cricket answer. Try to get a streak of 3.', seoTitle: 'Play Cricket Quiz League Online Free', seoDescription: 'Challenge your cricket knowledge with Cricket Quiz League. Play for free on FF Live Play.' },
-  { id: 128, title: 'GK Quiz India', category: 'quiz', desc: 'Test your General Knowledge about India. Geography, History, Science, Sports, and Culture. 10 Questions.', icon: '🇮🇳', color: '#3b82f6', slug: 'gk-quiz-india', tags: ["gk","india","quiz","knowledge"], difficulty: 'medium', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 2750, rating: 4.7, instructions: 'Select the correct answer for general knowledge questions. Read the explanations to learn more!', seoTitle: 'Play GK Quiz India Online Free', seoDescription: 'Challenge your general knowledge with GK Quiz India. Play for free on FF Live Play.' },
   { id: 129, title: 'Logo Guess Game', category: 'quiz', desc: 'Can you identify these fictional brands just from their minimalist logos? 10 rounds to test your visual memory.', icon: '🧩', color: '#f59e0b', slug: 'logo-guess-game', tags: ["logo","guess","quiz","brand-style"], difficulty: 'easy', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 1980, rating: 4.5, instructions: 'Look at the fictional logo design and choose the correct brand name.', seoTitle: 'Play Logo Guess Game Online Free', seoDescription: 'Guess the minimalist logos in Logo Guess Game. Play for free on FF Live Play.' },
   { id: 130, title: 'Guess the City', category: 'quiz', desc: 'Read the clues and identify the correct city. You have 20 seconds per question. 10 rounds total.', icon: '🏙️', color: '#0ea5e9', slug: 'guess-the-city', tags: ["city","geography","quiz","travel"], difficulty: 'medium', estimatedPlayTime: 8, rewardCoins: 20, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 2150, rating: 4.7, instructions: 'Read the text clues provided and select the correct city from the options.', seoTitle: 'Play Guess the City Online Free', seoDescription: 'Test your travel knowledge with Guess the City. Play for free on FF Live Play.' },
   { id: 131, title: 'Crossword Mini', category: 'word', desc: 'Solve 5 mini crosswords. Tap a cell, read the clue, and type the answer!', icon: '📝', color: '#8b5cf6', slug: 'crossword-mini', tags: ["crossword","word","puzzle","brain"], difficulty: 'medium', estimatedPlayTime: 10, rewardCoins: 25, isExistingGame: false, isNewAddedGame: true, isTrending: true, isNew: true, playCount: 3800, rating: 4.9, instructions: 'Tap a cell to select a word. Read the clue and type the answer using your keyboard.', seoTitle: 'Play Crossword Mini Online Free', seoDescription: 'Solve daily mini crosswords in Crossword Mini. Play for free on FF Live Play.' },
@@ -346,7 +346,7 @@ window.renderGameGrid = function(cat = 'all', term = '') {
     list = list.filter(g => g.title.toLowerCase().includes(lowerTerm) || g.category.toLowerCase().includes(lowerTerm));
   }
 
-  const fixedFirstIds = [15, 65, 63, 80, 92, 77, 93, 12, 45, 77, 83, 89, 90, 91, 100]; // Array of game IDs to always show first in this exact order
+  const fixedFirstIds = [15, 128, 65, 63, 80, 92, 77, 93, 12, 45, 77, 83, 89, 90, 91, 100, 121, 122, 123, 124, 125, 126, 127, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158]; // Array of game IDs to always show first in this exact order
   // Premium: Curated list of the most interesting/best games to show first
   const premiumIds = [58, 60, 85, 79, 38, 1, 95, 92, 90, 88, 86, 77, 74, 69, 54, 55, 46, 50, 31, 34, 16, 6, 21, 24];
   const lowIds = [84, 64, 80, 81];
@@ -378,40 +378,54 @@ window.renderGameGrid = function(cat = 'all', term = '') {
   const playNowText = typeof window.T === 'function' ? window.T('Play Now') : 'Play Now';
 
   const renderCard = (game) => `
-    <a href="games/${game.slug}/index.html" onclick="if(typeof trackGameStart==='function') trackGameStart('${game.slug}', '${game.category}')" class="game-card bg-white rounded-2xl border-0 hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden animate-fade-in-up shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] group relative">
-      <div class="w-full h-36 relative overflow-hidden flex items-center justify-center transition-transform duration-500 group-hover:scale-110" style="background:${game.color}15">
-        <div class="text-7xl opacity-90 drop-shadow-md select-none">${game.icon}</div>
+    <a href="games/${game.slug}/index.html" onclick="if(typeof trackGameStart==='function') trackGameStart('${game.slug}', '${game.category}')" class="game-card">
+      <div class="game-card-coin-badge" title="Play this game to earn coins and XP.">
+        +${game.rewardCoins || 10} Coins
       </div>
-      <div class="p-4 flex flex-col flex-grow items-center text-center bg-white rounded-b-2xl">
-        <span class="category-badge mb-1.5 uppercase tracking-widest font-extrabold text-[#7361F2]" style="font-size:0.65rem;">${game.category}</span>
-        <h3 class="font-extrabold text-gray-800 text-[17px] mb-4 line-clamp-1" style="font-family:var(--font-heading)">${game.title}</h3>
-        <button class="bg-[#ef4444] text-white rounded-xl py-2 px-6 text-sm font-bold shadow-md hover:bg-[#dc2626] hover:shadow-lg transition-all w-full mt-auto active:scale-95">${playNowText}</button>
+      <div class="game-card-media" style="background:${game.color}15">
+        <div class="game-card-media-icon">${game.icon}</div>
+      </div>
+      <div class="game-card-body">
+        <span class="game-card-category">${game.category}</span>
+        <h3 class="game-card-title">${game.title}</h3>
+        <button class="game-card-button">${playNowText}</button>
       </div>
     </a>`;
 
   let html = '';
-  if (cat === 'all' && !term) {
-    const newGames = list.filter(g => g.isNewAddedGame);
-    if (newGames.length > 0) {
-      html += `<div class="mb-12">
-        <h2 class="text-3xl font-extrabold font-heading text-gray-900 mb-6 flex items-center gap-3">
-          <span class="text-4xl">✨</span>
-        </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-          ${newGames.map(renderCard).join('')}
-        </div>
-      </div>
-      <div class="mb-4">
-        <h2 class="text-3xl font-extrabold font-heading text-gray-900 mb-6 flex items-center gap-3">
-          <span class="text-4xl">🎮</span>
-        </h2>
-      </div>`;
-    }
-  }
-
   html += '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">' + list.map(renderCard).join('') + '</div>';
   grid.innerHTML = html;
 }
+
+// ==========================================
+// Economy Sync
+// ==========================================
+function syncEconomy() {
+  const getStorage = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch(e) { return d; } };
+  const coins = getStorage('ffliveplay_coins', 0);
+  const totalXP = Number(getStorage('ffliveplay_xp', 0));
+  const streak = getStorage('ffliveplay_streak', 1);
+
+  const level = Math.floor(totalXP / 100) + 1;
+  const progressXP = totalXP % 100;
+
+  const cEl = document.getElementById('ui-coins');
+  const sEl = document.getElementById('ui-streak');
+  const xTEl = document.getElementById('ui-xp-text');
+  const xBEl = document.getElementById('ui-xp-bar');
+
+  if (cEl) cEl.innerText = coins;
+  if (sEl) sEl.innerText = `🔥 ${streak}`;
+  if (xTEl) xTEl.innerText = `Lvl ${level} - ${progressXP}/100`;
+  if (xBEl) xBEl.style.width = `${progressXP}%`;
+}
+
+document.addEventListener('DOMContentLoaded', syncEconomy);
+window.addEventListener('pageshow', syncEconomy);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') syncEconomy();
+});
+
 
 
 /* ================= SCROLL ANIMATIONS ================= */

@@ -57,6 +57,7 @@ function postMsg(type, extra = {}) {
 }
 
 function initGame() {
+    hasRevived = false;
     currentRound = 1;
     score = 0;
     lives = 3;
@@ -96,7 +97,9 @@ function checkAnswer() {
                 endGame(true);
             } else {
                 postMsg("LEVEL_COMPLETE", { score, coins: 10 });
-                loadRound();
+                showLevelCompleteModal(() => {
+                    loadRound();
+                });
             }
         }, 1000);
     } else {
@@ -113,14 +116,14 @@ function checkAnswer() {
     }
 }
 
-function showHint() {
+function ffOriginalHint() {
     hintsUsed++;
     const hintEl = document.getElementById('hint-display');
     hintEl.innerText = "Hint: " + currentWordObj.h;
     hintEl.classList.remove('hidden');
 }
 
-function endGame(win) {
+function ffOriginalEndGame(win) {
     showScreen('end');
     document.getElementById('end-title').innerText = win ? 'You Win!' : 'Game Over';
     document.getElementById('val-final-score').innerText = score;
@@ -139,3 +142,81 @@ document.getElementById('btn-hint').addEventListener('click', showHint);
 document.getElementById('word-input').addEventListener('keypress', e => {
     if (e.key === 'Enter') checkAnswer();
 });
+
+function showLevelCompleteModal(onNext) {
+    let modal = document.getElementById('ff-internal-level-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'ff-internal-level-modal';
+        modal.innerHTML = '<div style="background:rgba(15,23,42,0.95);padding:40px;border-radius:24px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.8);border:2px solid #fbbf24;min-width:300px;"><h2 style="color:#fbbf24;font-size:32px;margin:0 0 20px 0;font-family:system-ui,sans-serif;font-weight:900;">Level Complete!</h2><button id="ff-internal-next-btn" style="background:linear-gradient(135deg, #fbbf24, #f59e0b);color:#000;border:none;padding:16px 32px;font-size:20px;font-weight:900;border-radius:30px;cursor:pointer;box-shadow:0 4px 15px rgba(245,158,11,0.4);transition:transform 0.2s;">Next Level ➔</button></div>';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);';
+        document.body.appendChild(modal);
+        
+        const btn = document.getElementById('ff-internal-next-btn');
+        btn.onmouseover = () => btn.style.transform = 'scale(1.05)';
+        btn.onmouseout = () => btn.style.transform = 'scale(1)';
+    }
+    modal.style.display = 'flex';
+    document.getElementById('ff-internal-next-btn').onclick = () => {
+        modal.style.display = 'none';
+        if (onNext) onNext();
+    };
+}
+
+
+function showHint() {
+    if (window.FFRewards) {
+        if (typeof hints !== 'undefined' && hints > 0) {
+            ffOriginalHint();
+        } else {
+            window.FFRewards.showSpendConfirm({
+                title: "Use Hint?",
+                message: "Use 20 coins for a hint?",
+                cost: 20,
+                itemId: "hint_pack",
+                onConfirm: (success) => {
+                    if (success) {
+                        if (typeof hints !== 'undefined') hints++; 
+                        ffOriginalHint();
+                    }
+                }
+            });
+        }
+    } else {
+        ffOriginalHint();
+    }
+}
+        
+
+let hasRevived = false;
+function endGame(win) {
+    if (!win && window.FFRewards && !hasRevived) {
+        window.FFRewards.showSpendConfirm({
+            title: "Revive?",
+            message: "Use 30 coins or a Revive Token to continue?",
+            cost: 30,
+            itemId: "revive_token",
+            onConfirm: (success) => {
+                if (success) {
+                    hasRevived = true;
+                    // RECOVER STATE
+                    
+    attempts = MAX_ATTEMPTS;
+    updateUI();
+
+                } else {
+                    ffOriginalEndGame(win);
+                }
+            }
+        });
+        // Override cancel to trigger original game over
+        setTimeout(() => {
+            document.getElementById('ff-confirm-btn-cancel').onclick = () => {
+                document.getElementById('ff-confirm-modal').classList.add('hidden');
+                ffOriginalEndGame(win);
+            };
+        }, 100);
+        return; // Halt game over
+    }
+    ffOriginalEndGame(win);
+}

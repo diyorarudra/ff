@@ -26,7 +26,7 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
 
                 // Injected Progressive Difficulty Modifiers
@@ -35,18 +35,7 @@
                     return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
                 }
             
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -92,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
   <link rel="stylesheet" href="/games/daily-word-puzzle/style.css">
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -320,5 +310,7 @@ document.addEventListener('keydown', (e) => {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Enter'].includes(e.code)) playClickSound();
 });
 </script>
+
+  <script defer src="/js/game-rewards.js"></script>
 </body>
 </html>

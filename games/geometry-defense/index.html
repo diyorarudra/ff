@@ -23,20 +23,37 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED REWARD BRIDGE ---
+let ffRewardSentForCurrentRound = false;
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+// ------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -226,11 +244,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     
-    let angle=0,e=[],px=200,py=200; function init(){e=[];score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
+    let angle=0,e=[],px=200,py=200; function init(){
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') ffRewardSentForCurrentRound = false;
+e=[];score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
     canvas.addEventListener('mousemove',ev=>{let r=canvas.getBoundingClientRect();angle=Math.atan2(ev.clientY-r.top-200,ev.clientX-r.left-200);});
     canvas.addEventListener('mousedown',()=>{e.forEach((o,i)=>{if(Math.abs(Math.atan2(o.y-200,o.x-200)-angle)<0.2){score++;e.splice(i,1);if(scoreEl)scoreEl.textContent=score;}});});
     function update(){if(Math.random()<0.03){let a=Math.random()*6.28;e.push({x:200+Math.cos(a)*250,y:200+Math.sin(a)*250});}
-    for(let i=e.length-1;i>=0;i--){e[i].x+=(200-e[i].x)*0.01;e[i].y+=(200-e[i].y)*0.01;if(Math.hypot(e[i].x-200,e[i].y-200)<20){isGameOver=true;if(gameOverOverlay){gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}}
+    for(let i=e.length-1;i>=0;i--){e[i].x+=(200-e[i].x)*0.01;e[i].y+=(200-e[i].y)*0.01;if(Math.hypot(e[i].x-200,e[i].y-200)<20){isGameOver=true;if(gameOverOverlay){
+    if (typeof ffRewardSentForCurrentRound !== 'undefined' && !ffRewardSentForCurrentRound) { ffRewardSentForCurrentRound = true; ffTriggerRewardEvent('LEVEL_COMPLETE'); }
+gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}}
     function draw(){ctx.fillStyle='yellow';ctx.beginPath();ctx.arc(200,200,20,0,6.28);ctx.fill();ctx.strokeStyle='white';ctx.beginPath();ctx.moveTo(200,200);ctx.lineTo(200+Math.cos(angle)*40,200+Math.sin(angle)*40);ctx.stroke();ctx.fillStyle='red';e.forEach(o=>{ctx.beginPath();ctx.arc(o.x,o.y,10,0,6.28);ctx.fill();});}
 
     if (!document.getElementById('startBtn')) {
@@ -424,4 +446,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

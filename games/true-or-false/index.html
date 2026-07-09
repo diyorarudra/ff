@@ -31,20 +31,48 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED MILESTONE BRIDGE (BATCH 4) ---
+let ffRewardSentForCurrentRound = false;
+let ffLastRewardMilestone = 0;
+
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+
+function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
+  const numericScore = Number(scoreValue || 0);
+  const milestone = Math.floor(numericScore / milestoneSize);
+  if (milestone > ffLastRewardMilestone && numericScore >= milestoneSize) {
+    ffLastRewardMilestone = milestone;
+    ffTriggerRewardEvent("LEVEL_COMPLETE", { level: milestone, score: numericScore, coins: 10 });
+  }
+}
+// ---------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -212,7 +241,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
         let score, isOver, stat, isTrue;
-        function init() { score=0; isOver=false; updateScoreUI(0); next(); }
+        function init() {
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') { ffRewardSentForCurrentRound = false; ffLastRewardMilestone = 0; }
+ score=0; isOver=false; updateScoreUI(0); next(); }
         function next() {
             let a = Math.floor(Math.random()*10)+1, b = Math.floor(Math.random()*10)+1;
             isTrue = Math.random()>0.5;
@@ -230,7 +261,25 @@ document.addEventListener("DOMContentLoaded", () => {
             if(isOver) return; const r=canvas.getBoundingClientRect(); let x=(e.clientX-r.left)*(canvas.width/r.width), y=(e.clientY-r.top)*(canvas.height/r.height);
             if(y>250 && y<310) {
                 let ans = (x>canvas.width/2-150 && x<canvas.width/2-50) ? true : (x>canvas.width/2+50 && x<canvas.width/2+150 ? false : null);
-                if(ans!==null) { if(ans===isTrue) { score+=10; updateScoreUI(score); next(); } else { isOver=true; draw(); } }
+                if(ans!==null) {
+                    if(ans===isTrue) {
+                        score+=10;
+                        if (window.FFRewards && window.FFRewards.triggerCorrectAnswer) {
+                            window.FFRewards.triggerCorrectAnswer({ gameSlug: 'true-or-false', scoreDelta: 10, xp: 2, coins: 0 });
+                        }
+                        if (typeof ffCheckScoreMilestone !== 'undefined') ffCheckScoreMilestone(score, 50);
+                        updateScoreUI(score); next();
+                    } else {
+                        isOver=true;
+                        if (typeof window.ffRewardSentForCurrentRound !== 'undefined' && !window.ffRewardSentForCurrentRound) {
+                            window.ffRewardSentForCurrentRound = true;
+                            window.dispatchEvent(new CustomEvent("FF_GAME_COMPLETE", {
+                                detail: { type: "GAME_COMPLETE", gameSlug: "true-or-false", level: 1, score: score || 0, coins: 20 }
+                            }));
+                        }
+                        draw();
+                    }
+                }
             }
         });
         restartBtn.addEventListener('click', init); init();
@@ -409,4 +458,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

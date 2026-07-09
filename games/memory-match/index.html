@@ -81,6 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
+  <script defer src="/js/game-rewards.js"></script>
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -260,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('playAgainBtn').addEventListener('click', init);
 
     function init() {
+      if (typeof window !== "undefined") window.ffRewardSentForCurrentRound = false;
       canvas.width = 600;
       if (window.innerWidth >= 768 && cols === 4 && rows === 4) {
         canvas.height = 450;
@@ -357,6 +360,17 @@ document.addEventListener("DOMContentLoaded", () => {
         c1.isMatched = true;
         c2.isMatched = true;
         pairsFound++;
+        
+        if (window.FFRewards && typeof window.FFRewards.triggerCorrectAnswer === 'function') {
+          window.FFRewards.triggerCorrectAnswer({
+            gameSlug: "memory-match",
+            scoreDelta: 10,
+            xp: 2,
+            coins: 0,
+            label: "Match!"
+          });
+        }
+        
         checkWin();
       } else {
         c1.isFlipped = false;
@@ -375,7 +389,18 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem(key, moves);
           bestEl.textContent = moves;
         }
-        
+        if (!window.ffRewardSentForCurrentRound) {
+          window.ffRewardSentForCurrentRound = true;
+          window.dispatchEvent(new CustomEvent("FF_GAME_COMPLETE", {
+            detail: {
+              type: "GAME_COMPLETE",
+              gameSlug: "memory-match",
+              level: 1,
+              score: pairsFound || 0,
+              coins: 20
+            }
+          }));
+        }
         gameWonOverlay.style.opacity = '1';
         gameWonOverlay.style.pointerEvents = 'auto';
       }

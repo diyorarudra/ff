@@ -31,20 +31,47 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED MILESTONE BRIDGE ---
+let ffRewardSentForCurrentRound = false;
+let ffLastRewardMilestone = 0;
+
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+
+function ffCheckScoreMilestone(score, milestoneSize = 1000) {
+  const milestone = Math.floor(score / milestoneSize);
+  if (milestone > ffLastRewardMilestone && score >= milestoneSize) {
+    ffLastRewardMilestone = milestone;
+    ffTriggerRewardEvent("LEVEL_COMPLETE", { level: milestone, score: score, coins: 10 });
+  }
+}
+// ---------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -209,6 +237,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const gravity = 0.245, jumpForce = -4.55;
 
         function init() {
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') { ffRewardSentForCurrentRound = false; ffLastRewardMilestone = 0; }
+
             planeY = 200; velocity = 0; score = 0; isOver = false; pipes = [];
             updateScoreUI();
         }
@@ -249,7 +279,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.fillRect(p.x, 0, 65, p.top); ctx.strokeRect(p.x, 0, 65, p.top);
                 ctx.fillRect(p.x, canvas.height - p.bottom, 65, p.bottom); ctx.strokeRect(p.x, canvas.height - p.bottom, 65, p.bottom);
 
-                if (p.x < 120 && !p.passed) { score++; p.passed = true; updateScoreUI(); }
+                if (p.x < 120 && !p.passed) { score++;
+    if (typeof ffCheckScoreMilestone !== 'undefined') ffCheckScoreMilestone(score, 10);
+ p.passed = true; updateScoreUI(); }
                 if (p.x < -70) pipes.splice(i, 1);
                 if ((120 + 20 > p.x && 120 - 10 < p.x + 65) && (planeY - 10 < p.top || planeY + 10 > canvas.height - p.bottom)) isOver = true;
             }
@@ -471,4 +503,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

@@ -31,20 +31,48 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED MILESTONE BRIDGE (BATCH 6) ---
+let ffRewardSentForCurrentRound = false;
+let ffLastRewardMilestone = 0;
+
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+
+function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
+  const numericScore = Number(scoreValue || 0);
+  const milestone = Math.floor(numericScore / milestoneSize);
+  if (milestone > ffLastRewardMilestone && numericScore >= milestoneSize) {
+    ffLastRewardMilestone = milestone;
+    ffTriggerRewardEvent("LEVEL_COMPLETE", { level: milestone, score: numericScore, coins: 10 });
+  }
+}
+// ---------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -214,6 +243,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let cards, flipped, score, isOver, lock;
         const symbols = ['🚀','👽','👾','🛸','⭐','🪐','☄️','🌕'];
         function init() {
+            if (typeof window !== "undefined") window.ffRewardSentForCurrentRound = false;
+
             score=0; isOver=false; flipped=[]; lock=false; updateScoreUI(0);
             let deck = [...symbols, ...symbols].sort(()=>Math.random()-0.5);
             cards = deck.map((s,i)=>({s, r:Math.floor(i/4), c:i%4, up:false, match:false})); draw();
@@ -228,7 +259,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(card.up || card.match) { ctx.fillStyle='#000'; ctx.font='40px sans-serif'; ctx.textAlign='center'; ctx.fillText(card.s, x+50, y+60); }
                 if(card.match) matches++;
             });
-            if(matches===16) { ctx.fillStyle='rgba(15,23,42,0.8)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#4ade80'; ctx.font='bold 40px sans-serif'; ctx.fillText('YOU WIN!', canvas.width/2, canvas.height/2); }
+            if(matches===16) { 
+                ctx.fillStyle='rgba(15,23,42,0.8)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#4ade80'; ctx.font='bold 40px sans-serif'; ctx.fillText('YOU WIN!', canvas.width/2, canvas.height/2);
+                if (!window.ffRewardSentForCurrentRound) {
+                    window.ffRewardSentForCurrentRound = true;
+                    window.dispatchEvent(new CustomEvent("FF_GAME_COMPLETE", {
+                        detail: {
+                            type: "GAME_COMPLETE",
+                            gameSlug: "memory-card-match",
+                            level: 1,
+                            score: score || 0,
+                            coins: 20
+                        }
+                    }));
+                }
+            }
         }
         canvas.addEventListener('mousedown', e => {
             if(lock) return; const rect = canvas.getBoundingClientRect(); let x = (e.clientX - rect.left)*(canvas.width/rect.width), y = (e.clientY - rect.top)*(canvas.height/rect.height);
@@ -237,9 +282,23 @@ document.addEventListener("DOMContentLoaded", () => {
             if(card && !card.up && !card.match) {
                 card.up = true; flipped.push(card); draw();
                 if(flipped.length===2) {
-                    lock=true; score+=10; updateScoreUI(score);
+                    lock=true; score+=10;
+    // (Removed intermediate milestone for puzzle game)
+ updateScoreUI(score);
                     setTimeout(() => {
-                        if(flipped[0].s === flipped[1].s) { flipped[0].match=true; flipped[1].match=true; score+=50; updateScoreUI(score); }
+                        if(flipped[0].s === flipped[1].s) { 
+                            flipped[0].match=true; flipped[1].match=true; score+=50;
+                            if (window.FFRewards && typeof window.FFRewards.triggerCorrectAnswer === 'function') {
+                                window.FFRewards.triggerCorrectAnswer({
+                                    gameSlug: "memory-card-match",
+                                    scoreDelta: 10,
+                                    xp: 2,
+                                    coins: 0,
+                                    label: "Match!"
+                                });
+                            }
+                            updateScoreUI(score); 
+                        }
                         else { flipped[0].up=false; flipped[1].up=false; }
                         flipped = []; lock=false; draw();
                     }, 800);
@@ -422,4 +481,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

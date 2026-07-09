@@ -23,20 +23,76 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED MILESTONE BRIDGE (BATCH 5) ---
+let ffRewardSentForCurrentRound = false;
+let ffLastRewardMilestone = 0;
+
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+
+function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
+  const numericScore = Number(scoreValue || 0);
+  const milestone = Math.floor(numericScore / milestoneSize);
+  if (milestone > ffLastRewardMilestone && numericScore >= milestoneSize) {
+    ffLastRewardMilestone = milestone;
+    ffTriggerRewardEvent("LEVEL_COMPLETE", { level: milestone, score: numericScore, coins: 10 });
+  }
+}
+// ---------------------------------
+
+
+// --- INJECTED REWARD BRIDGE ---
+let ffRewardSentForCurrentRound = false;
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+// ------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -226,12 +283,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     
-    let s=[{x:10,y:10}],dx=1,dy=0,f={x:15,y:15},t=0; function init(){s=[{x:10,y:10}];dx=1;dy=0;f={x:15,y:15};score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
+    let s=[{x:10,y:10}],dx=1,dy=0,f={x:15,y:15},t=0; function init(){
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') { ffRewardSentForCurrentRound = false; ffLastRewardMilestone = 0; }
+
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') ffRewardSentForCurrentRound = false;
+s=[{x:10,y:10}];dx=1;dy=0;f={x:15,y:15};score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
     window.addEventListener('keydown',e=>{if(e.key=='ArrowUp'&&dy==0){dx=0;dy=-1;}if(e.key=='ArrowDown'&&dy==0){dx=0;dy=1;}if(e.key=='ArrowLeft'&&dx==0){dx=-1;dy=0;}if(e.key=='ArrowRight'&&dx==0){dx=1;dy=0;}});
     let mx=0,my=0; canvas.addEventListener('mousedown',e=>{mx=e.clientX;my=e.clientY;}); canvas.addEventListener('mouseup',e=>{let ex=e.clientX,ey=e.clientY;if(Math.abs(ex-mx)>Math.abs(ey-my)){if(ex>mx&&dx==0){dx=1;dy=0;}else if(ex<mx&&dx==0){dx=-1;dy=0;}}else{if(ey>my&&dy==0){dx=0;dy=1;}else if(ey<my&&dy==0){dx=0;dy=-1;}}});
     function update(){t++;if(t%5!==0)return;let h={x:s[0].x+dx,y:s[0].y+dy};s.unshift(h);
-    if(h.x==f.x&&h.y==f.y){score++;if(scoreEl)scoreEl.textContent=score;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else{s.pop();}
-    if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.slice(1).some(p=>p.x==h.x&&p.y==h.y)){isGameOver=true;if(gameOverOverlay){gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}
+    if(h.x==f.x&&h.y==f.y){score++;
+    if (typeof ffCheckScoreMilestone !== 'undefined') ffCheckScoreMilestone(score, 10);
+if(scoreEl)scoreEl.textContent=score;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else{s.pop();}
+    if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.slice(1).some(p=>p.x==h.x&&p.y==h.y)){isGameOver=true;if(gameOverOverlay){
+    if (typeof ffRewardSentForCurrentRound !== 'undefined' && !ffRewardSentForCurrentRound) { ffRewardSentForCurrentRound = true; ffTriggerRewardEvent('LEVEL_COMPLETE'); }
+gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}
     function draw(){ctx.fillStyle='lime';s.forEach(p=>ctx.fillRect(p.x*20,p.y*20,18,18));ctx.fillStyle='red';ctx.fillRect(f.x*20,f.y*20,18,18);}
 
     if (!document.getElementById('startBtn')) {
@@ -425,4 +490,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

@@ -1,13 +1,11 @@
 module.exports = {
   content: [
-    './*.html',
-    './blog/**/*.html',
-    './compliance/**/*.html',
-    './games/**/*.html',
-    './*-games/**/*.html',
-    './browser-games/**/*.html',
-    './popular-games/**/*.html',
-    './js/**/*.js'
+    "./index.html",
+    "./*.html",
+    "./**/*.html",
+    "./js/**/*.js",
+    "./games/**/*.html",
+    "./games/**/*.js"
   ],
   theme: {
     extend: {

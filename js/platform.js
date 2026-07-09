@@ -2,8 +2,6 @@
 
 // State
 let pfState = {
-    coins: parseInt(localStorage.getItem('ffliveplay_coins') || '0'),
-    xp: parseInt(localStorage.getItem('ffliveplay_xp') || '0'),
     streak: parseInt(localStorage.getItem('ffliveplay_streak') || '0'),
     lastLogin: localStorage.getItem('ffliveplay_last_login') || '',
     favorites: JSON.parse(localStorage.getItem('ffliveplay_favorites') || '[]'),
@@ -13,8 +11,6 @@ let pfState = {
 };
 
 function saveState() {
-    localStorage.setItem('ffliveplay_coins', pfState.coins);
-    localStorage.setItem('ffliveplay_xp', pfState.xp);
     localStorage.setItem('ffliveplay_streak', pfState.streak);
     localStorage.setItem('ffliveplay_last_login', pfState.lastLogin);
     localStorage.setItem('ffliveplay_favorites', JSON.stringify(pfState.favorites));
@@ -97,18 +93,24 @@ function getLevelInfo() {
 }
 
 function updateHeaderUI() {
+    const coins = parseInt(localStorage.getItem('ffliveplay_coins') || '0');
+    const xp = parseInt(localStorage.getItem('ffliveplay_xp') || '0');
+    const streak = parseInt(localStorage.getItem('ffliveplay_streak') || '0');
+
     const coinEl = document.getElementById('ui-coins');
     const xpEl = document.getElementById('ui-xp-text');
     const xpBar = document.getElementById('ui-xp-bar');
     const streakEl = document.getElementById('ui-streak');
     
-    if (coinEl) coinEl.innerText = pfState.coins;
+    if (coinEl) coinEl.innerText = coins;
     
-    const { level, currentLevelXp, nextLevelXp } = getLevelInfo();
+    const level = Math.floor(xp / 100) + 1;
+    const currentLevelXp = xp % 100;
+    const nextLevelXp = 100;
     if (xpEl) xpEl.innerText = `Lvl ${level} - ${currentLevelXp}/${nextLevelXp}`;
     if (xpBar) xpBar.style.width = `${(currentLevelXp / nextLevelXp) * 100}%`;
     
-    if (streakEl) streakEl.innerText = `🔥 ${pfState.streak}`;
+    if (streakEl) streakEl.innerText = `🔥 ${streak}`;
 }
 
 // Daily Login Reward
@@ -151,7 +153,8 @@ window.claimDailyReward = function() {
     if (pfState.streak >= 3) reward = 100;
     if (pfState.streak >= 7) reward = 300;
     
-    pfState.coins += reward;
+    const currentCoins = parseInt(localStorage.getItem('ffliveplay_coins') || '0');
+    localStorage.setItem('ffliveplay_coins', currentCoins + reward);
     saveState();
     
     const modal = document.getElementById('daily-modal');
@@ -196,7 +199,8 @@ window.trackGameStart = function(slug, category) {
     if (pfState.recentlyPlayed.length > 10) pfState.recentlyPlayed.pop();
     
     // Give 5 XP for starting
-    pfState.xp += 5;
+    const currentXP = parseInt(localStorage.getItem('ffliveplay_xp') || '0');
+    localStorage.setItem('ffliveplay_xp', currentXP + 5);
     saveState();
 };
 
@@ -288,20 +292,13 @@ window.renderHomepageSections = function(container, allGames) {
     container.innerHTML = html;
 };
 
-// Listen for PostMessages from games
-window.addEventListener('message', (event) => {
-    const data = event.data;
-    if (!data || !data.type) return;
-    
-    if (data.type === 'LEVEL_COMPLETE') {
-        pfState.coins += 10;
-        pfState.xp += 15;
-        saveState();
-    } else if (data.type === 'GAME_COMPLETE') {
-        pfState.coins += 20;
-        pfState.xp += 25;
-        saveState();
-    }
+// message listener removed to prevent duplicate reward grants
+
+// Listen for sync events
+['storage', 'visibilitychange', 'pageshow', 'ffrewards:wallet-updated'].forEach(evt => {
+    window.addEventListener(evt, () => {
+        updateHeaderUI();
+    });
 });
 
 // Initialization

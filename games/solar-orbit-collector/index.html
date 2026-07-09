@@ -23,20 +23,37 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED REWARD BRIDGE ---
+let ffRewardSentForCurrentRound = false;
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+// ------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -226,12 +244,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     
-    let angle=0, p=[], s=0.05, d=1; function init(){angle=0;p=[];score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
+    let angle=0, p=[], s=0.05, d=1; function init(){
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') ffRewardSentForCurrentRound = false;
+angle=0;p=[];score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
     window.addEventListener('keydown',()=>d*=-1); canvas.addEventListener('mousedown',()=>d*=-1);
     function update(){ angle+=s*d; if(Math.random()<0.05)p.push({x:200,y:200,vx:(Math.random()-0.5)*5,vy:(Math.random()-0.5)*5});
     for(let i=p.length-1;i>=0;i--){ p[i].x+=p[i].vx; p[i].y+=p[i].vy; let px=200+Math.cos(angle)*100,py=200+Math.sin(angle)*100;
     if(Math.hypot(p[i].x-px,p[i].y-py)<20){score++;p.splice(i,1);if(scoreEl)scoreEl.textContent=score;}
-    else if(p[i].x<0||p[i].x>400||p[i].y<0||p[i].y>400){isGameOver=true;if(gameOverOverlay){gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}}
+    else if(p[i].x<0||p[i].x>400||p[i].y<0||p[i].y>400){isGameOver=true;if(gameOverOverlay){
+    if (typeof ffRewardSentForCurrentRound !== 'undefined' && !ffRewardSentForCurrentRound) { ffRewardSentForCurrentRound = true; ffTriggerRewardEvent('LEVEL_COMPLETE'); }
+gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}}
     function draw(){ctx.fillStyle='white';ctx.beginPath();ctx.arc(200,200,20,0,6.28);ctx.fill();let px=200+Math.cos(angle)*100,py=200+Math.sin(angle)*100;ctx.fillStyle='cyan';ctx.beginPath();ctx.arc(px,py,15,0,6.28);ctx.fill();ctx.fillStyle='red';p.forEach(e=>{ctx.beginPath();ctx.arc(e.x,e.y,5,0,6.28);ctx.fill();});}
 
     if (!document.getElementById('startBtn')) {
@@ -425,4 +447,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

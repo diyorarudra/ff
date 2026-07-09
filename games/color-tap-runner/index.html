@@ -31,20 +31,48 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED MILESTONE BRIDGE (BATCH 6) ---
+let ffRewardSentForCurrentRound = false;
+let ffLastRewardMilestone = 0;
+
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+
+function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
+  const numericScore = Number(scoreValue || 0);
+  const milestone = Math.floor(numericScore / milestoneSize);
+  if (milestone > ffLastRewardMilestone && numericScore >= milestoneSize) {
+    ffLastRewardMilestone = milestone;
+    ffTriggerRewardEvent("LEVEL_COMPLETE", { level: milestone, score: numericScore, coins: 10 });
+  }
+}
+// ---------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -212,7 +241,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
         let pos, score, isOver, colors, blocks, pColor;
-        function init() { colors=['#ef4444','#3b82f6','#22c55e']; pos=0; score=0; isOver=false; blocks=[]; pColor=0; updateScoreUI(0); for(let i=0;i<10;i++) spawnBlock(i); blocks[0].c = 0; blocks[1].c = 0; loop(); }
+        function init() {
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') { ffRewardSentForCurrentRound = false; ffLastRewardMilestone = 0; }
+ colors=['#ef4444','#3b82f6','#22c55e']; pos=0; score=0; isOver=false; blocks=[]; pColor=0; updateScoreUI(0); for(let i=0;i<10;i++) spawnBlock(i); blocks[0].c = 0; blocks[1].c = 0; loop(); }
         function spawnBlock(idx) { blocks.push({x: idx*300, c: Math.floor(Math.random()*3)}); }
         function loop() {
             if(isOver){ ctx.fillStyle='rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#ef4444'; ctx.font='bold 36px sans-serif'; ctx.textAlign='center'; ctx.fillText('MISMATCH', canvas.width/2, canvas.height/2); return; }
@@ -224,7 +255,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 let b = blocks[i]; ctx.fillStyle = colors[b.c]; ctx.fillRect(b.x - pos, canvas.height/2, 100, 50);
                 if(b.x - pos < 50 && b.x - pos > -50) {
                     if(b.c !== pColor) isOver = true;
-                    if(b.x - pos < -40 && !b.scored) { b.scored = true; score+=5; updateScoreUI(score); }
+                    if(b.x - pos < -40 && !b.scored) { b.scored = true; score+=5;
+    if (typeof ffCheckScoreMilestone !== 'undefined') ffCheckScoreMilestone(score, 50);
+ updateScoreUI(score); }
                 }
             }
             if(blocks[0].x - pos < -100) { blocks.shift(); spawnBlock(blocks[blocks.length-1].x/300 + 1); }
@@ -416,4 +449,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

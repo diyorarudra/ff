@@ -23,20 +23,37 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED REWARD BRIDGE ---
+let ffRewardSentForCurrentRound = false;
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+// ------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -226,12 +244,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     
-    let py=200,vy=0,p=[{x:200,y:380}],px=200; function init(){py=200;vy=0;p=[{x:200,y:380},{x:200,y:200},{x:200,y:50}];score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
+    let py=200,vy=0,p=[{x:200,y:380}],px=200; function init(){
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') ffRewardSentForCurrentRound = false;
+py=200;vy=0;p=[{x:200,y:380},{x:200,y:200},{x:200,y:50}];score=0;isGameOver=false;requestAnimationFrame(gameLoop);}
     canvas.addEventListener('mousemove',e=>{px=e.clientX-canvas.getBoundingClientRect().left;});
     function update(){py+=vy;vy+=0.4;if(py<200){p.forEach(o=>o.y-=vy);py=200;score++;if(scoreEl)scoreEl.textContent=Math.floor(score/10);}
     p.forEach(o=>{if(vy>0&&Math.abs(o.x-px)<40&&Math.abs(o.y-py)<15)vy=-10;});
     if(p[0].y>400)p.shift();if(p[p.length-1].y>100)p.push({x:Math.random()*320+40,y:p[p.length-1].y-150});
-    if(py>400){isGameOver=true;if(gameOverOverlay){gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}
+    if(py>400){isGameOver=true;if(gameOverOverlay){
+    if (typeof ffRewardSentForCurrentRound !== 'undefined' && !ffRewardSentForCurrentRound) { ffRewardSentForCurrentRound = true; ffTriggerRewardEvent('LEVEL_COMPLETE'); }
+gameOverOverlay.style.opacity='1';gameOverOverlay.style.pointerEvents='auto';}}}
     function draw(){ctx.fillStyle='yellow';ctx.fillRect(px-10,py-10,20,20);ctx.fillStyle='green';p.forEach(o=>ctx.fillRect(o.x-40,o.y,80,10));}
 
     if (!document.getElementById('startBtn')) {
@@ -425,4 +447,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

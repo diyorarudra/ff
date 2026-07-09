@@ -31,20 +31,48 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED MILESTONE BRIDGE (BATCH 6) ---
+let ffRewardSentForCurrentRound = false;
+let ffLastRewardMilestone = 0;
+
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+
+function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
+  const numericScore = Number(scoreValue || 0);
+  const milestone = Math.floor(numericScore / milestoneSize);
+  if (milestone > ffLastRewardMilestone && numericScore >= milestoneSize) {
+    ffLastRewardMilestone = milestone;
+    ffTriggerRewardEvent("LEVEL_COMPLETE", { level: milestone, score: numericScore, coins: 10 });
+  }
+}
+// ---------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -213,6 +242,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let px, py, score, isOver, maze, sz;
         function init() {
+    if (typeof ffRewardSentForCurrentRound !== 'undefined') { ffRewardSentForCurrentRound = false; ffLastRewardMilestone = 0; }
+
             score=0; isOver=false; sz = canvas.height/10; updateScoreUI(0);
             maze = [
                 [1,1,1,1,1,1,1,1,1,1], [1,0,0,0,1,0,0,0,2,1], [1,0,1,0,1,0,1,1,0,1],
@@ -234,7 +265,9 @@ document.addEventListener("DOMContentLoaded", () => {
         window.addEventListener('keydown', e => {
             if(isOver) return; let nx=px, ny=py;
             if(e.key==='ArrowUp') ny--; if(e.key==='ArrowDown') ny++; if(e.key==='ArrowLeft') nx--; if(e.key==='ArrowRight') nx++;
-            if(maze[ny][nx]!==1) { px=nx; py=ny; score++; updateScoreUI(score); if(maze[ny][nx]===2) isOver=true; draw(); }
+            if(maze[ny][nx]!==1) { px=nx; py=ny; score++;
+    if (typeof ffCheckScoreMilestone !== 'undefined') ffCheckScoreMilestone(score, 5);
+ updateScoreUI(score); if(maze[ny][nx]===2) isOver=true; draw(); }
         });
         let tsX = 0, tsY = 0;
         canvas.addEventListener('touchstart', e => {
@@ -248,7 +281,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if(Math.abs(dx) > Math.abs(dy)) { if(dx > 0) nx++; else nx--; } 
             else { if(dy > 0) ny++; else ny--; }
             if(isOver) return;
-            if(maze[ny][nx]!==1) { px=nx; py=ny; score++; updateScoreUI(score); if(maze[ny][nx]===2) isOver=true; draw(); }
+            if(maze[ny][nx]!==1) { px=nx; py=ny; score++;
+    if (typeof ffCheckScoreMilestone !== 'undefined') ffCheckScoreMilestone(score, 5);
+ updateScoreUI(score); if(maze[ny][nx]===2) isOver=true; draw(); }
             e.preventDefault();
         }, {passive: false});
         restartBtn.addEventListener('click', init); init();
@@ -427,4 +462,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>

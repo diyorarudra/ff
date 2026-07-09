@@ -38,6 +38,7 @@ function postMsg(type, extra = {}) {
 }
 
 function initGame() {
+    hasRevived = false;
     questions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
     currentQIdx = 0;
     score = 0;
@@ -122,7 +123,9 @@ document.getElementById('btn-next').addEventListener('click', () => {
         endGame();
     } else {
         postMsg("LEVEL_COMPLETE", { score, coins: 10 });
-        loadQuestion();
+                showLevelCompleteModal(() => {
+                    loadQuestion();
+                });
     }
 });
 
@@ -134,3 +137,54 @@ function endGame() {
 
 document.getElementById('btn-start').addEventListener('click', initGame);
 document.getElementById('btn-restart').addEventListener('click', initGame);
+
+function showLevelCompleteModal(onNext) {
+    let modal = document.getElementById('ff-internal-level-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'ff-internal-level-modal';
+        modal.innerHTML = '<div style="background:rgba(15,23,42,0.95);padding:40px;border-radius:24px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.8);border:2px solid #fbbf24;min-width:300px;"><h2 style="color:#fbbf24;font-size:32px;margin:0 0 20px 0;font-family:system-ui,sans-serif;font-weight:900;">Level Complete!</h2><button id="ff-internal-next-btn" style="background:linear-gradient(135deg, #fbbf24, #f59e0b);color:#000;border:none;padding:16px 32px;font-size:20px;font-weight:900;border-radius:30px;cursor:pointer;box-shadow:0 4px 15px rgba(245,158,11,0.4);transition:transform 0.2s;">Next Level ➔</button></div>';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);';
+        document.body.appendChild(modal);
+        
+        const btn = document.getElementById('ff-internal-next-btn');
+        btn.onmouseover = () => btn.style.transform = 'scale(1.05)';
+        btn.onmouseout = () => btn.style.transform = 'scale(1)';
+    }
+    modal.style.display = 'flex';
+    document.getElementById('ff-internal-next-btn').onclick = () => {
+        modal.style.display = 'none';
+        if (onNext) onNext();
+    };
+}
+
+
+let hasRevived = false;
+function endMatch(completed) {
+    if (!completed && window.FFRewards && !hasRevived) {
+        window.FFRewards.showSpendConfirm({
+            title: "Revive?",
+            message: "Use 30 coins or a Revive Token to continue?",
+            cost: 30,
+            itemId: "revive_token",
+            onConfirm: (success) => {
+                if (success) {
+                    hasRevived = true;
+                    lives = 3;
+                    updateUI();
+                    loadQuestion();
+                } else {
+                    ffOriginalEndMatch(completed);
+                }
+            }
+        });
+        setTimeout(() => {
+            document.getElementById('ff-confirm-btn-cancel').onclick = () => {
+                document.getElementById('ff-confirm-modal').classList.add('hidden');
+                ffOriginalEndMatch(completed);
+            };
+        }, 100);
+        return;
+    }
+    ffOriginalEndMatch(completed);
+}

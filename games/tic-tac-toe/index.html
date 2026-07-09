@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -228,6 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   
+  <script defer src="/js/game-rewards.js"></script>
 
   <script>
     const cells = document.querySelectorAll('.cell');
@@ -253,6 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
       board = ['', '', '', '', '', '', '', '', ''];
       gameActive = true;
       currentPlayer = 'X';
+      if (typeof window !== "undefined") window.ffRewardSentForCurrentRound = false;
       
       cells.forEach(cell => {
         cell.textContent = '';
@@ -363,6 +366,19 @@ document.addEventListener("DOMContentLoaded", () => {
           scoreP1El.textContent = scoreP1;
           statusText.textContent = "You Win!";
           statusText.className = "text-5xl font-bold mb-6 font-heading text-cyan-400 drop-shadow-md";
+          
+          if (!window.ffRewardSentForCurrentRound) {
+            window.ffRewardSentForCurrentRound = true;
+            window.dispatchEvent(new CustomEvent("FF_GAME_COMPLETE", {
+              detail: {
+                type: "GAME_COMPLETE",
+                gameSlug: "tic-tac-toe",
+                level: 1,
+                score: 1,
+                coins: 20
+              }
+            }));
+          }
         } else {
           scoreP2++;
           scoreP2El.textContent = scoreP2;

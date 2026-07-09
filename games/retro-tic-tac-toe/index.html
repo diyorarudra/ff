@@ -31,20 +31,48 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/css/tailwind.css">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            body: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Outfit', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
-          }
-        }
-      }
+
+// --- INJECTED MILESTONE BRIDGE (BATCH 6) ---
+let ffRewardSentForCurrentRound = false;
+let ffLastRewardMilestone = 0;
+
+function ffTriggerRewardEvent(type, payload = {}) {
+  try {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const slugIndex = parts.indexOf("games") + 1;
+    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
+    const detail = {
+      type,
+      gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
+      level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
+      score: payload.score || window.score || 0,
+      coins: type === "GAME_COMPLETE" ? 20 : 10
+    };
+    window.dispatchEvent(new CustomEvent(
+      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
+      { detail }
+    ));
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(detail, "*");
+    }
+  } catch (e) {
+    console.warn("FF reward event failed safely", e);
+  }
+}
+
+function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
+  const numericScore = Number(scoreValue || 0);
+  const milestone = Math.floor(numericScore / milestoneSize);
+  if (milestone > ffLastRewardMilestone && numericScore >= milestoneSize) {
+    ffLastRewardMilestone = milestone;
+    ffTriggerRewardEvent("LEVEL_COMPLETE", { level: milestone, score: numericScore, coins: 10 });
+  }
+}
+// ---------------------------------
+
+    
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/css/game-rewards.css">
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -212,7 +241,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
         let board, isOver, msg, score;
-        function init() { board=['','','','','','','','','']; isOver=false; msg="Your Turn (X)"; score=0; updateScoreUI(score); draw(); }
+        function init() {
+            if (typeof window !== "undefined") window.ffRewardSentForCurrentRound = false;
+ board=['','','','','','','','','']; isOver=false; msg="Your Turn (X)"; score=0; updateScoreUI(score); draw(); }
         function draw() {
             ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 4; ctx.shadowBlur=10; ctx.shadowColor='#38bdf8';
@@ -247,7 +278,27 @@ document.addEventListener("DOMContentLoaded", () => {
             let c = Math.floor((x - (canvas.width/2 - 150))/100), r = Math.floor((y - 100)/100);
             if(r>=0&&r<3&&c>=0&&c<3 && !board[r*3+c]) {
                 board[r*3+c] = 'X'; let w = checkWin();
-                if(w) { isOver=true; msg=w==='Draw'?"It's a Draw!":w+" Wins!"; if(w==='X')score+=50; updateScoreUI(score); draw(); }
+                if(w) { 
+                    isOver=true; 
+                    msg=w==='Draw'?"It's a Draw!":w+" Wins!"; 
+                    if(w==='X') {
+                        score+=50;
+                        if (!window.ffRewardSentForCurrentRound) {
+                            window.ffRewardSentForCurrentRound = true;
+                            window.dispatchEvent(new CustomEvent("FF_GAME_COMPLETE", {
+                                detail: {
+                                    type: "GAME_COMPLETE",
+                                    gameSlug: "retro-tic-tac-toe",
+                                    level: 1,
+                                    score: 1,
+                                    coins: 20
+                                }
+                            }));
+                        }
+                    }
+                    updateScoreUI(score); 
+                    draw(); 
+                }
                 else { msg="AI Thinking..."; draw(); setTimeout(aiTurn, 600); }
             }
         });
@@ -427,4 +478,6 @@ window.addEventListener('load', () => {
     <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
   </p>
 </section>
+
+  <script defer src="/js/game-rewards.js"></script>
 </html>
