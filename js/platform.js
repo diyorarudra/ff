@@ -301,6 +301,27 @@ window.renderHomepageSections = function(container, allGames) {
     });
 });
 
+// Hamburger menu logic for all pages
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('#hamburger');
+    const menu = document.getElementById('mobile-menu');
+    
+    // If clicked on hamburger
+    if (btn && menu) {
+        menu.classList.toggle('open');
+        btn.classList.toggle('active');
+        return;
+    }
+    
+    // If clicked on a link inside mobile menu
+    const link = e.target.closest('#mobile-menu a');
+    if (link && menu) {
+        const hBtn = document.getElementById('hamburger');
+        menu.classList.remove('open');
+        if (hBtn) hBtn.classList.remove('active');
+    }
+});
+
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
     const langSelect = document.getElementById('lang-select');

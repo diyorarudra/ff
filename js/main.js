@@ -226,18 +226,7 @@ function initNavbar() {
     if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
   }, { passive: true });
 
-  if (btn && menu) {
-    btn.addEventListener('click', () => {
-      menu.classList.toggle('open');
-      btn.classList.toggle('active');
-    });
-
-    menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        menu.classList.remove('open');
-        btn.classList.remove('active');
-      });
-    });
+    // Hamburger menu logic moved to platform.js for global access
   }
 }
 
