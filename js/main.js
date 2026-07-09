@@ -227,7 +227,6 @@ function initNavbar() {
   }, { passive: true });
 
     // Hamburger menu logic moved to platform.js for global access
-  }
 }
 
 /* ================= CAROUSEL ================= */
