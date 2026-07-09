@@ -1,0 +1,159 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --success: #10b981;
+    --success-hover: #059669;
+    --warning: #f59e0b;
+    --warning-hover: #d97706;
+    --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+.new-game-wrapper {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.screen.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.game-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: #818cf8;
+}
+
+.instructions {
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.btn {
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    max-width: 250px;
+}
+
+.btn:active { transform: scale(0.95); }
+
+.btn.primary { background-color: var(--primary); }
+.btn.primary:hover { background-color: var(--primary-hover); }
+
+.btn.success { background-color: var(--success); }
+.btn.success:hover { background-color: var(--success-hover); }
+
+.btn.warning { background-color: var(--warning); color: #fff; }
+.btn.warning:hover { background-color: var(--warning-hover); }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #334155;
+    font-weight: 600;
+}
+
+.puzzle-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.scrambled-text {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 20px 0;
+}
+
+.word-input {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    border-radius: 8px;
+    border: 2px solid #475569;
+    background: #0f172a;
+    color: white;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.word-input:focus {
+    border-color: var(--primary);
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.controls .btn { width: auto; flex: 1; }
+
+.feedback-text {
+    font-weight: 700;
+    font-size: 1.2rem;
+    height: 24px;
+}
+.feedback-text.success { color: var(--success); }
+.feedback-text.error { color: var(--danger); }
+
+.hint-text {
+    color: var(--warning);
+    font-size: 0.9rem;
+    font-weight: 600;
+    height: 20px;
+}
+.hidden { visibility: hidden; }

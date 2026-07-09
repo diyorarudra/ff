@@ -1,0 +1,109 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #f59e0b;
+    --primary-hover: #d97706;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; touch-action: manipulation; user-select: none; }
+
+.new-game-wrapper {
+    background-color: var(--bg-color); color: var(--text-main);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow: hidden;
+}
+
+#game-container {
+    width: 100%; max-width: 500px; background-color: var(--card-bg);
+    border-radius: 16px; padding: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    min-height: 600px;
+    display: flex; flex-direction: column;
+}
+
+.screen { display: none; flex-direction: column; align-items: center; text-align: center; animation: fadeIn 0.3s; flex: 1; justify-content: center; }
+.screen.active { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.game-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 16px; color: #fcd34d; }
+.instructions { color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; padding: 0 20px; font-size: 1.1rem; }
+.final-score { font-size: 1.5rem; font-weight: 700; color: #fcd34d; margin-bottom: 24px; }
+
+.btn {
+    border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1rem; font-weight: 700;
+    color: white; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 250px;
+}
+.btn:active { transform: scale(0.95); }
+.btn.primary { background-color: var(--primary); }
+.btn.primary:hover { background-color: var(--primary-hover); }
+
+.header { display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px; padding-bottom: 12px; border-bottom: 1px solid #334155; font-weight: 700; font-size: 1.2rem; color: #fcd34d; }
+
+.actions-area { display: flex; justify-content: space-between; width: 100%; margin-bottom: 20px; }
+.btn-sm {
+    background: #334155; border: none; color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;
+}
+.btn-sm:active { background: #475569; }
+.btn-sm.danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+.btn-sm.danger:active { background: rgba(239, 68, 68, 0.4); }
+.btn-sm:disabled { opacity: 0.5; pointer-events: none; }
+
+.game-area { width: 100%; flex: 1; display: flex; justify-content: center; align-items: center; }
+
+#tubes-container {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%;
+}
+
+.tube {
+    width: 48px; height: 180px;
+    border: 3px solid #94a3b8; border-top: none;
+    border-radius: 0 0 24px 24px;
+    background: rgba(255,255,255,0.02);
+    display: flex; flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 3px 0; gap: 2px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+}
+
+.tube.selected {
+    transform: translateY(-15px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
+    border-color: #fcd34d;
+}
+/* Visual indicator for selected tube's top ball */
+.tube.selected .ball:last-child {
+    transform: translateY(-20px);
+    box-shadow: 0 0 10px rgba(255,255,255,0.8);
+}
+
+.ball {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* 3D sphere effect */
+    background: radial-gradient(circle at 12px 12px, var(--ball-color), #000);
+}
+
+.color-1 { --ball-color: #ef4444; } /* Red */
+.color-2 { --ball-color: #3b82f6; } /* Blue */
+.color-3 { --ball-color: #10b981; } /* Green */
+.color-4 { --ball-color: #f59e0b; } /* Yellow */
+.color-5 { --ball-color: #8b5cf6; } /* Purple */
+.color-6 { --ball-color: #06b6d4; } /* Cyan */
+.color-7 { --ball-color: #f97316; } /* Orange */
+
+.msg-overlay {
+    position: absolute; top: 40%; left: 0; width: 100%; text-align: center;
+    font-size: 2.5rem; font-weight: 900; color: #fcd34d; text-shadow: 0 0 15px #000;
+    z-index: 50; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.msg-overlay.hidden { display: none; }
+@keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }

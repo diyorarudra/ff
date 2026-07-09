@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+        <title>Word Connect - Play Free Online Game | FF Live Play</title>
+  <meta name="description" content="Play Word Connect online for free instantly on FF Live Play. Experience high-performance, no-download Word Connect browser gameplay directly in your viewport.">
+  <meta name="keywords" content="Word Connect, ffliveplay, online game, browser game, free h5 games, instant arcade">
+  <meta property="og:title" content="Word Connect - Play Free Online Game | FF Live Play">
+  <meta property="og:description" content="Play Word Connect online for free instantly on FF Live Play. Experience high-performance, no-download Word Connect browser gameplay directly in your viewport.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Word Connect - Play Free Online Game | FF Live Play">
+  <meta name="twitter:description" content="Play Word Connect online for free instantly on FF Live Play. Experience high-performance, no-download Word Connect browser gameplay directly in your viewport.">
+  <meta name="twitter:image" content="https://www.ffliveplay.com/assets/thumbnails/tic-tac-toe.png">
+  <meta property="og:image" content="https://www.ffliveplay.com/assets/thumbnails/tic-tac-toe.png">
+
+  <meta charset="UTF-8">
+  <link rel="canonical" href="https://www.ffliveplay.com/games/tic-tac-toe/" />
+  <meta name="robots" content="index, follow">
+  
+  
+  
+  
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+
+                // Injected Progressive Difficulty Modifiers
+                let baseSpeedMultiplier = 0.70; // 30% reduction benchmark
+                function getDynamicVelocity(baseSpeed) {
+                    return baseSpeed * baseSpeedMultiplier * (1 + Math.log1p(score || 0) * 0.15);
+                }
+            
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            nexus: { dark: '#06060e', card: '#111125', elevated: '#1a1a2e' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Word Connect","description":"Play Word Connect online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup.","url":"https://www.ffliveplay.com/games/tic-tac-toe/","image":"https://www.ffliveplay.com/assets/thumbnails/game23.jpg","genre":"arcade","applicationCategory":"Game","operatingSystem":"Web browser","playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com"}}</script>
+  <style>
+    body { overscroll-behavior-y: none; user-select: none; }
+    .cell {
+      transition: background-color 0.2s, transform 0.1s;
+      cursor: pointer;
+    }
+    .cell:hover { background-color: #1a1a2e; }
+    .cell:active { transform: scale(0.95); }
+    
+    .mark-x { color: #22d3ee; text-shadow: 0 0 15px rgba(34,211,238,0.5); }
+    .mark-o { color: #f43f5e; text-shadow: 0 0 15px rgba(244,63,94,0.5); }
+    .win-cell { background-color: rgba(34,211,238,0.1) !important; }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const adObserver = new MutationObserver(() => {});
+    setTimeout(() => {
+        document.querySelectorAll('.ad-slot, .adsense-side-rail').forEach(slot => {
+            const ins = slot.querySelector('ins.adsbygoogle');
+            if (ins && ins.innerHTML.trim() === '') {
+                slot.style.setProperty('display', 'none', 'important');
+                slot.style.height = '0';
+                slot.style.minHeight = '0';
+            }
+        });
+    }, 2500);
+});
+</script>
+
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="/games/word-connect/style.css">
+</head>
+<body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
+
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+
+  <nav class="navbar px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <a href="/index.html" class="flex items-center gap-2 font-bold font-heading text-gray-900">
+      <svg class="w-8 h-8 text-[#7361F2]" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1" fill="#fff"></circle><circle cx="14" cy="12" r="1" fill="#fff"></circle><path d="M6 12h4m-2-2v4" stroke="#fff" stroke-width="2"></path></svg>
+      <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">ffliveplay</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 font-semibold text-[#111]">
+      <a href="/index.html" class="hover:text-[#7361F2] transition-colors">Home</a>
+      <a href="/compliance/about-us.html" class="hover:text-[#7361F2] transition-colors">About Us</a>
+      <a href="#" class="hover:text-[#7361F2] transition-colors">Contact Us</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <button id="audioToggleBtn" style="width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200; flex-shrink: 0;" title="Toggle Audio">🔊</button>
+      <div class="relative hidden md:block">
+        <input type="text" placeholder="Search games..." class="border border-gray-200 rounded-full py-1.5 pl-9 pr-4 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 w-48 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <!-- Hamburger -->
+      <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu">
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+        <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300 w-full bg-white absolute top-full left-0 shadow-md">
+    <div class="flex flex-col gap-4 pt-4 pb-4 px-4 border-t border-gray-100">
+      <div class="relative w-full">
+        <input type="text" placeholder="Search games..." class="w-full border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 transition-all">
+        <svg class="w-4 h-4 text-gray-400 absolute left-4 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <a href="/index.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">Home</a>
+      <a href="/compliance/about-us.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">About Us</a>
+      <a href="/compliance/contact.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2">Contact Us</a>
+    </div>
+  </div>
+</nav>
+
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+
+  <div class="adsense-side-rail left-rail hidden lg:flex bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-right: 1rem; position: sticky; top: 100px;">
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="3333333333"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+<div class="game-container flex-1 w-full max-w-[500px] mx-auto px-4 py-6 flex flex-col items-center lg:max-w-[800px]">
+    <h1 class="text-3xl md:text-4xl font-extrabold font-heading text-white text-center mb-4">Play Word Connect Online</h1>
+
+<div class="new-game-wrapper" style="width:100%; display:flex; justify-content:center; align-items:center; flex:1; min-height: 600px; padding: 20px 0;">
+<div id="game-container">
+        <!-- Start Screen -->
+        <div id="screen-start" class="screen active">
+            <h1 class="game-title">Word Connect</h1>
+            <p class="instructions">Connect letters to form hidden words! Complete all 5 levels to win.</p>
+            <button id="btn-start" class="btn primary">Start Game</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="screen-game" class="screen">
+            <div class="header">
+                <div class="stat">Level: <span id="val-level">1</span>/5</div>
+                <div class="stat">Score: <span id="val-score">0</span></div>
+            </div>
+            
+            <div class="board-area">
+                <div class="progress-info">Found <span id="val-found">0</span> / <span id="val-total">0</span> words</div>
+                
+                <div id="word-slots" class="word-slots"></div>
+                
+                <div class="input-area">
+                    <div id="current-input" class="current-input"></div>
+                    <div class="action-row">
+                        <button id="btn-clear" class="btn warning small">Clear</button>
+                        <button id="btn-submit" class="btn success small">Submit</button>
+                    </div>
+                </div>
+
+                <div id="letters-wheel" class="letters-wheel"></div>
+                
+                <div class="controls">
+                    <button id="btn-shuffle" class="btn action">Shuffle 🔀</button>
+                    <button id="btn-hint" class="btn action">Hint 💡</button>
+                </div>
+                
+                <div id="feedback" class="feedback-text"></div>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="screen-end" class="screen">
+            <h1 id="end-title" class="game-title">You Win!</h1>
+            <p class="final-score">Final Score: <span id="val-final-score">0</span></p>
+            <button id="btn-restart" class="btn primary">Play Again</button>
+        </div>
+    </div>
+</div>
+
+<div class="w-full mb-8 mt-4">
+    <div class="ad-slot ad-slot-in-article bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+  </div>
+  </div>
+</div>
+
+    <div class="adsense-side-rail hidden lg:flex bg-white drop-shadow-sm text-gray-800 border border-gray-200 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.warn('AdSense payload dropped securely:', e); }</script>
+</div>
+</div>
+
+
+
+  
+
+  
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
+
+<script>
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.classList.add('fade-out');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 500);
+  }
+});
+</script>
+
+
+<section class="max-w-4xl mx-auto px-4 pb-10 text-white game-seo-content">
+  <h2 class="text-2xl font-bold font-heading mb-3">About Word Connect</h2>
+  <p class="leading-relaxed mb-5">Play Word Connect online on FFLivePlay and enjoy a fast arcade browser game made for quick sessions. Play Word Connect online for free on FFLivePlay. Enjoy this arcade browser game instantly with no download or signup. The game opens directly in your browser, so you can start without a download, install, or account. It is a good choice when you want a simple challenge that works on desktop and many mobile screens. The goal is easy to understand, but better scores come from practice, timing, and learning how the game reacts. Take a moment to watch the first round, then adjust your moves and try again. Because the game is lightweight, restarts are quick and you can play whenever you have a short break. If you enjoy this style of game, use the related games below to find more free browser games with similar pacing, controls, or arcade energy. You can keep it casual or chase a stronger score over repeated rounds.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">How to Play</h2>
+  <p class="leading-relaxed mb-5">Start the game, follow the on-screen goal, and keep playing until you beat your previous score. Watch the movement carefully, react early, and use the restart button whenever you want a fresh attempt.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">Controls</h2>
+  <p class="leading-relaxed mb-5">Use your keyboard, mouse, swipe, or tap controls depending on the game screen. Most FFLivePlay games show their main control hint near the play area.</p>
+  <h2 class="text-2xl font-bold font-heading mb-3">Related Games</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <a href="/games/retro-snake/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#22c55e15"><div class="text-7xl opacity-90 drop-shadow-md select-none">🐍</div></div><span class="block p-3 font-bold text-gray-800">Retro Snake</span></a>
+    <a href="/games/pac-chase/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#facc1515"><div class="text-7xl opacity-90 drop-shadow-md select-none">👻</div></div><span class="block p-3 font-bold text-gray-800">Pac Chase</span></a>
+    <a href="/games/pong/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#47556915"><div class="text-7xl opacity-90 drop-shadow-md select-none">🏓</div></div><span class="block p-3 font-bold text-gray-800">Pong</span></a>
+    <a href="/games/block-stacker/index.html" class="bg-white rounded-xl overflow-hidden text-center shadow-sm"><div class="w-full h-28 relative overflow-hidden flex items-center justify-center transition-transform duration-500 hover:scale-110" style="background:#06b6d415"><div class="text-7xl opacity-90 drop-shadow-md select-none">🟦</div></div><span class="block p-3 font-bold text-gray-800">Block Stacker</span></a>
+  </div>
+  <h2 class="text-2xl font-bold font-heading mb-3 mt-6">More Game Categories</h2>
+  <p class="flex flex-wrap gap-x-4 gap-y-2 font-semibold mb-5">
+    <a href="/action-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Play Action Games</a>
+    <a href="/car-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Play Car Games</a>
+    <a href="/puzzle-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">Try Puzzle Games</a>
+    <a href="/new-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">New Free Online Games</a>
+    <a href="/no-download-games/" class="text-white hover:text-white underline decoration-white/40 hover:decoration-white">No Download Browser Games</a>
+  </p>
+</section>
+  <script src="/games/word-connect/script.js"></script>
+
+<script>
+// --- NATIVE WEB AUDIO ENGINE ---
+let audioCtx = null;
+let isMuted = false;
+
+function initAudioEngine() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playClickSound() {
+    if (isMuted || !audioCtx) return;
+    let clickOsc = audioCtx.createOscillator();
+    let clickGain = audioCtx.createGain();
+    
+    clickOsc.type = 'sine';
+    clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    clickOsc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+    
+    clickGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+    
+    clickOsc.connect(clickGain);
+    clickGain.connect(audioCtx.destination);
+    
+    clickOsc.start();
+    clickOsc.stop(audioCtx.currentTime + 0.1);
+}
+
+const audioBtn = document.getElementById('audioToggleBtn');
+if(audioBtn) {
+    const toggleAudio = (e) => {
+        if(e) { e.preventDefault(); e.stopPropagation(); }
+        if(!audioCtx) initAudioEngine();
+        if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        isMuted = !isMuted;
+        audioBtn.textContent = isMuted ? '🔇' : '🔊';
+    };
+    audioBtn.addEventListener('click', toggleAudio);
+}
+
+document.addEventListener('mousedown', (e) => {
+    if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
+    if(e.target.tagName === 'CANVAS' || e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.btn') || e.target.closest('.key') || e.target.closest('.tube') || e.target.closest('.option-btn') || e.target.closest('.color-btn')) playClickSound();
+});
+document.addEventListener('keydown', (e) => {
+    if(!audioCtx) initAudioEngine();
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Enter'].includes(e.code)) playClickSound();
+});
+</script>
+</body>
+</html>

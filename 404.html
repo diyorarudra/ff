@@ -7,6 +7,12 @@
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
+    (function () {
+      var p = window.location.pathname;
+      if ((p === "/play" || p === "/play/") && !window.location.href.includes("/play.html")) {
+        window.location.replace("/play.html" + window.location.search);
+      }
+    })();
     tailwind.config = {
       theme: {
         extend: {

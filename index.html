@@ -52,6 +52,7 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/platform.css">
 
   <!-- Schema.org -->
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"FFLivePlay","alternateName":"FF Live Play","url":"https://www.ffliveplay.com/","description":"Play free online games instantly on FF Live Play. Enjoy action, racing, puzzle and shooting games with no download or signup.","potentialAction":{"@type":"SearchAction","target":"https://www.ffliveplay.com/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
@@ -77,11 +78,24 @@
       <a href="/compliance/about-us.html" class="hover:text-[#7361F2] transition-colors">About Us</a>
       <a href="/compliance/contact.html" class="hover:text-[#7361F2] transition-colors">Contact Us</a>
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2 md:gap-4">
+      <!-- Economy UI -->
+      <div class="header-economy hidden lg:flex">
+        <div class="economy-pill text-[#f59e0b] bg-amber-50">
+           <span class="icon">🪙</span> <span id="ui-coins">0</span>
+        </div>
+        <div class="economy-pill text-blue-600 bg-blue-50">
+           <span id="ui-streak">🔥 0</span>
+        </div>
+        <div class="economy-pill">
+           <span class="text-xs font-bold" id="ui-xp-text">Lvl 1 - 0/100</span>
+           <div class="level-progress-wrap"><div class="level-progress-bar" id="ui-xp-bar" style="width:0%"></div></div>
+        </div>
+      </div>
       <div class="relative hidden md:block">
         <input type="text" placeholder="Search games..." class="border border-gray-200 rounded-full py-1.5 pl-9 pr-4 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 w-48 transition-all">
-        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
+        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
       <!-- Hamburger -->
       <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Toggle menu">
         <span class="w-6 h-0.5 bg-gray-900 rounded transition-all"></span>
@@ -96,7 +110,7 @@
     <div class="flex flex-col gap-4 pt-4 pb-4 px-4 border-t border-gray-100">
       <div class="relative w-full">
         <input type="text" placeholder="Search games..." class="w-full border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7361F2] text-gray-800 transition-all">
-        <svg class="w-4 h-4 text-gray-400 absolute left-4 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <svg class="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </div>
       <a href="/index.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">Home</a>
       <a href="/compliance/about-us.html" class="text-gray-800 hover:text-[#7361F2] font-semibold py-2 border-b border-gray-50">About Us</a>
@@ -135,8 +149,8 @@
       
 
       <!-- Game Grid -->
-      <div id="game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-        <!-- JS populates game cards -->
+      <div id="game-grid">
+        <!-- JS populates game cards or sections -->
       </div>
     </section>
 
@@ -318,6 +332,7 @@
   </footer>
 
   <!-- Scripts -->
+  <script src="js/platform.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

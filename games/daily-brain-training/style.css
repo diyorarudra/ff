@@ -1,0 +1,68 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
+.new-game-wrapper {
+    background-color: var(--bg-color); color: var(--text-main);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow: hidden;
+}
+
+#game-container {
+    width: 100%; max-width: 500px; background-color: var(--card-bg);
+    border-radius: 16px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+}
+
+.screen { display: none; flex-direction: column; align-items: center; text-align: center; animation: fadeIn 0.3s; }
+.screen.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.game-title { font-size: 2rem; font-weight: 800; margin-bottom: 16px; color: #c4b5fd; }
+.instructions { color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; }
+.rating-text { font-size: 1.5rem; font-weight: 700; color: #fcd34d; margin-bottom: 24px; }
+
+.btn {
+    border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; font-weight: 700;
+    color: white; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 250px;
+}
+.btn:active { transform: scale(0.95); }
+.btn.primary { background-color: var(--primary); }
+.btn.primary:hover { background-color: var(--primary-hover); }
+
+.header { display: flex; justify-content: space-between; width: 100%; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #334155; font-weight: 600; }
+.puzzle-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; min-height: 250px; justify-content: center; }
+
+.task-title { font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 16px; height: 30px; }
+.task-container { width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+
+.feedback-text { font-weight: 700; font-size: 1.2rem; height: 24px; margin-top: 16px; }
+.feedback-text.success { color: var(--success); }
+.feedback-text.error { color: var(--danger); }
+
+/* Math */
+.math-eq { font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; letter-spacing: 2px; }
+.math-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.opt-btn { background: #334155; color: #fff; font-size: 1.5rem; padding: 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; }
+.opt-btn:active { background: #475569; }
+
+/* Odd One Out */
+.odd-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.emoji-btn { background: #334155; font-size: 3rem; padding: 16px; border-radius: 8px; border: none; cursor: pointer; }
+
+/* Reaction */
+.reaction-btn { width: 150px; height: 150px; border-radius: 50%; background: var(--danger); border: none; cursor: pointer; color: white; font-size: 1.2rem; font-weight: bold; transition: background 0.1s; }
+.reaction-btn.ready { background: var(--success); }
+
+/* Memory */
+.mem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mem-cell { width: 60px; height: 60px; background: #334155; border-radius: 8px; border: none; cursor: pointer; }
+.mem-cell.active { background: #fcd34d; }

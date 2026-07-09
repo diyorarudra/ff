@@ -1,0 +1,116 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #f97316;
+    --primary-hover: #ea580c;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; touch-action: none; user-select: none; }
+
+.new-game-wrapper {
+    background-color: var(--bg-color); color: var(--text-main);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow: hidden;
+}
+
+#game-container {
+    width: 100%; max-width: 500px; background-color: var(--card-bg);
+    border-radius: 16px; padding: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    min-height: 600px;
+    display: flex; flex-direction: column;
+}
+
+.screen { display: none; flex-direction: column; align-items: center; text-align: center; animation: fadeIn 0.3s; flex: 1; justify-content: center; }
+.screen.active { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.game-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 16px; color: #fdba74; }
+.instructions { color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; padding: 0 20px; font-size: 1.1rem; }
+.final-score { font-size: 1.8rem; font-weight: 700; color: #fdba74; margin-bottom: 16px; }
+.rank-title { font-size: 1.5rem; font-weight: bold; color: #fcd34d; margin-bottom: 24px; }
+
+.btn {
+    border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1rem; font-weight: 700;
+    color: white; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 250px;
+}
+.btn:active { transform: scale(0.95); }
+.btn.primary { background-color: var(--primary); }
+.btn.primary:hover { background-color: var(--primary-hover); }
+
+.header { display: flex; justify-content: space-between; width: 100%; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #334155; font-weight: 700; font-size: 1.2rem; color: #fdba74; }
+
+.game-area { 
+    width: 100%; height: 400px; 
+    background: #475569; border-radius: 8px; border: 2px solid #64748b;
+    position: relative; overflow: hidden; cursor: crosshair;
+}
+
+/* Background scenery */
+.game-area::before {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 150px;
+    background: #14532d; /* grass */
+}
+.game-area::after {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 100%; height: 250px;
+    background: #38bdf8; /* sky */
+    opacity: 0.2;
+}
+
+#target {
+    position: absolute;
+    width: 120px; height: 120px;
+    left: 50%; top: 100px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    z-index: 5;
+    transition: transform 0.1s linear; /* for moving */
+}
+
+.ring {
+    border-radius: 50%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+}
+.ring.outer { width: 120px; height: 120px; background: white; border: 2px solid #ccc; }
+.ring.middle { width: 80px; height: 80px; background: #3b82f6; }
+.ring.inner { width: 40px; height: 40px; background: #ef4444; }
+.bullseye { width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+#arrow {
+    position: absolute;
+    font-size: 40px;
+    bottom: 10px; left: 50%;
+    transform: translateX(-50%) rotate(-45deg);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10;
+    opacity: 1;
+}
+
+#crosshair {
+    position: absolute;
+    font-size: 30px; color: rgba(255, 255, 255, 0.8);
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 15;
+    text-shadow: 0 0 5px #000;
+}
+
+.msg-overlay {
+    position: absolute; top: 30%; left: 0; width: 100%; text-align: center;
+    font-size: 3rem; font-weight: 900; color: #fff; text-shadow: 0 0 15px #000;
+    z-index: 50; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.msg-overlay.hidden { display: none; }
+@keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }

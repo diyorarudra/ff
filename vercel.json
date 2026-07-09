@@ -2,6 +2,7 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/games/game:id", "destination": "/games/game:id/index.html" },
-    { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" }
+    { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" },
+    { "source": "/play", "destination": "/play.html" }
   ]
 }

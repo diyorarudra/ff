@@ -1,0 +1,109 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; touch-action: manipulation; user-select: none; }
+
+.new-game-wrapper {
+    background-color: var(--bg-color); color: var(--text-main);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow: hidden;
+}
+
+#game-container {
+    width: 100%; max-width: 500px; background-color: var(--card-bg);
+    border-radius: 16px; padding: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    min-height: 600px;
+    display: flex; flex-direction: column;
+}
+
+.screen { display: none; flex-direction: column; align-items: center; text-align: center; animation: fadeIn 0.3s; flex: 1; justify-content: center; }
+.screen.active { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.game-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 16px; color: #c4b5fd; }
+.instructions { color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; padding: 0 20px; font-size: 1.1rem; }
+.final-score { font-size: 1.8rem; font-weight: 700; color: #c4b5fd; margin-bottom: 24px; }
+
+.btn {
+    border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1rem; font-weight: 700;
+    color: white; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 250px;
+}
+.btn:active { transform: scale(0.95); }
+.btn.primary { background-color: var(--primary); }
+.btn.primary:hover { background-color: var(--primary-hover); }
+
+.header { display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px; padding-bottom: 12px; border-bottom: 1px solid #334155; font-weight: 700; font-size: 1.1rem; color: #c4b5fd; }
+
+.actions-area { display: flex; justify-content: flex-end; width: 100%; margin-bottom: 10px; }
+.btn-sm {
+    background: #334155; border: none; color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;
+}
+.btn-sm:active { background: #475569; }
+.btn-sm.danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+
+.game-area { width: 100%; height: 350px; position: relative; border-radius: 8px; overflow: hidden; background: #0f172a; border: 2px solid #475569; }
+
+#room-scene {
+    width: 100%; height: 100%;
+    position: relative;
+    background: linear-gradient(180deg, #334155 60%, #1e293b 40%);
+}
+
+.room-obj {
+    position: absolute;
+    font-size: 3rem;
+    cursor: pointer;
+    transition: transform 0.1s;
+    display: flex; justify-content: center; align-items: center;
+}
+.room-obj:active { transform: scale(0.9); }
+.room-obj.text { font-size: 1rem; font-weight: bold; color: #fff; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px; }
+
+/* Overlays */
+.overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 20;
+}
+.overlay.hidden { display: none; }
+
+.puzzle-box {
+    background: #1e293b; padding: 20px; border-radius: 8px; border: 2px solid #475569;
+    margin-bottom: 15px; width: 80%; text-align: center;
+}
+.puzzle-title { color: #fff; margin-bottom: 10px; font-weight: bold; }
+
+/* Number pad styles */
+.numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
+.numpad-btn { background: #334155; color: #fff; border: none; padding: 10px; border-radius: 4px; font-size: 1.2rem; cursor: pointer; }
+.numpad-btn:active { background: #475569; }
+#keypad-display { background: #000; color: #10b981; font-family: monospace; font-size: 1.5rem; padding: 5px; margin-bottom: 10px; letter-spacing: 5px; min-height: 35px; }
+
+/* Sequence puzzle */
+.seq-btn { background: #334155; border: none; color: white; padding: 10px; margin: 5px; border-radius: 4px; font-size: 1.5rem; cursor: pointer;}
+.seq-btn.lit { background: #facc15; color: #000; }
+
+.inventory-area { width: 100%; margin-top: 15px; background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+.inv-title { font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+#inventory-slots { display: flex; gap: 10px; min-height: 50px; }
+.inv-slot { width: 50px; height: 50px; background: #1e293b; border: 2px dashed #475569; border-radius: 6px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; }
+.inv-slot.selected { border-color: #facc15; box-shadow: 0 0 10px rgba(250, 204, 21, 0.5); }
+
+.msg-banner {
+    position: absolute; top: 10px; left: 10%; width: 80%; text-align: center;
+    background: rgba(0,0,0,0.8); color: #fff; padding: 10px; border-radius: 8px;
+    font-weight: bold; z-index: 50; animation: dropDown 0.3s;
+}
+.msg-banner.hidden { display: none; }
+@keyframes dropDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

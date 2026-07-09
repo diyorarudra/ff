@@ -1,0 +1,98 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; touch-action: none; }
+
+.new-game-wrapper {
+    background-color: var(--bg-color); color: var(--text-main);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow: hidden;
+}
+
+#game-container {
+    width: 100%; max-width: 500px; background-color: var(--card-bg);
+    border-radius: 16px; padding: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    min-height: 600px;
+    display: flex; flex-direction: column;
+}
+
+.screen { display: none; flex-direction: column; align-items: center; text-align: center; animation: fadeIn 0.3s; flex: 1; justify-content: center; }
+.screen.active { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.game-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; color: #93c5fd; }
+.instructions { color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; padding: 0 20px; }
+.final-score { font-size: 1.5rem; font-weight: 700; color: #93c5fd; margin-bottom: 24px; }
+
+.btn {
+    border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; font-weight: 700;
+    color: white; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 250px;
+}
+.btn:active { transform: scale(0.95); }
+.btn.primary { background-color: var(--primary); }
+.btn.primary:hover { background-color: var(--primary-hover); }
+
+.header { display: flex; justify-content: space-between; width: 100%; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #334155; font-weight: 700; font-size: 1.2rem; color: #bfdbfe; }
+
+.puzzle-area { width: 100%; display: flex; flex-direction: column; align-items: center; }
+
+/* 4x4 Grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 8px;
+    background: #0f172a;
+    padding: 10px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 350px;
+    aspect-ratio: 1;
+}
+
+.cell {
+    background: #334155;
+    border-radius: 8px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 2rem; font-weight: 800; color: #fff;
+    transition: all 0.1s ease-in-out;
+}
+.cell.new { animation: pop 0.2s; }
+.cell.merged { animation: pulse 0.2s; }
+
+@keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+/* Dynamic Colors */
+.cell[data-val="2"] { background: #1e293b; color: #94a3b8; }
+.cell[data-val="4"] { background: #3b82f6; color: #fff; }
+.cell[data-val="8"] { background: #8b5cf6; color: #fff; }
+.cell[data-val="16"] { background: #d946ef; color: #fff; }
+.cell[data-val="32"] { background: #f43f5e; color: #fff; }
+.cell[data-val="64"] { background: #ef4444; color: #fff; }
+.cell[data-val="128"] { background: #f59e0b; color: #fff; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+.cell[data-val="256"] { background: #eab308; color: #fff; box-shadow: 0 0 12px rgba(234, 179, 8, 0.6); }
+.cell[data-val="512"] { background: #84cc16; color: #fff; box-shadow: 0 0 14px rgba(132, 204, 22, 0.7); }
+.cell[data-val="1024"] { background: #10b981; color: #fff; box-shadow: 0 0 16px rgba(16, 185, 129, 0.8); }
+.cell[data-val="2048"] { background: #14b8a6; color: #fff; box-shadow: 0 0 20px rgba(20, 184, 166, 1); }
+
+/* Controls */
+.controls-area {
+    margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.row { display: flex; gap: 8px; }
+.btn-ctrl {
+    background: #334155; border: none; color: #fff; font-size: 1.5rem;
+    width: 60px; height: 60px; border-radius: 8px; cursor: pointer;
+}
+.btn-ctrl:active { background: #475569; transform: scale(0.9); }

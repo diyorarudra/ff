@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Game - FF Live Play</title>
+  <meta name="description" content="Play free online games instantly on FF Live Play.">
+  
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/platform.css">
+  <link rel="stylesheet" href="/css/player.css">
+</head>
+<body class="font-body" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="/index.html" class="flex items-center gap-2 font-bold font-heading text-gray-900">
+        <svg class="w-8 h-8 text-[#7361F2]" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1" fill="#fff"></circle><circle cx="14" cy="12" r="1" fill="#fff"></circle><path d="M6 12h4m-2-2v4" stroke="#fff" stroke-width="2"></path></svg>
+        <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">ffliveplay</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 font-semibold text-[#111]">
+        <a href="/index.html" class="hover:text-[#7361F2] transition-colors">Home</a>
+      </div>
+      <div class="flex items-center gap-2 md:gap-4">
+        <button id="search-toggle" class="p-2 hover:bg-gray-100 rounded-full transition-colors hidden md:block" aria-label="Search">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </button>
+        <!-- Economy UI -->
+        <div class="header-economy hidden lg:flex">
+          <div class="economy-pill text-[#f59e0b] bg-amber-50">
+             <span class="icon">🪙</span> <span id="ui-coins">0</span>
+          </div>
+          <div class="economy-pill text-blue-600 bg-blue-50">
+             <span id="ui-streak">🔥 0</span>
+          </div>
+          <div class="economy-pill">
+             <span class="text-xs font-bold" id="ui-xp-text">Lvl 1 - 0/100</span>
+             <div class="level-progress-wrap"><div class="level-progress-bar" id="ui-xp-bar" style="width:0%"></div></div>
+          </div>
+          <select id="lang-select" class="border border-gray-200 rounded-md py-1 px-2 text-xs ml-2 bg-white outline-none cursor-pointer">
+              <option value="en">EN</option>
+              <option value="hi">HI</option>
+              <option value="gu">GU</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 md:px-8 py-8">
+      
+      <!-- Error State -->
+      <div id="player-error" class="hidden text-center text-white py-12">
+          <h1 id="error-title" class="text-4xl font-bold mb-4 font-heading">Game Not Found</h1>
+          <p id="error-desc" class="mb-8">The game you are looking for might have been moved or does not exist.</p>
+          <a href="/index.html" class="px-8 py-3 bg-white text-[#7361F2] rounded-full font-bold shadow-lg hover:shadow-xl transition-all">Back to Home</a>
+          
+          <div class="mt-16 text-left">
+              <div id="error-recommended-games" class="w-full">
+                  <!-- Populated by JS -->
+              </div>
+          </div>
+      </div>
+
+      <!-- Player State -->
+      <div id="player-ui" class="hidden player-layout">
+          
+          <!-- Main Content Column -->
+          <div class="main-column">
+              <!-- Title -->
+              <h1 id="game-title" class="text-3xl md:text-4xl font-extrabold text-white mb-4 font-heading drop-shadow-md">Loading...</h1>
+              
+              <!-- Iframe Container -->
+              <div class="iframe-container" id="iframe-container">
+                  <div class="play-overlay" id="play-overlay">
+                      <button class="play-btn" id="start-game-btn">Play Now</button>
+                      <p class="text-white mt-4 font-semibold drop-shadow-md bg-black/40 px-4 py-1.5 rounded-full border border-white/20">Earn <span id="game-reward-coins-banner">10</span> 🪙 every 2 minutes!</p>
+                  </div>
+                  <!-- Iframe injected via JS -->
+              </div>
+
+              <!-- Action Bar -->
+              <div class="flex items-center justify-between mt-4 bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/20">
+                  <div class="flex items-center gap-3">
+                      <button id="btn-fav" class="player-action-btn" title="Add to Favorites">
+                          <svg class="w-6 h-6 outline-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                          <svg class="w-6 h-6 solid-icon text-red-500 hidden" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.485 3.172 12.828a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
+                          <span class="text-sm font-bold text-white ml-1 hidden sm:inline" id="txt-fav">Favorite</span>
+                      </button>
+                      
+                      <button id="btn-share" class="player-action-btn" title="Share Game">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                          <span class="text-sm font-bold text-white ml-1 hidden sm:inline" id="txt-share">Share</span>
+                      </button>
+                  </div>
+                  
+                  <div class="flex items-center gap-3">
+                      <span class="text-white text-sm font-medium mr-2 hidden sm:inline opacity-80" id="game-category">Category</span>
+                      <button id="btn-fullscreen" class="player-action-btn bg-white/20 hover:bg-white/30" title="Fullscreen">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                          <span class="text-sm font-bold text-white ml-1 hidden sm:inline" id="txt-fullscreen">Fullscreen</span>
+                      </button>
+                  </div>
+              </div>
+
+              <!-- In-player Ad slot -->
+              <div class="mt-6 bg-white/5 rounded-2xl p-4 flex justify-center border border-white/10">
+                  <div class="ad-placeholder banner">
+                      <span>Advertisement</span>
+                  </div>
+              </div>
+
+              <!-- Instructions Box -->
+              <div class="bg-white rounded-xl p-6 mt-6 shadow-sm border border-gray-100">
+                  <h3 class="font-bold text-xl mb-3 font-heading text-gray-800 flex items-center gap-2"><span>📝</span> Instructions</h3>
+                  <p id="game-desc" class="text-gray-600 leading-relaxed"></p>
+              </div>
+
+              <!-- Related Games -->
+              <div class="mt-10">
+                  <h2 class="text-2xl font-bold text-white mb-6 font-heading flex items-center gap-2"><span>🎮</span> Related Games</h2>
+                  <div id="related-games" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
+                      <!-- Populated via JS -->
+                  </div>
+              </div>
+          </div>
+
+          <!-- Sidebar Column (Desktop Only) -->
+          <div class="sidebar-column hidden lg:block">
+              <div class="bg-white rounded-xl p-6 shadow-sm mb-6 sticky top-24 border border-gray-100">
+                  <h3 class="font-bold font-heading mb-4 text-gray-400 uppercase text-xs tracking-wider text-center">Advertisement</h3>
+                  <div class="ad-placeholder native flex items-center justify-center bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg text-gray-400 font-medium h-[250px]">
+                      <span>Sidebar Ad Slot</span>
+                  </div>
+              </div>
+          </div>
+          
+      </div>
+  </main>
+  
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/js/main.js"></script>
+  <script src="/js/platform.js"></script>
+  <script src="/js/player.js"></script>
+</body>
+</html>
