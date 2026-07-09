@@ -266,6 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if(Math.hypot(arr.x - b.x, arr.y - b.y) < b.r) {
                         balloons.splice(j,1); arrows.splice(i,1); score += 10;
     if (typeof ffCheckScoreMilestone !== 'undefined') ffCheckScoreMilestone(score, 250);
+    window.FFRewards?.triggerCorrectAnswer({ gameSlug: "balloons-shooter", scoreDelta: 10, xp: 2, coins: 0, label: "+10" });
  updateUI(); spawnBalloon(); break;
                     }
                 }
