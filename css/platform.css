@@ -43,18 +43,25 @@
 /* Mobile Header Adjustments to prevent overflow */
 @media (max-width: 768px) {
     .header-economy {
-        gap: 4px;
+        gap: 3px;
     }
     .economy-pill {
-        padding: 2px 6px;
-        font-size: 0.75rem;
-        gap: 4px;
+        padding: 2px 4px;
+        gap: 2px;
+        white-space: nowrap !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+    }
+    .economy-pill, .economy-pill span {
+        font-size: 11px !important;
+        line-height: 1.2 !important;
     }
     .economy-pill .icon {
-        font-size: 0.9rem;
+        font-size: 12px !important;
     }
     .level-progress-wrap {
-        width: 35px;
+        width: 25px;
+        margin-left: 2px;
     }
 }
 
