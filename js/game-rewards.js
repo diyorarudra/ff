@@ -795,4 +795,21 @@
         }
     }
 
+    // Hamburger menu logic for game pages
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('#hamburger');
+        const menu = document.getElementById('mobile-menu');
+        if (btn && menu) {
+            menu.classList.toggle('open');
+            btn.classList.toggle('active');
+            return;
+        }
+        const link = e.target.closest('#mobile-menu a');
+        if (link && menu) {
+            const hBtn = document.getElementById('hamburger');
+            menu.classList.remove('open');
+            if (hBtn) hBtn.classList.remove('active');
+        }
+    });
+
 })();
