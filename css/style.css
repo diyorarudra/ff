@@ -175,6 +175,7 @@ img { max-width: 100%; height: auto; }
 #hamburger span {
   display: block;
   transition: all 0.3s ease;
+  background-color: #ffffff !important;
 }
 
 #hamburger.active span:nth-child(1) {
