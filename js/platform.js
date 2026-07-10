@@ -3,7 +3,7 @@
 // State
 let pfState = {
     streak: parseInt(localStorage.getItem('ffliveplay_streak') || '0'),
-    lastLogin: localStorage.getItem('ffliveplay_last_login') || '',
+    lastLogin: localStorage.getItem('ffliveplay_daily_reward_date') || '',
     favorites: JSON.parse(localStorage.getItem('ffliveplay_favorites') || '[]'),
     recentlyPlayed: JSON.parse(localStorage.getItem('ffliveplay_recently_played') || '[]'),
     language: localStorage.getItem('ffliveplay_language') || 'en',
@@ -12,7 +12,7 @@ let pfState = {
 
 function saveState() {
     localStorage.setItem('ffliveplay_streak', pfState.streak);
-    localStorage.setItem('ffliveplay_last_login', pfState.lastLogin);
+    localStorage.setItem('ffliveplay_daily_reward_date', pfState.lastLogin);
     localStorage.setItem('ffliveplay_favorites', JSON.stringify(pfState.favorites));
     localStorage.setItem('ffliveplay_recently_played', JSON.stringify(pfState.recentlyPlayed));
     localStorage.setItem('ffliveplay_language', pfState.language);
