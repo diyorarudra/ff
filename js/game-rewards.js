@@ -599,6 +599,7 @@
                 if (options.onConfirm) options.onConfirm(true, 'item');
             } else {
                 showToast("Item not available");
+                if (options.onConfirm) options.onConfirm(false);
             }
         });
 
@@ -606,11 +607,14 @@
             modal.classList.add('hidden');
             if (spendCoins(options.cost, `use_${options.itemId}`)) {
                 if (options.onConfirm) options.onConfirm(true, 'coins');
+            } else {
+                if (options.onConfirm) options.onConfirm(false);
             }
         });
 
         newCancel.addEventListener('click', () => {
             modal.classList.add('hidden');
+            if (options.onConfirm) options.onConfirm(false);
         });
     }
 

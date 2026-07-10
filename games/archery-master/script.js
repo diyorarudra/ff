@@ -200,14 +200,7 @@ function calculateHit() {
                     }
                 }
             });
-            setTimeout(() => {
-                document.getElementById('ff-confirm-btn-cancel').onclick = () => {
-                    document.getElementById('ff-confirm-modal').classList.add('hidden');
-                    showScreen('end');
-                    document.getElementById('val-final-score').innerText = score;
-                    postMsg("GAME_COMPLETE", { score, coins: 50 });
-                };
-            }, 100);
+
             return;
         }
         showScreen('end');
