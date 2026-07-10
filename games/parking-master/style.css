@@ -95,3 +95,6 @@
 .ctrl-btn:active { background: #475569; }
 
 #gameCanvas, #game-container { touch-action: none; }
+
+.ctrl-btn, .dpad { touch-action: none; }
+

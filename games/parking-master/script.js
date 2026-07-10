@@ -244,8 +244,9 @@ window.addEventListener('keyup', e => {
 // Mobile button handling
 const bindBtn = (id, key) => {
     const btn = document.getElementById(id);
-    btn.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; });
-    btn.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; });
+    btn.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; }, { passive: false });
+    btn.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; }, { passive: false });
+    btn.addEventListener('touchcancel', e => { e.preventDefault(); keys[key] = false; }, { passive: false });
     btn.addEventListener('mousedown', e => { keys[key] = true; });
     btn.addEventListener('mouseup', e => { keys[key] = false; });
     btn.addEventListener('mouseleave', e => { keys[key] = false; });
