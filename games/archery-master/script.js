@@ -214,7 +214,7 @@ function calculateHit() {
         showScreen('end');
         document.getElementById('val-final-score').innerText = score;
         postMsg("GAME_COMPLETE", { score, coins: 50 });
-    };
+
             }
         }, 1500);
     }
