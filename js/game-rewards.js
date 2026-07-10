@@ -302,6 +302,17 @@
         if (window.innerWidth <= 768) {
             hudInner.classList.add('hidden');
             hudMin.classList.remove('hidden');
+            
+            // Move minimized pill to navbar for perfect mobile UX
+            const navRight = document.querySelector('.navbar .flex.items-center.gap-4');
+            if (navRight) {
+                const hamburger = document.getElementById('hamburger');
+                if (hamburger) {
+                    navRight.insertBefore(hudMin, hamburger);
+                } else {
+                    navRight.appendChild(hudMin);
+                }
+            }
         }
 
         const infoModal = document.getElementById('ff-reward-modal');
