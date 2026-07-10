@@ -1,7 +1,6 @@
 const slug = "cricket-batting-challenge";
 
 let score = 0;
-    currentRound = 1;
 let currentRound = 1;
 const MAX_ROUNDS = 5;
 let ballsLeft = 20;
