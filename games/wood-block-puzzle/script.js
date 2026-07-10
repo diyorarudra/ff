@@ -21,7 +21,6 @@ const SHAPES = [
 let grid = [];
 const SIZE = 8;
 let score = 0;
-    currentLevel = 1;
 let currentLevel = 1;
 let currentShapes = [];
 let selectedShapeIdx = -1;
