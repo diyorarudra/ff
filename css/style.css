@@ -150,32 +150,34 @@ img { max-width: 100%; height: auto; }
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(6, 6, 14, 0.8);
+  background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
   transition: all var(--transition-base);
 }
 
 .navbar.scrolled {
-  background: rgba(6, 6, 14, 0.95);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  background: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
 }
 
 /* Fix text colors when navbar is dark */
+/* Fix text colors when navbar is dark */
 .navbar.scrolled .text-\[\#111\],
 .navbar.scrolled .text-gray-900 {
-  color: #ffffff !important;
+  color: #111111 !important;
 }
 
 .navbar.scrolled #hamburger span {
-  background-color: #ffffff !important;
+  background-color: #111111 !important;
 }
 
 #hamburger span {
   display: block;
   transition: all 0.3s ease;
-  background-color: #ffffff !important;
+  background-color: #111111 !important;
 }
 
 #hamburger.active span:nth-child(1) {
