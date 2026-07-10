@@ -301,10 +301,10 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     #ff-reward-hud {
-        top: auto;
-        bottom: 10px;
+        top: 70px;
+        bottom: auto;
         right: 10px;
-        left: 10px;
+        left: auto;
         display: flex;
         justify-content: flex-end;
     }
@@ -312,8 +312,8 @@
     /* On mobile, default to collapsed state so it doesn't block game controls */
     .ff-hud-inner {
         /* Add a little zoom out to make it smaller on mobile */
-        transform-origin: bottom right;
-        transform: scale(0.9);
+        transform-origin: top right;
+        transform: scale(0.85);
     }
 }
 

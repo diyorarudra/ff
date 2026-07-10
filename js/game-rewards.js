@@ -299,6 +299,11 @@
             hudInner.classList.remove('hidden');
         });
 
+        if (window.innerWidth <= 768) {
+            hudInner.classList.add('hidden');
+            hudMin.classList.remove('hidden');
+        }
+
         const infoModal = document.getElementById('ff-reward-modal');
         const shopModal = document.getElementById('ff-shop-modal');
 

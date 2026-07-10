@@ -9,12 +9,12 @@
     --danger: #ef4444;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; touch-action: none; user-select: none; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; touch-action: manipulation; user-select: none; }
 
 .new-game-wrapper {
     background-color: var(--bg-color); color: var(--text-main);
     display: flex; justify-content: center; align-items: center;
-    min-height: 100vh; overflow: hidden;
+    min-height: 100vh; overflow: auto;
 }
 
 #game-container {
@@ -68,3 +68,5 @@ canvas {
 .ctrl-btn:active { background: #475569; }
 .ctrl-btn.highlight { background: var(--primary); }
 .ctrl-btn.highlight:active { background: var(--primary-hover); }
+
+#gameCanvas, #game-container { touch-action: none; }
