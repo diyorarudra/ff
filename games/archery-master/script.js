@@ -1,7 +1,6 @@
 const slug = "archery-master";
 
 let score = 0;
-    currentLevel = 1;
 let currentLevel = 1;
 const MAX_LEVELS = 5;
 let arrows = 10;
