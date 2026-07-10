@@ -114,7 +114,9 @@ function updateHeaderUI() {
 }
 
 // Daily Login Reward
-function checkDailyLogin() {
+let pendingGameUrl = null;
+
+function checkDailyLoginAndShow(url) {
     const today = new Date().toISOString().split('T')[0];
     if (pfState.lastLogin !== today) {
         // New day!
@@ -129,9 +131,12 @@ function checkDailyLogin() {
         
         pfState.lastLogin = today;
         saveState();
+        pendingGameUrl = url;
         showDailyRewardModal();
         generateDailyChallenges();
+        return true;
     }
+    return false;
 }
 
 function showDailyRewardModal() {
@@ -159,6 +164,10 @@ window.claimDailyReward = function() {
     
     const modal = document.getElementById('daily-modal');
     if (modal) modal.remove();
+    
+    if (pendingGameUrl) {
+        window.location.href = pendingGameUrl;
+    }
 };
 
 function generateDailyChallenges() {
@@ -334,5 +343,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     updateHeaderUI();
-    checkDailyLogin();
+});
+
+// Intercept game clicks for daily reward
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (link && link.href && link.href.match(/\/games\/[^\/]+\/index\.html/)) {
+        if (typeof checkDailyLoginAndShow === 'function' && checkDailyLoginAndShow(link.href)) {
+            e.preventDefault();
+        }
+    }
 });
