@@ -1,8 +1,16 @@
 /* rewarded-ads.js - Official H5 Games Ads wrapper for FFLivePlay */
 
 (function() {
+    let adBreakInProgress = false;
+    let lastAdBreakAt = 0;
+    const AD_BREAK_COOLDOWN_MS = 120000;
+
     function isLocalhost() {
         return location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    }
+
+    function canRequestAdBreak() {
+        return !adBreakInProgress && Date.now() - lastAdBreakAt >= AD_BREAK_COOLDOWN_MS;
     }
 
     function isMockEnabled() {
@@ -35,7 +43,7 @@
             if (xp > 0) window.FFRewards.addXP(xp);
             showToast(`Reward Claimed! +${coins} Coins`);
             if (window.FFRewards.updateUI) window.FFRewards.updateUI();
-            
+
             // Dispatch wallet update just in case
             window.dispatchEvent(new CustomEvent('ffrewards:wallet-updated'));
         }
@@ -47,6 +55,10 @@
         const rewardXP = options.rewardXP || 0;
         const onReward = options.onReward;
 
+        if (!canRequestAdBreak()) {
+            return { ok: false, reason: "ad_break_cooldown" };
+        }
+
         if (!isAvailable()) {
             return { ok: false, reason: "rewarded_ads_unavailable" };
         }
@@ -54,6 +66,8 @@
         // Mock Testing Mode (strictly guarded to localhost)
         if (isMockEnabled() && typeof adBreak !== 'function') {
             console.log("[FFRewardedAds] Using Mock Localhost Mode.");
+            adBreakInProgress = true;
+            lastAdBreakAt = Date.now();
             const userChoice = confirm(`[TEST MOCK]\nWatch a short ad to earn ${rewardCoins} game coins?`);
             if (userChoice) {
                 console.log("[FFRewardedAds] Mock ad complete. Granting reward.");
@@ -62,11 +76,14 @@
                 console.log("[FFRewardedAds] Mock ad cancelled.");
                 showToast("Ad not completed. No reward added.");
             }
+            adBreakInProgress = false;
             return { ok: true, mocked: true };
         }
 
         // Official H5 Games API
         if (typeof adBreak === 'function') {
+            adBreakInProgress = true;
+            lastAdBreakAt = Date.now();
             adBreak({
                 type: 'reward',
                 name: 'ffliveplay_reward',
@@ -82,10 +99,15 @@
                 adDismissed: function() {
                     console.log("[FFRewardedAds] Ad dismissed before completion.");
                     showToast("Ad not completed. No reward added.");
+                    adBreakInProgress = false;
                 },
                 adViewed: function() {
                     console.log("[FFRewardedAds] Official Ad Viewed. Granting Reward.");
                     grantReward(rewardCoins, rewardXP, onReward);
+                    adBreakInProgress = false;
+                },
+                adBreakDone: function() {
+                    adBreakInProgress = false;
                 }
             });
             return { ok: true };
@@ -95,6 +117,7 @@
     }
 
     window.FFRewardedAds = {
+        canRequestAdBreak,
         isAvailable,
         showRewardedAd
     };

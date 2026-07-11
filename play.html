@@ -13,9 +13,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Play Game - FF Live Play</title>
-  <meta name="description" content="Play free online games instantly on FF Live Play.">
-  
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="canonical" href="https://www.ffliveplay.com/play">
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="Play free online games instantly on FF Live Play.">
+
+          <meta property="og:type" content="website">
+<meta property="og:url" content="https://www.ffliveplay.com/play">
+<meta property="og:description" content="Play free online games instantly on FF Live Play.">
+      <meta name="twitter:description" content="Play free online games instantly on FF Live Play.">
+<meta name="twitter:title" content="Play Game - FF Live Play">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="Play Game - FF Live Play">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="shortcut icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
 
@@ -49,12 +58,12 @@
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <a href="/index.html" class="flex items-center gap-2 font-bold font-heading text-gray-900">
+      <a href="/index" class="flex items-center gap-2 font-bold font-heading text-gray-900">
         <svg class="w-8 h-8 text-[#7361F2]" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"></rect><circle cx="17" cy="12" r="1" fill="#fff"></circle><circle cx="14" cy="12" r="1" fill="#fff"></circle><path d="M6 12h4m-2-2v4" stroke="#fff" stroke-width="2"></path></svg>
         <span class="text-xl font-extrabold tracking-tight" style="color: #7361F2;">ffliveplay</span>
       </a>
       <div class="hidden md:flex items-center gap-8 font-semibold text-[#111]">
-        <a href="/index.html" class="hover:text-[#7361F2] transition-colors">Home</a>
+        <a href="/index" class="hover:text-[#7361F2] transition-colors">Home</a>
       </div>
       <div class="flex items-center gap-2 md:gap-4">
         <button id="search-toggle" class="p-2 hover:bg-gray-100 rounded-full transition-colors hidden md:block" aria-label="Search">
@@ -83,13 +92,13 @@
   </nav>
 
   <main class="max-w-7xl mx-auto px-4 md:px-8 py-8">
-      
+
       <!-- Error State -->
       <div id="player-error" class="hidden text-center text-white py-12">
           <h1 id="error-title" class="text-4xl font-bold mb-4 font-heading">Game Not Found</h1>
           <p id="error-desc" class="mb-8">The game you are looking for might have been moved or does not exist.</p>
-          <a href="/index.html" class="px-8 py-3 bg-white text-[#7361F2] rounded-full font-bold shadow-lg hover:shadow-xl transition-all">Back to Home</a>
-          
+          <a href="/index" class="px-8 py-3 bg-white text-[#7361F2] rounded-full font-bold shadow-lg hover:shadow-xl transition-all">Back to Home</a>
+
           <div class="mt-16 text-left">
               <div id="error-recommended-games" class="w-full">
                   <!-- Populated by JS -->
@@ -99,12 +108,12 @@
 
       <!-- Player State -->
       <div id="player-ui" class="hidden player-layout">
-          
+
           <!-- Main Content Column -->
           <div class="main-column">
               <!-- Title -->
-              <h1 id="game-title" class="text-3xl md:text-4xl font-extrabold text-white mb-4 font-heading drop-shadow-md">Loading...</h1>
-              
+              <h2 id="game-title" class="text-3xl md:text-4xl font-extrabold text-white mb-4 font-heading drop-shadow-md">Loading...</h2>
+
               <!-- Iframe Container -->
               <div class="iframe-container" id="iframe-container">
                   <div class="play-overlay" id="play-overlay">
@@ -122,13 +131,13 @@
                           <svg class="w-6 h-6 solid-icon text-red-500 hidden" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.485 3.172 12.828a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
                           <span class="text-sm font-bold text-white ml-1 hidden sm:inline" id="txt-fav">Favorite</span>
                       </button>
-                      
+
                       <button id="btn-share" class="player-action-btn" title="Share Game">
                           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                           <span class="text-sm font-bold text-white ml-1 hidden sm:inline" id="txt-share">Share</span>
                       </button>
                   </div>
-                  
+
                   <div class="flex items-center gap-3">
                       <span class="text-white text-sm font-medium mr-2 hidden sm:inline opacity-80" id="game-category">Category</span>
                       <button id="btn-fullscreen" class="player-action-btn bg-white/20 hover:bg-white/30" title="Fullscreen">
@@ -169,10 +178,10 @@
                   </div>
               </div>
           </div>
-          
+
       </div>
   </main>
-  
+
   <div class="toast-container" id="toast-container"></div>
 
   <!-- Scripts -->

@@ -6,7 +6,9 @@
   "scripts": {
     "start": "serve .",
     "dev": "serve .",
-    "postbuild": "node scripts/hydrate-game-metadata.js && node scripts/verify-game-seo.js"
+    "postbuild": "node scripts/hydrate-game-metadata.js && node scripts/verify-game-seo.js",
+    "build": "node scripts/verify-game-seo.js",
+    "audit:adsense": "node scripts/audit-adsense-readiness.js"
   },
   "dependencies": {
     "canvas": "^3.2.3",
