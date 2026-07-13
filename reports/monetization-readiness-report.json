@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-13T10:57:57.417Z",
-  "release": true,
+  "generatedAt": "2026-07-13T11:28:33.629Z",
+  "release": false,
   "metrics": {
     "monetizationMode": "PENDING_OWNER_CONFIGURATION",
     "adsenseConfigurationStatus": "PENDING_REAL_PUBLISHER_ID",
@@ -43,10 +43,7 @@
     "autoAdsH5ConflictRisk": "NONE_WHILE_H5_DISABLED",
     "consentOwnerActionsOutstanding": true
   },
-  "failures": [
-    "A real Google AdSense publisher ID is required.",
-    "A real Google AdSense publisher ID is required."
-  ],
+  "failures": [],
   "ownerDashboardChecklist": {
     "standardAdSense": [
       "Create/complete AdSense account.",

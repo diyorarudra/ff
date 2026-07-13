@@ -1,6 +1,6 @@
 # Monetization Readiness Report
 
-Generated: 2026-07-13T10:57:57.417Z
+Generated: 2026-07-13T11:28:33.629Z
 
 ## Metrics
 
@@ -47,9 +47,7 @@ Generated: 2026-07-13T10:57:57.417Z
 
 ## Result
 
-Checks failed:
-- A real Google AdSense publisher ID is required.
-- A real Google AdSense publisher ID is required.
+All normal monetization checks passed.
 
 ## Page Eligibility Matrix
 

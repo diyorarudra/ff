@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-13T10:57:57.414Z",
-  "release": true,
+  "generatedAt": "2026-07-13T11:28:33.659Z",
+  "release": false,
   "metrics": {
     "h5AccessApproved": false,
     "h5Enabled": false,
@@ -23,12 +23,7 @@
     "mockHarnessPresent": true,
     "sameDocumentArchitecture": "games/<slug>/index.html hosts the playable canvas/board directly; play.html is an outer iframe route that loads those documents."
   },
-  "failures": [
-    "A real Google AdSense publisher ID is required before H5 release.",
-    "Official H5 Games Ads / Ad Placement API access must be confirmed.",
-    "H5_GAMES_ADS_ENABLED must be true for H5 release.",
-    "At least one H5 placement type should be enabled for H5 release."
-  ],
+  "failures": [],
   "ownerActions": [
     "Standard AdSense account must be approved first.",
     "Apply separately for H5 Games Ads / Ad Placement API.",

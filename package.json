@@ -16,6 +16,7 @@
     "audit:monetization:release": "node scripts/audit-monetization-readiness.js --release",
     "audit:h5": "node scripts/audit-h5-ads-readiness.js",
     "audit:h5:release": "node scripts/audit-h5-ads-readiness.js --release",
+    "audit:brand": "node scripts/audit-brand-seo.js",
     "test:h5": "node scripts/test-h5-ads-controller.js"
   },
   "dependencies": {

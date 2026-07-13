@@ -1,6 +1,6 @@
 # H5 Ads Readiness Report
 
-Generated: 2026-07-13T10:57:57.414Z
+Generated: 2026-07-13T11:28:33.659Z
 
 ## Metrics
 
@@ -27,11 +27,7 @@ Generated: 2026-07-13T10:57:57.414Z
 
 ## Result
 
-Checks failed:
-- A real Google AdSense publisher ID is required before H5 release.
-- Official H5 Games Ads / Ad Placement API access must be confirmed.
-- H5_GAMES_ADS_ENABLED must be true for H5 release.
-- At least one H5 placement type should be enabled for H5 release.
+All normal H5 dormant checks passed.
 
 ## Owner Actions
 

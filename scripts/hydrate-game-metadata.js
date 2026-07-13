@@ -22,6 +22,12 @@ const {
 
 const root = path.join(__dirname, '..');
 const gamesDir = path.join(__dirname, '../games');
+const PRIMARY_BRAND = 'FFLivePlay';
+const ALTERNATE_BRAND = 'FF Live Play';
+const WEBSITE_ID = `${SITE_ORIGIN}/#website`;
+const ORGANIZATION_ID = `${SITE_ORIGIN}/#organization`;
+const HOMEPAGE_TITLE = 'FFLivePlay (FF Live Play) - Free Online Browser Games';
+const HOMEPAGE_DESCRIPTION = 'Play free online browser games on FFLivePlay, also known as FF Live Play. Enjoy action, racing, puzzle, arcade and casual games with no download or signup.';
 
 function toTitleCase(str) {
     return str
@@ -57,6 +63,105 @@ function escapeAttr(value) {
 
 function jsonLdScript(data) {
     return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
+}
+
+function faviconTags() {
+    return [
+        '<link rel="icon" href="/favicon.ico" sizes="any">',
+        '<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">',
+        '<link rel="apple-touch-icon" sizes="180x180" href="/favicon.png">'
+    ].map(tag => `  ${tag}`).join('\n');
+}
+
+function normalizeFaviconTags(html) {
+    let content = html.replace(/<link[^>]*rel=["'][^"']*(?:icon|apple-touch-icon)[^"']*["'][^>]*>\r?\n?/gi, '');
+    return content.replace(/<head>/i, `<head>\n${faviconTags()}`);
+}
+
+function normalizeBrandTextOutsideScripts(html) {
+    const parts = html.split(/(<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>)/gi);
+    return parts.map(part => {
+        if (/^<(?:script|style)\b/i.test(part)) return part;
+        return part
+            .replace(/FFliveplay|FFlivePlay|FF LivePlay|Ff Live Play/g, PRIMARY_BRAND)
+            .replace(/(aria-label=["'])ffliveplay Home(["'])/gi, `$1${PRIMARY_BRAND} home$2`)
+            .replace(/(aria-label=["'])ffliveplay home(["'])/gi, `$1${PRIMARY_BRAND} home$2`)
+            .replace(/>\s*ffliveplay\s*</gi, `>${PRIMARY_BRAND}<`)
+            .replace(/&copy;\s*2026\s+ffliveplay/gi, `&copy; 2026 ${PRIMARY_BRAND}`)
+            .replace(/\bPublished by ffliveplay\b/gi, `Published by ${PRIMARY_BRAND}`)
+            .replace(/\bAbout ffliveplay\b/gi, `About ${PRIMARY_BRAND}`)
+            .replace(/\bcontact ffliveplay\b/gi, `contact ${PRIMARY_BRAND}`)
+            .replace(/\bthe ffliveplay team\b/gi, `the ${PRIMARY_BRAND} team`)
+            .replace(/\bWelcome to ffliveplay\b/gi, `Welcome to ${PRIMARY_BRAND}`)
+            .replace(/\bffliveplay Privacy Policy\b/gi, `${PRIMARY_BRAND} Privacy Policy`)
+            .replace(/\bffliveplay is designed\b/gi, `${PRIMARY_BRAND} is designed`)
+            .replace(/\bffliveplay\b(?!\.com|@gmail\.com)/gi, PRIMARY_BRAND);
+    }).join('');
+}
+
+function replaceMetaContent(html, selectorRe, tag) {
+    if (selectorRe.test(html)) return html.replace(selectorRe, tag);
+    return html.replace(/<\/head>/i, `${tag}\n</head>`);
+}
+
+function normalizeOgSiteName(html) {
+    return replaceMetaContent(
+        html,
+        /<meta\s+property=["']og:site_name["'][^>]*>/i,
+        `<meta property="og:site_name" content="${PRIMARY_BRAND}">`
+    );
+}
+
+function normalizeInternalTitleBrand(title) {
+    return title
+        .replace(/\s+(?:-|&mdash;|—)\s+ffliveplay$/i, ` | ${PRIMARY_BRAND}`)
+        .replace(/\s+(?:-|&mdash;|—)\s+FF Live Play$/i, ` | ${PRIMARY_BRAND}`)
+        .replace(/\s+\|\s+FF Live Play$/i, ` | ${PRIMARY_BRAND}`)
+        .replace(/\s+\|\s+ffliveplay$/i, ` | ${PRIMARY_BRAND}`);
+}
+
+function normalizeBasicBrandMetadata(html) {
+    let content = html;
+    const title = extractFirst(content, /<title[^>]*>([\s\S]*?)<\/title>/i);
+    if (title) {
+        content = content.replace(/<title[^>]*>[\s\S]*?<\/title>/i, `<title>${escapeHtml(normalizeInternalTitleBrand(title))}</title>`);
+    }
+    content = content
+        .replace(/(<meta\s+name=["']author["'][^>]*content=["'])(?:ffliveplay|FF Live Play)(["'][^>]*>)/gi, `$1${PRIMARY_BRAND}$2`)
+        .replace(/(<meta\s+property=["']og:title["'][^>]*content=["'])([^"']*)(["'][^>]*>)/gi, (_, a, value, b) => `${a}${escapeAttr(normalizeInternalTitleBrand(value))}${b}`)
+        .replace(/(<meta\s+name=["']twitter:title["'][^>]*content=["'])([^"']*)(["'][^>]*>)/gi, (_, a, value, b) => `${a}${escapeAttr(normalizeInternalTitleBrand(value))}${b}`);
+    content = normalizeOgSiteName(content);
+    content = normalizeBrandTextOutsideScripts(content);
+    return normalizeFaviconTags(content);
+}
+
+function homepageWebsiteData() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        '@id': WEBSITE_ID,
+        url: `${SITE_ORIGIN}/`,
+        name: PRIMARY_BRAND,
+        alternateName: ALTERNATE_BRAND,
+        description: 'Free online browser games with no download or signup.',
+        inLanguage: 'en'
+    };
+}
+
+function homepageOrganizationData() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': ORGANIZATION_ID,
+        name: PRIMARY_BRAND,
+        alternateName: ALTERNATE_BRAND,
+        url: `${SITE_ORIGIN}/`,
+        logo: {
+            '@type': 'ImageObject',
+            url: `${SITE_ORIGIN}/favicon-192x192.png`
+        },
+        description: 'An independent browser-gaming website offering free online games.'
+    };
 }
 
 function analyticsConfigScript() {
@@ -215,15 +320,12 @@ function normalizeGameStructuredData(html, slug, gameName, descText) {
         description: descText,
         url: `${SITE_ORIGIN}/games/${slug}/`,
         image: `${SITE_ORIGIN}/assets/thumbnails/${slug}.png`,
+        isPartOf: { '@id': WEBSITE_ID },
         genre: 'browser game',
         applicationCategory: 'Game',
         operatingSystem: 'Web browser',
         playMode: 'SinglePlayer',
-        publisher: {
-            '@type': 'Organization',
-            name: 'FFLivePlay',
-            url: SITE_ORIGIN
-        }
+        publisher: { '@id': ORGANIZATION_ID }
     };
     const script = `  ${jsonLdScript(data)}`;
     if (/<script[^>]+type=["']application\/ld\+json["'][^>]*>[\s\S]*?"@type"\s*:\s*"VideoGame"[\s\S]*?<\/script>/i.test(html)) {
@@ -233,8 +335,8 @@ function normalizeGameStructuredData(html, slug, gameName, descText) {
 }
 
 function normalizeGameMetadata(content, slug, gameName) {
-    const descText = `Play ${gameName} online for free instantly on FF Live Play. Experience high-performance, no-download ${gameName} browser gameplay directly in your viewport.`;
-    const title = `${gameName} - Play Free Online Game | FF Live Play`;
+    const descText = `Play ${gameName} online for free instantly on ${PRIMARY_BRAND}. Experience high-performance, no-download ${gameName} browser gameplay directly in your viewport.`;
+    const title = `${gameName} - Play Free Online Game | ${PRIMARY_BRAND}`;
     const canonical = `${SITE_ORIGIN}/games/${slug}`;
     const imageUrl = `${SITE_ORIGIN}/assets/thumbnails/${slug}.png`;
 
@@ -313,10 +415,11 @@ function blogPostData(title, description, canonical, existing = {}) {
         headline: title,
         description,
         mainEntityOfPage: canonical,
+        isPartOf: { '@id': WEBSITE_ID },
         ...(existing.datePublished ? { datePublished: existing.datePublished } : {}),
         ...(existing.dateModified ? { dateModified: existing.dateModified } : {}),
-        author: existing.author || { '@type': 'Organization', name: 'ffliveplay' },
-        publisher: existing.publisher || { '@type': 'Organization', name: 'ffliveplay', url: SITE_ORIGIN }
+        author: { '@type': 'Organization', name: PRIMARY_BRAND, url: `${SITE_ORIGIN}/` },
+        publisher: { '@id': ORGANIZATION_ID }
     };
 }
 
@@ -532,6 +635,87 @@ ${existingWrapper}
     return content;
 }
 
+function replaceJsonLdByType(html, type, data) {
+    const blocks = readJsonLdBlocks(html);
+    const block = blocks.find(item => jsonLdTypes(item.data).includes(type));
+    if (block) return html.replace(block.raw, `  ${jsonLdScript(data)}`);
+    return html.replace(/<\/head>/i, `  ${jsonLdScript(data)}\n</head>`);
+}
+
+function removeJsonLdByType(html, type) {
+    return html.replace(/<script[^>]+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>\s*/gi, block => {
+        try {
+            const data = JSON.parse((block.match(/<script[^>]*>([\s\S]*?)<\/script>/i) || [])[1] || '');
+            return jsonLdTypes(data).includes(type) ? '' : block;
+        } catch {
+            return block;
+        }
+    });
+}
+
+function normalizeHomepageBrandSeo(html) {
+    let content = html;
+    content = replaceOrInsertHeadTag(content, /<title>.*?<\/title>/i, `<title>${HOMEPAGE_TITLE}</title>`);
+    content = replaceOrInsertHeadTag(content, /<meta\s+name=["']description["'][^>]*>/i, `<meta name="description" content="${escapeAttr(HOMEPAGE_DESCRIPTION)}">`);
+    content = replaceOrInsertHeadTag(content, /<meta\s+name=["']author["'][^>]*>/i, `<meta name="author" content="${PRIMARY_BRAND}">`);
+    content = replaceOrInsertHeadTag(content, /<meta\s+property=["']og:title["'][^>]*>/i, `<meta property="og:title" content="${escapeAttr(HOMEPAGE_TITLE)}">`);
+    content = replaceOrInsertHeadTag(content, /<meta\s+property=["']og:description["'][^>]*>/i, `<meta property="og:description" content="${escapeAttr(HOMEPAGE_DESCRIPTION)}">`);
+    content = replaceOrInsertHeadTag(content, /<meta\s+name=["']twitter:title["'][^>]*>/i, `<meta name="twitter:title" content="${escapeAttr(HOMEPAGE_TITLE)}">`);
+    content = replaceOrInsertHeadTag(content, /<meta\s+name=["']twitter:description["'][^>]*>/i, `<meta name="twitter:description" content="${escapeAttr(HOMEPAGE_DESCRIPTION)}">`);
+    content = normalizeOgSiteName(content);
+    content = replaceJsonLdByType(content, 'WebSite', homepageWebsiteData());
+    content = replaceJsonLdByType(content, 'Organization', homepageOrganizationData());
+    content = content.replace(
+        /Welcome to FF Live Play! We are your ultimate destination to play free online games instantly in your browser\. Whether you love high-speed racing, puzzles, or classic arcade action, FF Live Play delivers full gaming sessions with no downloads or registration required\./,
+        `${PRIMARY_BRAND}, also written as ${ALTERNATE_BRAND}, is a browser-gaming website for free online games. Play instantly in your browser with no downloads or registration required.`
+    );
+    return content;
+}
+
+function normalizeAboutContactBrandSeo(file, html) {
+    let content = html;
+    if (file === 'compliance/about-us.html') {
+        const title = `About ${PRIMARY_BRAND} | Free Browser Games`;
+        const desc = `Learn about ${PRIMARY_BRAND}, an independent browser-gaming website offering free online games that are fast, lightweight, and easy to play.`;
+        content = replaceOrInsertHeadTag(content, /<title>.*?<\/title>/i, `<title>${title}</title>`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+name=["']description["'][^>]*>/i, `<meta name="description" content="${escapeAttr(desc)}">`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+property=["']og:title["'][^>]*>/i, `<meta property="og:title" content="${escapeAttr(title)}">`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+property=["']og:description["'][^>]*>/i, `<meta property="og:description" content="${escapeAttr(desc)}">`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+name=["']twitter:title["'][^>]*>/i, `<meta name="twitter:title" content="${escapeAttr(title)}">`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+name=["']twitter:description["'][^>]*>/i, `<meta name="twitter:description" content="${escapeAttr(desc)}">`);
+        content = removeJsonLdByType(content, 'Organization');
+        content = content.replace(/<h1 class="font-heading gradient-text animate-fade-in-up">About ffliveplay<\/h1>/i, `<h1 class="font-heading gradient-text animate-fade-in-up">About ${PRIMARY_BRAND}</h1>`);
+        content = content.replace(/Two pillars define the ffliveplay experience\./i, `Two pillars define the ${PRIMARY_BRAND} experience.`);
+    }
+    if (file === 'compliance/contact.html') {
+        const title = `Contact ${PRIMARY_BRAND}`;
+        const desc = `Contact the ${PRIMARY_BRAND} team to report a bug, suggest a feature, ask a question, or share feedback about free browser games.`;
+        content = replaceOrInsertHeadTag(content, /<title>.*?<\/title>/i, `<title>${title}</title>`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+name=["']description["'][^>]*>/i, `<meta name="description" content="${escapeAttr(desc)}">`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+property=["']og:title["'][^>]*>/i, `<meta property="og:title" content="${escapeAttr(title)}">`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+property=["']og:description["'][^>]*>/i, `<meta property="og:description" content="${escapeAttr(desc)}">`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+name=["']twitter:title["'][^>]*>/i, `<meta name="twitter:title" content="${escapeAttr(title)}">`);
+        content = replaceOrInsertHeadTag(content, /<meta\s+name=["']twitter:description["'][^>]*>/i, `<meta name="twitter:description" content="${escapeAttr(desc)}">`);
+        content = replaceJsonLdByType(content, 'ContactPage', {
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            name: `Contact ${PRIMARY_BRAND}`,
+            url: `${SITE_ORIGIN}/compliance/contact`,
+            description: desc,
+            isPartOf: { '@id': WEBSITE_ID },
+            mainEntity: { '@id': ORGANIZATION_ID }
+        });
+    }
+    return content;
+}
+
+function normalizeBrandSeoForPage(file, html) {
+    let content = normalizeBasicBrandMetadata(html);
+    if (file === 'index.html') content = normalizeHomepageBrandSeo(content);
+    content = normalizeAboutContactBrandSeo(file, content);
+    return content;
+}
+
 function processAdSense() {
     const htmlFiles = walk(root).filter(file => file.endsWith('.html'));
     let changed = 0;
@@ -546,6 +730,7 @@ function processAdSense() {
         content = repairGeneratedScriptFragments(content);
         content = normalizeGoogleAnalytics(content);
         content = normalizeAccessibleControls(content);
+        content = normalizeBrandSeoForPage(file, content);
         content = removeAdSenseArtifacts(content);
 
         const isGameDocument = /^games\/[^/]+\/index\.html$/i.test(file);
@@ -614,13 +799,7 @@ function processGames() {
                 content = normalizeGameGuidance(content, slug, gameName);
                 if (content.includes('data-game-guidance="true"')) guidanceCount++;
 
-                // 5. Icon Footprint Retention
-                // Remove existing favicons to prevent duplicates
-                content = content.replace(/<link[^>]*rel=["'](icon|shortcut icon|apple-touch-icon)["'][^>]*>\r?\n?/gi, '');
-
-                // Inject favicons right after <head>
-                const faviconTags = `\n  <link rel="icon" type="image/x-icon" href="/favicon.ico" />\n  <link rel="shortcut icon" type="image/png" href="/favicon.png" />\n  <link rel="apple-touch-icon" href="/favicon.png" />`;
-                content = content.replace(/<head>/i, `<head>${faviconTags}`);
+                content = normalizeFaviconTags(content);
 
                 if (content !== original) {
                     fs.writeFileSync(indexPath, content);
