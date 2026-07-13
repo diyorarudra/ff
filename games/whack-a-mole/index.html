@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>\n  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png">
@@ -690,6 +691,8 @@ window.addEventListener('load', () => {
 
   <script defer src="/js/game-rewards.js"></script>
 \n
+
+\n\n
 <!-- Fullscreen logic injected -->
 <style>
 .ff-fullscreen-mode {
@@ -732,6 +735,11 @@ window.addEventListener('load', () => {
   max-height: 80vh !important;
   max-width: 100vw !important;
   object-fit: contain !important;
+}
+
+body.ff-fullscreen-active #audioToggleBtn,
+body.ff-fullscreen-active #ff-rewards-widget {
+  display: none !important;
 }
 
 .ff-close-btn {
@@ -791,12 +799,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   fsBtn.addEventListener('click', function() {
     gameContainer.classList.add('ff-fullscreen-mode');
+    document.body.classList.add('ff-fullscreen-active');
     document.body.style.overflow = 'hidden';
     closeBtn.style.display = 'flex';
   });
 
   closeBtn.addEventListener('click', function() {
     gameContainer.classList.remove('ff-fullscreen-mode');
+    document.body.classList.remove('ff-fullscreen-active');
     document.body.style.overflow = '';
     closeBtn.style.display = 'none';
   });
