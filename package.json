@@ -11,7 +11,12 @@
     "validate:js": "node scripts/validate-javascript-syntax.js",
     "audit:content": "node scripts/content-quality-audit.js",
     "audit:adsense": "node scripts/audit-adsense-readiness.js",
-    "audit:adsense:release": "node scripts/audit-adsense-readiness.js --require-real-id"
+    "audit:adsense:release": "node scripts/audit-adsense-readiness.js --require-real-id",
+    "audit:monetization": "node scripts/audit-monetization-readiness.js",
+    "audit:monetization:release": "node scripts/audit-monetization-readiness.js --release",
+    "audit:h5": "node scripts/audit-h5-ads-readiness.js",
+    "audit:h5:release": "node scripts/audit-h5-ads-readiness.js --release",
+    "test:h5": "node scripts/test-h5-ads-controller.js"
   },
   "dependencies": {
     "canvas": "^3.2.3",

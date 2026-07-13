@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T10:26:39.489Z",
+  "generatedAt": "2026-07-13T10:57:56.755Z",
   "metrics": {
     "totalHtmlPages": 231,
     "indexablePages": 228,
@@ -2072,7 +2072,7 @@
       "canonical": "https://www.ffliveplay.com/compliance/privacy-policy",
       "canonicalCount": 1,
       "robots": "index, follow",
-      "visibleWordCount": 1917,
+      "visibleWordCount": 2088,
       "adsenseLoaderCount": 0,
       "manualAdUnitCount": 0,
       "leftSidebarCount": 0,
@@ -7349,7 +7349,7 @@
       "canonical": "https://www.ffliveplay.com/play",
       "canonicalCount": 1,
       "robots": "noindex, follow",
-      "visibleWordCount": 56,
+      "visibleWordCount": 51,
       "adsenseLoaderCount": 0,
       "manualAdUnitCount": 0,
       "leftSidebarCount": 0,

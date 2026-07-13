@@ -4,11 +4,19 @@ const {
     SITE_ORIGIN,
     ADSENSE_PUBLISHER_ID,
     ADSENSE_CLIENT_ID,
-    ADSENSE_CONFIGURED,
+    STANDARD_ADSENSE_CONFIGURED,
     MANUAL_SIDEBAR_ADS_ENABLED,
     ADSENSE_LEFT_SIDEBAR_SLOT_ID,
     ADSENSE_RIGHT_SIDEBAR_SLOT_ID,
     MANUAL_SIDEBAR_ADS_CONFIGURED,
+    H5_GAMES_ADS_ACCESS_APPROVED,
+    H5_GAMES_ADS_ENABLED,
+    H5_INTERSTITIAL_ADS_CONFIGURED,
+    H5_REWARDED_ADS_CONFIGURED,
+    H5_ADS_TEST_MODE,
+    H5_AD_FREQUENCY_HINT,
+    H5_PRELOAD_AD_BREAKS,
+    H5_GAMES_ADS_CONFIGURED,
     GA_MEASUREMENT_ID
 } = require('./site-config');
 
@@ -335,6 +343,9 @@ function isAdSenseExcluded(file, html) {
 function removeAdSenseArtifacts(html) {
     return html
         .replace(/<script\b[^>]*pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js[^>]*>\s*<\/script>\s*/gi, '')
+        .replace(/<script\b[^>]*id=["']ff-h5-ad-bootstrap["'][^>]*>[\s\S]*?<\/script>\s*/gi, '')
+        .replace(/<script\b[^>]*id=["']ff-h5-ad-config["'][^>]*>[\s\S]*?<\/script>\s*/gi, '')
+        .replace(/<script\b[^>]*src=["'][^"']*\/js\/h5-ads-controller\.js[^"']*["'][^>]*>\s*<\/script>\s*/gi, '')
         .replace(/<script\b[^>]*>\s*\(adsbygoogle\s*=\s*window\.adsbygoogle\s*\|\|\s*\[\]\)\.push\([^)]*\);\s*<\/script>\s*/gi, '')
         .replace(/<script\b[^>]*>[\s\S]*?<\/script>\s*/gi, (block) => /adsbygoogle/i.test(block) ? '' : block)
         .replace(/<meta\b[^>]*name=["']google-adsense-account["'][^>]*>\s*/gi, '')
@@ -342,9 +353,38 @@ function removeAdSenseArtifacts(html) {
         .replace(/<div\b[^>]*class=["'][^"']*(?:ad-slot|ad-container|adsbygoogle|advertisement|ad-wrapper)[^"']*["'][^>]*>\s*<\/div>\s*/gi, '');
 }
 
-function injectAdSenseLoader(html) {
-    const loader = `  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}" crossorigin="anonymous"></script>\n`;
+function injectAdSenseLoader(html, options = {}) {
+    const h5Attrs = options.h5
+        ? ` data-ad-frequency-hint="${H5_AD_FREQUENCY_HINT}"${H5_ADS_TEST_MODE ? ' data-adbreak-test="on"' : ''}`
+        : '';
+    const loader = `  <script async${h5Attrs} src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}" crossorigin="anonymous"></script>\n`;
     return html.replace(/<\/head>/i, `${loader}</head>`);
+}
+
+function h5BootstrapScripts() {
+    return `  <script id="ff-h5-ad-bootstrap">
+    window.adsbygoogle = window.adsbygoogle || [];
+    window.adBreak = window.adBreak || function(options) {
+      window.adsbygoogle.push(options);
+    };
+    window.adConfig = window.adConfig || function(options) {
+      window.adsbygoogle.push(options);
+    };
+  </script>
+  <script src="/js/h5-ads-controller.js"></script>
+  <script id="ff-h5-ad-config">
+      window.FFH5Ads && window.FFH5Ads.initialize({
+      enabled: true,
+      interstitialsEnabled: ${Boolean(H5_INTERSTITIAL_ADS_CONFIGURED)},
+      rewardedEnabled: ${Boolean(H5_REWARDED_ADS_CONFIGURED)},
+      preloadAdBreaks: "${H5_PRELOAD_AD_BREAKS}",
+      frequencyHint: "${H5_AD_FREQUENCY_HINT}"
+    });
+  </script>\n`;
+}
+
+function injectH5Bootstrap(html) {
+    return html.replace(/<\/head>/i, `${h5BootstrapScripts()}</head>`);
 }
 
 function findMatchingClose(html, openStart) {
@@ -508,12 +548,16 @@ function processAdSense() {
         content = normalizeAccessibleControls(content);
         content = removeAdSenseArtifacts(content);
 
-        if (ADSENSE_CONFIGURED && !isAdSenseExcluded(file, content)) {
-            content = injectAdSenseLoader(content);
+        const isGameDocument = /^games\/[^/]+\/index\.html$/i.test(file);
+        if (STANDARD_ADSENSE_CONFIGURED && !isAdSenseExcluded(file, content)) {
+            content = injectAdSenseLoader(content, { h5: H5_GAMES_ADS_CONFIGURED && isGameDocument });
             eligibleWithLoader++;
         }
 
-        if (/^games\/[^/]+\/index\.html$/i.test(file)) {
+        if (isGameDocument) {
+            if (H5_GAMES_ADS_CONFIGURED) {
+                content = injectH5Bootstrap(content);
+            }
             content = normalizeGameSidebarLayout(content);
             if (/data-manual-sidebar-layout=["']true["']/.test(content)) gamesWithSidebarMarkup++;
         }
@@ -525,14 +569,22 @@ function processAdSense() {
         }
     }
 
-    const adsTxt = ADSENSE_CONFIGURED
+    const adsTxt = STANDARD_ADSENSE_CONFIGURED
         ? `google.com, ${ADSENSE_PUBLISHER_ID}, DIRECT, f08c47fec0942fa0\n`
         : '# Google AdSense publisher ID has not been configured yet.\n';
     fs.writeFileSync(path.join(root, 'ads.txt'), adsTxt);
+    if (!STANDARD_ADSENSE_CONFIGURED) {
+        console.warn('AdSense publisher ID is pending or invalid. Standard AdSense, Auto Ads, manual units, and H5 Ads remain inactive.');
+    }
     if (MANUAL_SIDEBAR_ADS_ENABLED && !MANUAL_SIDEBAR_ADS_CONFIGURED) {
         console.warn('Manual sidebar ads were requested but are not fully configured.');
         console.warn('A real AdSense publisher ID and valid left and right ad-slot IDs are required.');
         console.warn('Manual sidebar ads remain disabled.');
+    }
+    if (H5_GAMES_ADS_ENABLED && !H5_GAMES_ADS_ACCESS_APPROVED) {
+        console.warn('H5 Games Ads were requested but official access has not been confirmed.');
+        console.warn('H5 Games Ads remain disabled.');
+        console.warn('Set H5_GAMES_ADS_ACCESS_APPROVED to true only after Google approves the account for H5 Games Ads / Ad Placement API.');
     }
     console.log(`AdSense hydration complete. Updated ${changed} HTML files; eligible loaders emitted: ${eligibleWithLoader}; game pages with sidebar markup: ${gamesWithSidebarMarkup}.`);
 }

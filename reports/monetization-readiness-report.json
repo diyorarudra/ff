@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-07-13T10:57:57.417Z",
+  "release": true,
+  "metrics": {
+    "monetizationMode": "PENDING_OWNER_CONFIGURATION",
+    "adsenseConfigurationStatus": "PENDING_REAL_PUBLISHER_ID",
+    "adsenseSubmissionReady": false,
+    "publisherIdValid": false,
+    "clientIdValid": true,
+    "adsTxtValid": true,
+    "adsTxtPublisherMatch": true,
+    "standardEligiblePages": 224,
+    "standardPagesWithLoader": 0,
+    "standardPagesMissingLoader": 0,
+    "duplicateAdSenseLoaders": 0,
+    "manualSidebarAdsEnabled": false,
+    "manualSidebarAdsConfigured": false,
+    "manualAdUnits": 0,
+    "visibleSidebarAds": 0,
+    "whiteSidebarBoxes": 0,
+    "reservedSidebarColumns": 0,
+    "h5AccessApproved": false,
+    "h5Enabled": false,
+    "h5Configured": false,
+    "h5EligibleGameDocuments": 158,
+    "h5GameDocumentsWithLoader": 0,
+    "h5GameDocumentsMissingLoader": 0,
+    "h5BootstrapCount": 0,
+    "duplicateH5Bootstrap": 0,
+    "adConfigCount": 0,
+    "duplicateAdConfig": 0,
+    "h5InterstitialsEnabled": false,
+    "h5RewardedEnabled": false,
+    "h5TestMode": false,
+    "productionTestModeLeaks": 0,
+    "adBreakCallSites": 1,
+    "unsafeAdBreakCallSites": 0,
+    "adBreakCallsInsideLoops": 0,
+    "adBreakCallsInsideCallbacks": 0,
+    "rewardGrantedFromAdViewedOnly": true,
+    "duplicateRewardRisk": 0,
+    "gamePauseResumeCoverage": true,
+    "autoAdsH5ConflictRisk": "NONE_WHILE_H5_DISABLED",
+    "consentOwnerActionsOutstanding": true
+  },
+  "failures": [
+    "A real Google AdSense publisher ID is required.",
+    "A real Google AdSense publisher ID is required."
+  ],
+  "ownerDashboardChecklist": {
+    "standardAdSense": [
+      "Create/complete AdSense account.",
+      "Add ffliveplay.com under Sites.",
+      "Put the exact real publisher ID in scripts/site-config.js.",
+      "Build and deploy.",
+      "Verify /ads.txt publicly.",
+      "Configure Privacy & messaging/CMP.",
+      "Review Auto Ads preview and exclusions.",
+      "Run the Standard AdSense release audit."
+    ],
+    "autoAds": [
+      "Turn on Auto Ads in the AdSense dashboard if desired.",
+      "Review Auto Ads preview.",
+      "Exclude pages or areas where ads could overlap games, controls, legal content, or player-only views.",
+      "Configure ad load conservatively."
+    ],
+    "h5GamesAds": [
+      "Obtain approved Standard AdSense status.",
+      "Apply separately for H5 Games Ads / Ad Placement API access.",
+      "Set H5_GAMES_ADS_ACCESS_APPROVED to true only after explicit Google approval.",
+      "Use H5_ADS_TEST_MODE only in staging/local validation.",
+      "Disable test mode before production."
+    ],
+    "consent": [
+      "Configure Google Privacy & messaging or another certified CMP.",
+      "Configure European regulations consent for the EEA, UK, and Switzerland.",
+      "Configure relevant US-state privacy messages/opt-outs.",
+      "Test consent behavior before serving personalized ads.",
+      "Keep privacy disclosures synchronized with enabled products."
+    ]
+  }
+}

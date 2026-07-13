@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-07-13T10:57:57.414Z",
+  "release": true,
+  "metrics": {
+    "h5AccessApproved": false,
+    "h5Enabled": false,
+    "h5Configured": false,
+    "h5InterstitialsEnabled": false,
+    "h5RewardedEnabled": false,
+    "h5TestMode": false,
+    "h5EligibleGameDocuments": 158,
+    "h5GameDocumentsWithLoader": 0,
+    "h5GameDocumentsMissingLoader": 0,
+    "h5BootstrapCount": 0,
+    "adConfigCount": 0,
+    "productionTestModeLeaks": 0,
+    "controllerMethodsPresent": true,
+    "overlapGuardPresent": true,
+    "cooldownPresent": true,
+    "pauseResumePresent": true,
+    "rewardAdViewedOnly": true,
+    "duplicateRewardGuardPresent": true,
+    "mockHarnessPresent": true,
+    "sameDocumentArchitecture": "games/<slug>/index.html hosts the playable canvas/board directly; play.html is an outer iframe route that loads those documents."
+  },
+  "failures": [
+    "A real Google AdSense publisher ID is required before H5 release.",
+    "Official H5 Games Ads / Ad Placement API access must be confirmed.",
+    "H5_GAMES_ADS_ENABLED must be true for H5 release.",
+    "At least one H5 placement type should be enabled for H5 release."
+  ],
+  "ownerActions": [
+    "Standard AdSense account must be approved first.",
+    "Apply separately for H5 Games Ads / Ad Placement API.",
+    "Wait for official access confirmation.",
+    "Only then set H5_GAMES_ADS_ACCESS_APPROVED to true.",
+    "Use H5_ADS_TEST_MODE only for local/staging validation.",
+    "Disable test mode before production.",
+    "Exclude player/game routes from Auto Ads in the AdSense dashboard if overlays conflict with gameplay."
+  ]
+}
