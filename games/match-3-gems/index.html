@@ -303,39 +303,7 @@ function getDynamicVelocity(baseSpeed) {
 
 
 
-          <section class="game-guidance mt-8 text-left" data-game-guidance="true" data-content-remediated="true">
-          <h2 class="text-2xl font-bold mb-3">How to Play Match 3 Gems</h2>
-          <p><strong>Goal:</strong> swap gems to create lines of three or more.</p>
-          <p><strong>Controls:</strong> drag or tap adjacent gems to swap them.</p>
-          <p><strong>Progress:</strong> matches and chains increase the score.</p>
-          <p><strong>Watch out:</strong> the board can stall if you chase isolated moves.</p>
-          <p><strong>Restart:</strong> restart when you want a new board layout.</p>
-          <p><strong>Tip:</strong> set up vertical and horizontal matches that trigger together.</p>
-        </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
+          <script>
 // Prevent Spacebar and Arrow keys from scrolling the page during gameplay
 window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {

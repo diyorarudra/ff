@@ -315,39 +315,7 @@ function getDynamicVelocity(baseSpeed) {
 
 
 
-          <section class="game-guidance mt-8 text-left" data-game-guidance="true" data-content-remediated="true">
-          <h2 class="text-2xl font-bold mb-3">How to Play Bus Driver Route</h2>
-          <p><strong>Goal:</strong> guide the bus through the route while avoiding awkward turns and missed lanes.</p>
-          <p><strong>Controls:</strong> use arrow keys or on-screen directional buttons.</p>
-          <p><strong>Progress:</strong> completed route segments and clean driving increase progress.</p>
-          <p><strong>Watch out:</strong> collisions and missed control timing can end the attempt.</p>
-          <p><strong>Restart:</strong> restart to practice the first turns until the bus feels predictable.</p>
-          <p><strong>Tip:</strong> begin turns early because the bus needs more space than a small car.</p>
-        </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
+          <script>
 // Prevent Spacebar and Arrow keys from scrolling the page during gameplay
 window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {

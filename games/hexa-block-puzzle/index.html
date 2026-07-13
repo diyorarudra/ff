@@ -307,39 +307,7 @@ function getDynamicVelocity(baseSpeed) {
 
 
 
-          <section class="game-guidance mt-8 text-left" data-game-guidance="true" data-content-remediated="true">
-          <h2 class="text-2xl font-bold mb-3">How to Play Hexa Block Puzzle</h2>
-          <p><strong>Goal:</strong> place hex-style blocks so lines and spaces clear efficiently.</p>
-          <p><strong>Controls:</strong> drag or tap pieces into the board area.</p>
-          <p><strong>Progress:</strong> completed lines and smart placements raise the score.</p>
-          <p><strong>Watch out:</strong> the game stalls when no piece fits.</p>
-          <p><strong>Restart:</strong> restart after filling isolated gaps that cannot be used.</p>
-          <p><strong>Tip:</strong> keep central space open for larger pieces.</p>
-        </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
+          <script>
 // Prevent Spacebar and Arrow keys from scrolling the page during gameplay
 window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {

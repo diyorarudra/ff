@@ -311,39 +311,7 @@ function getDynamicVelocity(baseSpeed) {
 
 
 
-          <section class="game-guidance mt-8 text-left" data-game-guidance="true" data-content-remediated="true">
-          <h2 class="text-2xl font-bold mb-3">How to Play Letter Hunt</h2>
-          <p><strong>Goal:</strong> spot the requested letters quickly and accurately.</p>
-          <p><strong>Controls:</strong> tap or click matching letters as they appear.</p>
-          <p><strong>Progress:</strong> correct finds increase the score.</p>
-          <p><strong>Watch out:</strong> wrong taps and time pressure reduce the round.</p>
-          <p><strong>Restart:</strong> restart for a fresh letter set.</p>
-          <p><strong>Tip:</strong> focus on letter shape rather than reading whole rows.</p>
-        </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
+          <script>
 // Prevent Spacebar and Arrow keys from scrolling the page during gameplay
 window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {

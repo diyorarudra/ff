@@ -309,39 +309,7 @@ function getDynamicVelocity(baseSpeed) {
 
 
 
-          <section class="game-guidance mt-8 text-left" data-game-guidance="true" data-content-remediated="true">
-          <h2 class="text-2xl font-bold mb-3">How to Play Ball Sort Puzzle</h2>
-          <p><strong>Goal:</strong> move colored balls until each tube contains a single color group.</p>
-          <p><strong>Controls:</strong> click or tap a tube, then choose the tube where the top ball should move.</p>
-          <p><strong>Progress:</strong> finishing the sorted layout completes the puzzle.</p>
-          <p><strong>Watch out:</strong> there is no speed penalty, but poor moves can block every tube.</p>
-          <p><strong>Restart:</strong> restart when all spare tubes are locked by mixed colors.</p>
-          <p><strong>Tip:</strong> keep at least one empty tube available as a temporary workspace.</p>
-        </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
+          <script>
 // Prevent Spacebar and Arrow keys from scrolling the page during gameplay
 window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {

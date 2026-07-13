@@ -309,39 +309,7 @@ function getDynamicVelocity(baseSpeed) {
 
 
 
-          <section class="game-guidance mt-8 text-left" data-game-guidance="true" data-content-remediated="true">
-          <h2 class="text-2xl font-bold mb-3">How to Play Color Sort Puzzle</h2>
-          <p><strong>Goal:</strong> rearrange colors until each container has one clean color stack.</p>
-          <p><strong>Controls:</strong> tap a source, then tap the destination that can accept the top color.</p>
-          <p><strong>Progress:</strong> the puzzle is solved when all stacks are complete.</p>
-          <p><strong>Watch out:</strong> bad moves can trap colors under incompatible pieces.</p>
-          <p><strong>Restart:</strong> restart if no legal move opens an empty buffer.</p>
-          <p><strong>Tip:</strong> move repeated colors together before filling the last open container.</p>
-        </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
+          <script>
 // Prevent Spacebar and Arrow keys from scrolling the page during gameplay
 window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
