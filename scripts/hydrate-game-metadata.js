@@ -264,6 +264,9 @@ function guidanceText(slug, gameName) {
 }
 
 function normalizeGameGuidance(html, slug, gameName) {
+    if (/data-game-guidance=["']true["'][^>]*data-content-remediated=["']true["']|data-content-remediated=["']true["'][^>]*data-game-guidance=["']true["']/.test(html)) {
+        return html;
+    }
     const text = guidanceText(slug, gameName);
     const section = `<section class="game-guidance mt-8 text-left" data-game-guidance="true">
           <h2 class="text-2xl font-bold mb-3">How to Play ${escapeHtml(gameName)}</h2>

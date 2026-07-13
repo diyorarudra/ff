@@ -9,6 +9,7 @@
     "postbuild": "node scripts/hydrate-game-metadata.js && node scripts/verify-game-seo.js",
     "build": "node scripts/hydrate-game-metadata.js && node scripts/verify-game-seo.js",
     "validate:js": "node scripts/validate-javascript-syntax.js",
+    "audit:content": "node scripts/content-quality-audit.js",
     "audit:adsense": "node scripts/audit-adsense-readiness.js",
     "audit:adsense:release": "node scripts/audit-adsense-readiness.js --require-real-id"
   },
