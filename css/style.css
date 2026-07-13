@@ -163,6 +163,10 @@ img { max-width: 100%; height: auto; }
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
 }
 
+.navbar .hidden.md\:flex a {
+  color: #111111;
+}
+
 /* Fix text colors when navbar is dark */
 /* Fix text colors when navbar is dark */
 .navbar.scrolled .text-\[\#111\],
