@@ -1,6 +1,6 @@
 # H5 Ads Readiness Report
 
-Generated: 2026-07-13T11:28:33.659Z
+Generated: 2026-07-13T12:50:54.841Z
 
 ## Metrics
 

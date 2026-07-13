@@ -1,6 +1,6 @@
 # Monetization Readiness Report
 
-Generated: 2026-07-13T11:28:33.629Z
+Generated: 2026-07-13T12:50:54.682Z
 
 ## Metrics
 

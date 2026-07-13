@@ -1,0 +1,26 @@
+[
+  {
+    "source": "/blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy",
+    "destination": "/blog/browser-game-revenue-diversification",
+    "permanent": true,
+    "reason": "Old slug targeted finance and macro-economy intent, while the article was refocused to browser-game publisher revenue diversification."
+  },
+  {
+    "source": "/blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy/",
+    "destination": "/blog/browser-game-revenue-diversification",
+    "permanent": true,
+    "reason": "Trailing-slash variant of the old finance/macro slug."
+  },
+  {
+    "source": "/blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy.html",
+    "destination": "/blog/browser-game-revenue-diversification",
+    "permanent": true,
+    "reason": "Clean URL disabled or explicit .html variant of the old finance/macro slug."
+  },
+  {
+    "source": "/blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy/index.html",
+    "destination": "/blog/browser-game-revenue-diversification",
+    "permanent": true,
+    "reason": "Previously deployed index-style route variant of the old finance/macro slug."
+  }
+]

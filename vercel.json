@@ -4,11 +4,15 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "redirects": [
+    { "source": "/blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy", "destination": "/blog/browser-game-revenue-diversification", "permanent": true },
+    { "source": "/blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy/", "destination": "/blog/browser-game-revenue-diversification", "permanent": true },
+    { "source": "/blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy.html", "destination": "/blog/browser-game-revenue-diversification", "permanent": true },
+    { "source": "/blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy/index.html", "destination": "/blog/browser-game-revenue-diversification", "permanent": true },
     { "source": "/reports/:path*", "destination": "/404", "permanent": false }
   ],
   "rewrites": [
     { "source": "/games/game:id", "destination": "/games/game:id/index.html" },
-    { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" },
+    { "source": "/blog/:slug", "destination": "/blog/:slug.html" },
     { "source": "/play", "destination": "/play.html" }
   ]
 }

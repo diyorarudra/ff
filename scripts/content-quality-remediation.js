@@ -127,9 +127,9 @@ function replaceGameGuidance() {
 
 function blogPlan(slug, title) {
   const lower = slug.toLowerCase();
-  if (slug === 'advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy') {
+  if (slug === 'browser-game-revenue-diversification') {
     return {
-      title: 'Advanced Diversification Techniques for Browser Game Revenue',
+      title: 'Browser Game Revenue Diversification',
       description: 'Practical ways browser game publishers can reduce monetization risk with ads, sponsorships, subscriptions, direct deals, and player-first design.',
       angle: 'monetization risk for independent browser-game publishers',
       sections: [
@@ -144,6 +144,24 @@ function blogPlan(slug, title) {
         ['What is the safest first step?', 'Keep the game usable without monetization, then test one clearly disclosed revenue feature at a natural break.']
       ],
       links: ['maximizing-adsense-revenue-without-ruining-user-experience', 'the-ethics-of-game-monetization']
+    };
+  }
+  if (slug === 'maximizing-adsense-revenue-without-ruining-user-experience') {
+    return {
+      title,
+      description: `A practical guide to ${title.toLowerCase()} for HTML5 and browser games, focused on player clarity, performance, trust, and production-ready design.`,
+      angle: `${title.toLowerCase()} in browser games`,
+      sections: [
+        ['Player trust comes first', `${title} should never make the game feel blocked, deceptive, or built only for ads. Monetization is safest when placements are disclosed, sparse, and tied to natural pauses.`],
+        ['Measure without overreaching', 'Track page views and meaningful game events, but avoid personal data in labels or event payloads. Revenue metrics should be used to improve placement quality, not to pressure players.'],
+        ['Policy-safe review', 'Before publishing, check privacy language, ad density, accidental clicks, mobile control visibility, and whether rewards are granted only after confirmed completion.']
+      ],
+      faq: [
+        [`How should teams approach ${title.toLowerCase()}?`, 'Start with the player problem, then choose the simplest implementation that solves it without slowing the page or hiding controls.'],
+        ['Does every HTML5 game need this?', 'No. Some games benefit from the idea directly, while simpler games may only need a small version or a checklist.'],
+        ['What should be tested before publishing?', 'Test mobile layout, keyboard or touch input, restart flow, page speed, and whether the visible text matches the actual game experience.']
+      ],
+      links: ['browser-game-revenue-diversification', 'understanding-the-requestanimationframe-game-loop']
     };
   }
   let angle = `${title.toLowerCase()} in browser games`;
@@ -294,8 +312,8 @@ function remediateBlogs() {
       const open = match.match(/<div class="prose[^"]*"[^>]*>/i)[0];
       return `${open}${articleBody(plan)}\n      </div>\n        </article>`;
     });
-    if (slug === 'advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy') {
-      advancedDecision = 'kept existing URL and refocused article from investment/macro language to browser-game publisher revenue diversification';
+    if (slug === 'browser-game-revenue-diversification') {
+      advancedDecision = 'renamed old finance/macro URL to browser-game revenue diversification with permanent redirects';
     }
     if (html !== original) {
       fs.writeFileSync(full, html);

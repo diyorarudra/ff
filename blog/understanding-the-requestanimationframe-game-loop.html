@@ -4,7 +4,7 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png">
-                                <!-- Google tag (gtag.js) -->
+                                                                                                                          <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPMK24W61X"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -15,23 +15,23 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Understanding The Requestanimationframe Game Loop | FFLivePlay</title>
+  <title>requestAnimationFrame Game Loop | FFLivePlay</title>
           <link rel="canonical" href="https://www.ffliveplay.com/blog/understanding-the-requestanimationframe-game-loop">
 <meta name="robots" content="index, follow">
-<meta name="description" content="A practical guide to understanding the requestanimationframe game loop for HTML5 and browser games, focused on player clarity, performance, trust, and production-ready design.">
+<meta name="description" content="A practical guide to the requestAnimationFrame game loop for HTML5 and browser games, focused on smooth timing, input response, and production-ready design.">
             <meta property="og:type" content="article">
   <meta property="og:url" content="https://www.ffliveplay.com/blog/understanding-the-requestanimationframe-game-loop">
-  <meta property="og:description" content="A practical guide to understanding the requestanimationframe game loop for HTML5 and browser games, focused on player clarity, performance, trust, and production-ready design.">
-        <meta name="twitter:description" content="A practical guide to understanding the requestanimationframe game loop for HTML5 and browser games, focused on player clarity, performance, trust, and production-ready design.">
-  <meta name="twitter:title" content="Understanding The Requestanimationframe Game Loop | FFLivePlay">
+  <meta property="og:description" content="A practical guide to the requestAnimationFrame game loop for HTML5 and browser games, focused on smooth timing, input response, and production-ready design.">
+        <meta name="twitter:description" content="A practical guide to the requestAnimationFrame game loop for HTML5 and browser games, focused on smooth timing, input response, and production-ready design.">
+  <meta name="twitter:title" content="requestAnimationFrame Game Loop | FFLivePlay">
   <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:title" content="Understanding The Requestanimationframe Game Loop | FFLivePlay">
+  <meta property="og:title" content="requestAnimationFrame Game Loop | FFLivePlay">
 <link rel="stylesheet" href="/css/tailwind.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-                                                    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Understanding The Requestanimationframe Game Loop","description":"A practical guide to understanding the requestanimationframe game loop for HTML5 and browser games, focused on player clarity, performance, trust, and production-ready design.","mainEntityOfPage":"https://www.ffliveplay.com/blog/understanding-the-requestanimationframe-game-loop","isPartOf":{"@id":"https://www.ffliveplay.com/#website"},"datePublished":"2026-06-26","dateModified":"2026-06-26","author":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com/"},"publisher":{"@id":"https://www.ffliveplay.com/#organization"}}</script>
+                                                                                  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"request<wbr>Animation<wbr>Frame Game Loop","description":"A practical guide to the requestAnimationFrame game loop for HTML5 and browser games, focused on smooth timing, input response, and production-ready design.","mainEntityOfPage":"https://www.ffliveplay.com/blog/understanding-the-requestanimationframe-game-loop","isPartOf":{"@id":"https://www.ffliveplay.com/#website"},"datePublished":"2026-06-26","dateModified":"2026-06-26","author":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com/"},"publisher":{"@id":"https://www.ffliveplay.com/#organization"}}</script>
 
   <!-- Vercel Web Analytics -->
   <script>
@@ -39,7 +39,7 @@
   </script>
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.ffliveplay.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.ffliveplay.com/blog"},{"@type":"ListItem","position":3,"name":"Understanding The Requestanimationframe Game Loop","item":"https://www.ffliveplay.com/blog/understanding-the-requestanimationframe-game-loop"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.ffliveplay.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.ffliveplay.com/blog"},{"@type":"ListItem","position":3,"name":"requestAnimationFrame Game Loop","item":"https://www.ffliveplay.com/blog/understanding-the-requestanimationframe-game-loop"}]}</script>
 <meta property="og:site_name" content="FFLivePlay">
 </head>
 <body class="font-body bg-[#7361F2] text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
@@ -73,12 +73,12 @@
     <article class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border-0 p-6 md:p-12">
       <header class="mb-10 text-center">
         <span class="text-orange-700 uppercase tracking-widest text-xs font-bold bg-orange-100 px-3 py-1 rounded-full">Web Technology</span>
-        <h1 class="text-4xl md:text-5xl font-extrabold font-heading text-gray-900 mt-6 mb-4 leading-tight">Understanding The Requestanimationframe Game Loop</h1>
+        <h1 class="text-4xl md:text-5xl font-extrabold font-heading text-gray-900 mt-6 mb-4 leading-tight">request<wbr>Animation<wbr>Frame Game Loop</h1>
         <p class="text-gray-500 text-sm">Published by FFLivePlay - June 26, 2026</p>
       </header>
 
       <div class="prose text-gray-800 prose-orange max-w-none text-lg leading-relaxed">
-        <p>Understanding The Requestanimationframe Game Loop is useful on FFLivePlay when it helps a player understand the game faster, recover from mistakes, or trust the page around the game. This guide keeps the focus on practical browser-game decisions rather than broad claims or unsupported predictions.</p>
+        <p>The requestAnimationFrame game loop is useful on FFLivePlay when it helps a player understand the game faster, recover from mistakes, or trust the page around the game. This guide keeps the focus on practical browser-game decisions rather than broad claims or unsupported predictions.</p>
         <div class="toc bg-gray-50 p-4 rounded-xl my-6 border border-gray-100">
             <h3 class="text-xl font-bold mb-2 mt-0 text-gray-900">Contents</h3>
             <ul class="list-none p-0 m-0 space-y-2">
@@ -90,7 +90,7 @@
         </div>
 
         <h2 id="section-1" class="text-2xl font-bold mt-10 mb-4 text-gray-900">Technical choices should be visible in play quality</h2>
-        <p>Understanding The Requestanimationframe Game Loop matters because players feel dropped frames, delayed input, and confusing collisions immediately. The goal is not complexity; it is stable feedback during ordinary play.</p>
+        <p>The requestAnimationFrame game loop matters because players feel dropped frames, delayed input, and confusing collisions immediately. The goal is not complexity; it is stable feedback during ordinary play.</p>
 
         <h2 id="section-2" class="text-2xl font-bold mt-10 mb-4 text-gray-900">Implementation notes</h2>
         <p>Prefer small loops, predictable state updates, measured asset loading, and defensive fallbacks. Code examples should be tested against the actual browser behavior they describe.</p>
@@ -99,16 +99,16 @@
         <p>Check frame pacing, input latency, restart cleanup, mobile viewport behavior, and whether blocked optional scripts leave the core game usable.</p>
         <h2 id="faq" class="text-2xl font-bold mt-10 mb-4 text-gray-900">Frequently Asked Questions</h2>
         <div class="space-y-6 my-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
-            <div><h4 class="font-bold text-gray-900 text-lg mb-1">How should teams approach understanding the requestanimationframe game loop?</h4><p class="text-gray-700 m-0">Start with the player problem, then choose the simplest implementation that solves it without slowing the page or hiding controls.</p></div>
+            <div><h4 class="font-bold text-gray-900 text-lg mb-1">How should teams approach the requestAnimationFrame game loop?</h4><p class="text-gray-700 m-0">Start with the player problem, then choose the simplest implementation that solves it without slowing the page or hiding controls.</p></div>
             <div><h4 class="font-bold text-gray-900 text-lg mb-1">Does every HTML5 game need this?</h4><p class="text-gray-700 m-0">No. Some games benefit from the idea directly, while simpler games may only need a small version or a checklist.</p></div>
             <div><h4 class="font-bold text-gray-900 text-lg mb-1">What should be tested before publishing?</h4><p class="text-gray-700 m-0">Test mobile layout, keyboard or touch input, restart flow, page speed, and whether the visible text matches the actual game experience.</p></div>
         </div>
-        <p>For understanding the requestanimationframe game loop, the strongest version is the one a player can verify on the page: clear purpose, honest wording, and cautious claims. Use the idea where it improves the browser-game experience, then remove anything that distracts from play.</p>
+        <p>For the requestAnimationFrame game loop, the strongest version is the one a player can verify on the page: clear purpose, honest wording, and cautious claims. Use the idea where it improves the browser-game experience, then remove anything that distracts from play.</p>
         <div class="mt-12 pt-8 border-t border-gray-200">
             <h3 class="text-xl font-bold mb-6 text-gray-900">Recommended Reading</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <a href="/blog/the-evolution-of-html5-canvas-in-modern-browser-gaming" class="p-5 bg-white rounded-xl border border-gray-200 hover:border-cyan-400 hover:shadow-md transition-all block group"><span class="text-xs font-bold text-cyan-600 block mb-2 uppercase tracking-wider">Related Guide</span><span class="text-gray-900 font-bold group-hover:text-cyan-500 transition-colors">The Evolution Of HTML5 Canvas In Modern Browser Gaming &rarr;</span></a>
-                <a href="/blog/understanding-the-requestanimationframe-game-loop" class="p-5 bg-white rounded-xl border border-gray-200 hover:border-cyan-400 hover:shadow-md transition-all block group"><span class="text-xs font-bold text-cyan-600 block mb-2 uppercase tracking-wider">Related Guide</span><span class="text-gray-900 font-bold group-hover:text-cyan-500 transition-colors">Understanding The Requestanimationframe Game Loop &rarr;</span></a>
+                <a href="/blog/understanding-the-requestanimationframe-game-loop" class="p-5 bg-white rounded-xl border border-gray-200 hover:border-cyan-400 hover:shadow-md transition-all block group"><span class="text-xs font-bold text-cyan-600 block mb-2 uppercase tracking-wider">Related Guide</span><span class="text-gray-900 font-bold group-hover:text-cyan-500 transition-colors">requestAnimationFrame Game Loop &rarr;</span></a>
             </div>
         </div>
 
