@@ -1,4 +1,7 @@
 {
+  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "redirects": [
     { "source": "/reports/:path*", "destination": "/404", "permanent": false }

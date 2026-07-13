@@ -1,6 +1,6 @@
 # AdSense Readiness Report
 
-Generated: 2026-07-13T07:23:55.732Z
+Generated: 2026-07-13T08:37:50.253Z
 
 ## Metrics
 
