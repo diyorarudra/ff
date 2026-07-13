@@ -374,26 +374,8 @@ function guidanceText(slug, gameName) {
 }
 
 function normalizeGameGuidance(html, slug, gameName) {
-    if (/data-game-guidance=["']true["'][^>]*data-content-remediated=["']true["']|data-content-remediated=["']true["'][^>]*data-game-guidance=["']true["']/.test(html)) {
-        return html;
-    }
-    const text = guidanceText(slug, gameName);
-    const section = `<section class="game-guidance mt-8 text-left" data-game-guidance="true">
-          <h2 class="text-2xl font-bold mb-3">How to Play ${escapeHtml(gameName)}</h2>
-          <p><strong>Objective:</strong> ${escapeHtml(text.objective)}</p>
-          <p><strong>Controls:</strong> ${escapeHtml(text.controls)}</p>
-          <p><strong>Scoring:</strong> ${escapeHtml(text.scoring)}</p>
-          <p><strong>Tip:</strong> ${escapeHtml(text.tip)}</p>
-        </section>`;
-    if (/data-game-guidance=["']true["']/.test(html)) {
-        return html.replace(/<section\b[^>]*data-game-guidance=["']true["'][\s\S]*?<\/section>/i, section);
-    }
-    const gameFrameEnd = html.search(/<div\b[^>]*class=["'][^"']*\bgame-frame\b/i);
-    if (gameFrameEnd >= 0) {
-        const close = findMatchingClose(html, gameFrameEnd);
-        if (close > 0) return `${html.slice(0, close)}\n        ${section}${html.slice(close)}`;
-    }
-    return html.replace(/<\/main>/i, `        ${section}\n  </main>`);
+    // Disabled to remove "How to Play" text from game UI
+    return html;
 }
 
 function blogBreadcrumbData(title, canonical) {
