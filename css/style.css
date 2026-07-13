@@ -163,21 +163,11 @@ img { max-width: 100%; height: auto; }
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Force text colors on white navbar */
-.navbar .text-\[\#111\],
-.navbar .text-gray-900,
-.navbar a {
+/* Fix text colors when navbar is dark */
+/* Fix text colors when navbar is dark */
+.navbar.scrolled .text-\[\#111\],
+.navbar.scrolled .text-gray-900 {
   color: #111111 !important;
-}
-
-.navbar a:hover {
-  color: #7361F2 !important;
-}
-
-.navbar .text-gray-800,
-.navbar input {
-  color: #333333 !important;
-  background-color: #ffffff !important;
 }
 
 .navbar.scrolled #hamburger span {
