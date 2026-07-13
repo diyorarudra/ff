@@ -707,6 +707,8 @@ window.addEventListener('load', () => {
 \n
 
 \n\n
+
+\n\n
 <!-- Fullscreen logic injected -->
 <style>
 .ff-fullscreen-mode {
@@ -785,11 +787,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const fsBtn = document.createElement('button');
   fsBtn.id = 'ff-fullscreen-btn';
-  fsBtn.className = 'bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg font-bold text-sm shadow-md flex items-center gap-2 transition-transform active:scale-95';
-  fsBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg> Fullscreen';
+  // Use a sleek pill design with a subtle gradient and shadow to make it look premium
+  fsBtn.className = 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-lg flex items-center gap-2 transition-all active:scale-95 border border-white/10 hover:shadow-indigo-500/25 hover:shadow-xl';
+  fsBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg> <span class="tracking-wide">Play Fullscreen</span>';
   
   const wrapper = document.createElement('div');
-  wrapper.className = 'ff-btn-wrapper w-full max-w-3xl flex justify-start mb-2 px-2';
+  // Right align it so it sits neatly aligned with the right edge of the game/header
+  wrapper.className = 'ff-btn-wrapper w-full max-w-3xl flex justify-end mb-4 mt-2 px-2';
   wrapper.appendChild(fsBtn);
 
   const header = document.querySelector('.game-header');
@@ -807,7 +811,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const closeBtn = document.createElement('button');
   closeBtn.className = 'ff-close-btn';
-  closeBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
+  closeBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
   closeBtn.style.display = 'none';
   document.body.appendChild(closeBtn);
 
