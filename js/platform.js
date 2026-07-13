@@ -218,7 +218,7 @@ function generateGameCard(game) {
     const isFav = pfState.favorites.includes(game.slug);
     return `
     <a href="games/${game.slug}/index.html" onclick="trackGameStart('${game.slug}', '${game.category}')" class="game-card bg-white rounded-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] group relative">
-      <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${game.slug}')">❤️</button>
+      <button class="fav-btn ${isFav ? 'active' : ''}" aria-label="${isFav ? 'Remove from favorites' : 'Add to favorites'}" onclick="toggleFavorite(event, '${game.slug}')">❤️</button>
       <div class="w-full h-36 relative overflow-hidden flex items-center justify-center transition-transform duration-500 group-hover:scale-110" style="background:${game.color}15">
         <div class="text-7xl opacity-90 drop-shadow-md select-none">${game.icon}</div>
       </div>

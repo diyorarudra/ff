@@ -15,6 +15,7 @@ const {
   MANUAL_SIDEBAR_ADS_CONFIGURED,
   GA_MEASUREMENT_ID
 } = require('./site-config');
+const { validate: validateJavaScriptSyntax } = require('./validate-javascript-syntax');
 
 const root = path.resolve(__dirname, '..');
 const reportDir = path.join(root, 'reports');
@@ -211,6 +212,77 @@ function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function toTitleCase(str) {
+  return str
+    .split('-')
+    .map((word) => word.toLowerCase() === '3d' ? '3D' : word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function parseJsonLdBlocks(html) {
+  const blocks = [];
+  for (const match of html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+    try {
+      blocks.push(JSON.parse(match[1]));
+    } catch {
+      blocks.push(null);
+    }
+  }
+  return blocks;
+}
+
+function jsonLdTypes(data) {
+  const nodes = Array.isArray(data) ? data : [data];
+  return nodes.flatMap((node) => {
+    if (!node || !node['@type']) return [];
+    return Array.isArray(node['@type']) ? node['@type'] : [node['@type']];
+  });
+}
+
+function gameMetadataMismatch(page) {
+  if (page.pageType !== 'game') return false;
+  const slug = page.file.split('/')[1];
+  const gameName = toTitleCase(slug);
+  const html = fs.readFileSync(path.join(root, page.file), 'utf8');
+  const keywords = firstMatch(html, /<meta\s+name=["']keywords["'][^>]*content=["']([^"']*)/i);
+  const ogTitle = firstMatch(html, /<meta\s+property=["']og:title["'][^>]*content=["']([^"']*)/i);
+  const twitterTitle = firstMatch(html, /<meta\s+name=["']twitter:title["'][^>]*content=["']([^"']*)/i);
+  const jsonGame = parseJsonLdBlocks(html).find((block) => jsonLdTypes(block).includes('VideoGame'));
+  const jsonName = jsonGame && jsonGame.name ? String(jsonGame.name) : '';
+  const haystack = `${page.title} ${page.metaDescription} ${keywords} ${ogTitle} ${twitterTitle} ${jsonName}`.toLowerCase();
+  return !haystack.includes(gameName.toLowerCase());
+}
+
+function blogSchemaMissing(page, type) {
+  if (page.pageType !== 'blog-post') return false;
+  if (type === 'breadcrumb') return !page.jsonLdTypes.includes('BreadcrumbList');
+  return !(page.jsonLdTypes.includes('BlogPosting') || page.jsonLdTypes.includes('Article'));
+}
+
+function faviconOversizedAssets() {
+  const files = ['assets/favicon.png', 'favicon.ico', 'favicon.png'];
+  return files
+    .map((file) => ({ file, bytes: fs.existsSync(path.join(root, file)) ? fs.statSync(path.join(root, file)).size : 0 }))
+    .filter((item) => item.bytes > 100 * 1024 || item.bytes === 0);
+}
+
+function iconOnlyControlsWithoutName() {
+  const files = walk(root).filter((file) => /\.(?:html|js)$/i.test(file));
+  const offenders = [];
+  const buttonRe = /<button\b([^>]*)>([\s\S]*?)<\/button>/gi;
+  for (const file of files) {
+    const text = fs.readFileSync(file, 'utf8');
+    for (const match of text.matchAll(buttonRe)) {
+      const attrs = match[1] || '';
+      const body = match[2].replace(/<[^>]+>/g, '').replace(/&[a-z#0-9]+;/gi, '').trim();
+      const hasName = /\b(?:aria-label|aria-labelledby|title)\s*=/i.test(attrs);
+      const hasUsefulText = /[A-Za-z0-9]/.test(body);
+      if (!hasName && !hasUsefulText) offenders.push(rel(file));
+    }
+  }
+  return [...new Set(offenders)];
+}
+
 function countPublisherPlaceholderInSourceConfig(file) {
   if (!fs.existsSync(file)) return 0;
   const source = fs.readFileSync(file, 'utf8');
@@ -220,6 +292,7 @@ function countPublisherPlaceholderInSourceConfig(file) {
 
 function analyze(options = {}) {
   const { pages, sitemapUrls, brokenLinks, missingAssets } = inventory();
+  const jsSyntax = validateJavaScriptSyntax(root);
   const indexable = pages.filter((page) => !page.noindex && page.pageType !== 'error' && page.pageType !== 'player');
   const eligiblePages = pages.filter((page) => !page.adsenseExcluded);
   const titleCounts = new Map();
@@ -246,6 +319,9 @@ function analyze(options = {}) {
   const adsTxtPath = path.join(root, 'ads.txt');
   const adsTxt = fs.existsSync(adsTxtPath) ? fs.readFileSync(adsTxtPath, 'utf8') : '';
   const adsTxtPublisher = firstMatch(adsTxt, /google\.com,\s*(pub-[^,\s]+)/i);
+  const adsTxtPlaceholderSellerLines = (adsTxt.match(/google\.com,\s*(?:pub-PASTE|pub-[A-Z0-9_]+)/gi) || []).length;
+  const adsTxtMissingFinalNewline = adsTxt && !adsTxt.endsWith('\n') ? 1 : 0;
+  const adsTxtPendingCommentValid = ADSENSE_CONFIGURED ? 0 : (adsTxt === '# Google AdSense publisher ID has not been configured yet.\n' ? 0 : 1);
   const placeholderInProductionHtml = pages.reduce((sum, page) => {
     const ids = [...page.publisherIds, ...page.clientIds].filter((id) => id === PLACEHOLDER_PUBLISHER_ID || id === PLACEHOLDER_CLIENT_ID);
     return sum + ids.length;
@@ -283,6 +359,15 @@ function analyze(options = {}) {
   const manualSidebarDuplicateUnits = gamePages.filter((page) => page.sidebarUnitCount > 2 || page.leftSidebarCount > 1 || page.rightSidebarCount > 1).length;
   const manualSidebarLayoutReservationWhileDisabled = MANUAL_SIDEBAR_ADS_CONFIGURED ? 0 : gamePages.reduce((sum, page) => sum + page.sidebarLayoutReservationCount, 0);
   const manualSidebarBlankWhiteContainers = pages.reduce((sum, page) => sum + page.sidebarBlankWhiteContainerCount, 0);
+  const gameMetadataTopicMismatches = gamePages.filter(gameMetadataMismatch);
+  const blogPostsMissingBreadcrumbSchema = pages.filter((page) => blogSchemaMissing(page, 'breadcrumb'));
+  const blogPostsMissingArticleSchema = pages.filter((page) => blogSchemaMissing(page, 'article'));
+  const oversizedFavicons = faviconOversizedAssets();
+  const iconOnlyControls = iconOnlyControlsWithoutName();
+  const bridgeCorruption = walk(root).filter((file) => file.endsWith('.html')).filter((file) => {
+    const html = fs.readFileSync(file, 'utf8');
+    return /INJECTED (?:REWARD|MILESTONE) BRIDGE|Injected Progressive Difficulty Modifiers|score\s*\+=\s*f\s*\r?\n[\s\S]{0,140}\.type\.points|ffCheckScoreMilestone[^\n]*\r?\n\s*[*/]\s*\d+/i.test(html);
+  }).map(rel);
 
   const metrics = {
     totalHtmlPages: pages.length,
@@ -299,6 +384,9 @@ function analyze(options = {}) {
     placeholderPublisherIdsInProductionHtml: placeholderInProductionHtml,
     publisherIdMismatches,
     adsTxtPublisherMismatch,
+    adsTxtPlaceholderSellerLines,
+    adsTxtMissingFinalNewline,
+    adsTxtPendingCommentInvalid: adsTxtPendingCommentValid,
     duplicateAdSenseTags,
     manualAdUnits,
     adsenseScriptsOnExcludedPages,
@@ -318,6 +406,14 @@ function analyze(options = {}) {
     manualSidebarDuplicateUnits,
     manualSidebarLayoutReservationWhileDisabled,
     manualSidebarBlankWhiteContainers,
+    inlineJavaScriptSyntaxErrors: jsSyntax.inlineErrors.length,
+    localJavaScriptSyntaxErrors: jsSyntax.localErrors.length,
+    rewardBridgeGenerationCorruption: bridgeCorruption.length,
+    gameMetadataTopicMismatches: gameMetadataTopicMismatches.length,
+    blogPostsMissingBreadcrumbSchema: blogPostsMissingBreadcrumbSchema.length,
+    blogPostsMissingArticleSchema: blogPostsMissingArticleSchema.length,
+    oversizedFaviconAssets: oversizedFavicons.length,
+    iconOnlyControlsWithoutAccessibleName: iconOnlyControls.length,
     missingTitles: indexable.filter((page) => !page.title).length,
     duplicateTitles: duplicateTitles.length,
     missingDescriptions: indexable.filter((page) => !page.metaDescription).length,
@@ -345,6 +441,9 @@ function analyze(options = {}) {
     'placeholderPublisherIdsInProductionHtml',
     'publisherIdMismatches',
     'adsTxtPublisherMismatch',
+    'adsTxtPlaceholderSellerLines',
+    'adsTxtMissingFinalNewline',
+    'adsTxtPendingCommentInvalid',
     'duplicateAdSenseTags',
     'manualAdUnits',
     'adsenseScriptsOnExcludedPages',
@@ -356,6 +455,14 @@ function analyze(options = {}) {
     'manualSidebarDuplicateUnits',
     'manualSidebarLayoutReservationWhileDisabled',
     'manualSidebarBlankWhiteContainers',
+    'inlineJavaScriptSyntaxErrors',
+    'localJavaScriptSyntaxErrors',
+    'rewardBridgeGenerationCorruption',
+    'gameMetadataTopicMismatches',
+    'blogPostsMissingBreadcrumbSchema',
+    'blogPostsMissingArticleSchema',
+    'oversizedFaviconAssets',
+    'iconOnlyControlsWithoutAccessibleName',
     'pagesWithManualAdUnits',
     'missingTitles',
     'duplicateTitles',
@@ -410,6 +517,14 @@ function analyze(options = {}) {
       missingSitemapUrls: missingSitemapUrls.slice(0, 80),
       noncanonicalSitemapUrls: noncanonicalSitemapUrls.slice(0, 80),
       blogTopicMismatches: blogTopicMismatches.map((page) => page.file).slice(0, 80),
+      gameMetadataTopicMismatches: gameMetadataTopicMismatches.map((page) => page.file).slice(0, 80),
+      blogPostsMissingBreadcrumbSchema: blogPostsMissingBreadcrumbSchema.map((page) => page.file).slice(0, 80),
+      blogPostsMissingArticleSchema: blogPostsMissingArticleSchema.map((page) => page.file).slice(0, 80),
+      oversizedFaviconAssets: oversizedFavicons,
+      iconOnlyControlsWithoutAccessibleName: iconOnlyControls.slice(0, 80),
+      inlineJavaScriptSyntaxErrors: jsSyntax.inlineErrors.slice(0, 80),
+      localJavaScriptSyntaxErrors: jsSyntax.localErrors.slice(0, 80),
+      rewardBridgeGenerationCorruption: bridgeCorruption.slice(0, 80),
       duplicateAdSenseTags: pages.filter((page) => page.adsenseLoaderCount > 1).map((page) => page.file).slice(0, 50),
       adsenseScriptsOnExcludedPages: pages.filter((page) => page.adsenseExcluded && page.adsenseLoaderCount > 0).map((page) => page.file).slice(0, 50),
       eligiblePagesMissingLoader: ADSENSE_CONFIGURED ? eligiblePages.filter((page) => page.adsenseLoaderCount === 0).map((page) => page.file).slice(0, 50) : [],

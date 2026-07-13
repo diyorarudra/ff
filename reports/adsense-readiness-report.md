@@ -1,6 +1,6 @@
 # AdSense Readiness Report
 
-Generated: 2026-07-13T08:37:50.253Z
+Generated: 2026-07-13T10:00:12.316Z
 
 ## Metrics
 
@@ -18,6 +18,9 @@ Generated: 2026-07-13T08:37:50.253Z
 - placeholderPublisherIdsInProductionHtml: 0
 - publisherIdMismatches: 0
 - adsTxtPublisherMismatch: 0
+- adsTxtPlaceholderSellerLines: 0
+- adsTxtMissingFinalNewline: 0
+- adsTxtPendingCommentInvalid: 0
 - duplicateAdSenseTags: 0
 - manualAdUnits: 0
 - adsenseScriptsOnExcludedPages: 0
@@ -37,6 +40,14 @@ Generated: 2026-07-13T08:37:50.253Z
 - manualSidebarDuplicateUnits: 0
 - manualSidebarLayoutReservationWhileDisabled: 0
 - manualSidebarBlankWhiteContainers: 0
+- inlineJavaScriptSyntaxErrors: 0
+- localJavaScriptSyntaxErrors: 0
+- rewardBridgeGenerationCorruption: 0
+- gameMetadataTopicMismatches: 0
+- blogPostsMissingBreadcrumbSchema: 0
+- blogPostsMissingArticleSchema: 0
+- oversizedFaviconAssets: 0
+- iconOnlyControlsWithoutAccessibleName: 0
 - missingTitles: 0
 - duplicateTitles: 0
 - missingDescriptions: 0
@@ -59,8 +70,9 @@ Generated: 2026-07-13T08:37:50.253Z
 
 ## Result
 
-All critical automated checks passed.
+Critical checks failed:
 
+- A real Google AdSense publisher ID is required.
 
 ## Future One-Place Replacement
 

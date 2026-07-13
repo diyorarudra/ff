@@ -4,7 +4,7 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="shortcut icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
-                                                                                                                                <!-- Google tag (gtag.js) -->
+                                                                                                                                                                          <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPMK24W61X"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,84 +13,60 @@
 
     gtag('config', 'G-PPMK24W61X');
   </script>
-              <title>Draggable Puzzle - Play Free Online Game | FF Live Play</title>
-      <link rel="canonical" href="https://www.ffliveplay.com/games/draggable-puzzle">
-<meta name="description" content="Play Draggable Puzzle online for free instantly on FF Live Play. Experience high-performance, no-download Draggable Puzzle browser gameplay directly in your viewport.">
-      <meta property="og:type" content="website">
-<meta property="og:url" content="https://www.ffliveplay.com/games/draggable-puzzle">
-<meta name="keywords" content="Draggable Puzzle, ffliveplay, online game, browser game, free h5 games, instant arcade">
-    <meta property="og:title" content="Draggable Puzzle - Play Free Online Game | FF Live Play">
-    <meta property="og:description" content="Play Draggable Puzzle online for free instantly on FF Live Play. Experience high-performance, no-download Draggable Puzzle browser gameplay directly in your viewport.">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Draggable Puzzle - Play Free Online Game | FF Live Play">
-    <meta name="twitter:description" content="Play Draggable Puzzle online for free instantly on FF Live Play. Experience high-performance, no-download Draggable Puzzle browser gameplay directly in your viewport.">
-  <meta name="twitter:image" content="https://www.ffliveplay.com/assets/thumbnails/draggable-puzzle.png">
-  <meta property="og:image" content="https://www.ffliveplay.com/assets/thumbnails/draggable-puzzle.png">
+  <script id="ff-reward-bridge">
+// FF reward bridge. Dispatches local completion events only; it does not call ad APIs.
+var ffRewardSentForCurrentRound = false;
+var ffLastRewardMilestone = 0;
 
-  <meta charset="UTF-8">
-<meta name="robots" content="index, follow">
-
-
-
-
-
-
-
-
-
-
-
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <link rel="stylesheet" href="/css/tailwind.css">
-  <script>
-
-// --- INJECTED MILESTONE BRIDGE (BATCH 7) ---
-let ffRewardSentForCurrentRound = false;
-let ffLastRewardMilestone = 0;
+function ffResetRewardBridge() {
+  ffRewardSentForCurrentRound = false;
+  ffLastRewardMilestone = 0;
+}
 
 function ffTriggerRewardEvent(type, payload = {}) {
   try {
-    const parts = location.pathname.split("/").filter(Boolean);
-    const slugIndex = parts.indexOf("games") + 1;
-    const detectedSlug = slugIndex > 0 ? parts[slugIndex] : "unknown-game";
-    const detail = {
-      type,
+    var parts = location.pathname.split('/').filter(Boolean);
+    var slugIndex = parts.indexOf('games') + 1;
+    var detectedSlug = slugIndex > 0 ? parts[slugIndex] : 'unknown-game';
+    var numericScore = Number(payload.score || window.score || 0);
+    var detail = {
+      type: type,
       gameSlug: payload.gameSlug || window.GAME_SLUG || detectedSlug,
       level: payload.level || window.currentLevel || window.level || window.currentRound || 1,
-      score: payload.score || window.score || 0,
-      coins: type === "GAME_COMPLETE" ? 20 : 10
+      score: numericScore,
+      coins: payload.coins || (type === 'GAME_COMPLETE' ? 20 : 10)
     };
+    window.ffRewardSentForCurrentRound = ffRewardSentForCurrentRound;
+    window.ffLastRewardMilestone = ffLastRewardMilestone;
     window.dispatchEvent(new CustomEvent(
-      type === "GAME_COMPLETE" ? "FF_GAME_COMPLETE" : "FF_LEVEL_COMPLETE",
-      { detail }
+      type === 'GAME_COMPLETE' ? 'FF_GAME_COMPLETE' : 'FF_LEVEL_COMPLETE',
+      { detail: detail }
     ));
     if (window.parent && window.parent !== window) {
-      window.parent.postMessage(detail, "*");
+      window.parent.postMessage(detail, '*');
     }
   } catch (e) {
-    console.warn("FF reward event failed safely", e);
+    console.warn('FF reward event failed safely', e);
   }
 }
 
 function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
-  const numericScore = Number(scoreValue || 0);
-  const milestone = Math.floor(numericScore / milestoneSize);
-  if (milestone > ffLastRewardMilestone && numericScore >= milestoneSize) {
+  var numericScore = Number(scoreValue || 0);
+  var safeMilestoneSize = Number(milestoneSize || 1000);
+  if (!Number.isFinite(numericScore) || !Number.isFinite(safeMilestoneSize) || safeMilestoneSize <= 0) return;
+  var milestone = Math.floor(numericScore / safeMilestoneSize);
+  if (milestone > ffLastRewardMilestone && numericScore >= safeMilestoneSize) {
     ffLastRewardMilestone = milestone;
-    ffTriggerRewardEvent("LEVEL_COMPLETE", { level: milestone, score: numericScore, coins: 10 });
+    window.ffLastRewardMilestone = ffLastRewardMilestone;
+    ffTriggerRewardEvent('LEVEL_COMPLETE', { level: milestone, score: numericScore, coins: 10 });
   }
 }
-// ---------------------------------
-
-
-    }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/style.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Draggable Puzzle","description":"Play Draggable Puzzle online for free on FFLivePlay. Enjoy this brain browser game instantly with no download or signup.","url":"https://www.ffliveplay.com/games/draggable-puzzle/","image":"https://www.ffliveplay.com/assets/thumbnails/game82.jpg","genre":"brain","applicationCategory":"Game","operatingSystem":"Web browser","playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com"}}</script>
+                <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Draggable Puzzle","description":"Play Draggable Puzzle online for free instantly on FF Live Play. Experience high-performance, no-download Draggable Puzzle browser gameplay directly in your viewport.","url":"https://www.ffliveplay.com/games/draggable-puzzle/","image":"https://www.ffliveplay.com/assets/thumbnails/draggable-puzzle.png","genre":"browser game","applicationCategory":"Game","operatingSystem":"Web browser","playMode":"SinglePlayer","publisher":{"@type":"Organization","name":"FFLivePlay","url":"https://www.ffliveplay.com"}}</script>
   <style>
     /* Prevent pull-to-refresh on mobile */
     body { overscroll-behavior-y: none; }
@@ -102,7 +78,18 @@ function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
   <link rel="stylesheet" href="/css/game-rewards.css">
-  <style id="manual-sidebar-ad-styles">
+  <title>Draggable Puzzle - Play Free Online Game | FF Live Play</title>
+  <meta name="description" content="Play Draggable Puzzle online for free instantly on FF Live Play. Experience high-performance, no-download Draggable Puzzle browser gameplay directly in your viewport.">
+  <meta name="keywords" content="Draggable Puzzle, ffliveplay, online game, browser game">
+  <link rel="canonical" href="https://www.ffliveplay.com/games/draggable-puzzle">
+  <meta property="og:title" content="Draggable Puzzle - Play Free Online Game | FF Live Play">
+  <meta property="og:description" content="Play Draggable Puzzle online for free instantly on FF Live Play. Experience high-performance, no-download Draggable Puzzle browser gameplay directly in your viewport.">
+  <meta property="og:url" content="https://www.ffliveplay.com/games/draggable-puzzle">
+  <meta property="og:image" content="https://www.ffliveplay.com/assets/thumbnails/draggable-puzzle.png">
+  <meta name="twitter:title" content="Draggable Puzzle - Play Free Online Game | FF Live Play">
+  <meta name="twitter:description" content="Play Draggable Puzzle online for free instantly on FF Live Play. Experience high-performance, no-download Draggable Puzzle browser gameplay directly in your viewport.">
+  <meta name="twitter:image" content="https://www.ffliveplay.com/assets/thumbnails/draggable-puzzle.png">
+<style id="manual-sidebar-ad-styles">
     .game-page-layout {
       display: flex;
       justify-content: center;
@@ -213,6 +200,13 @@ function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
 
 
 
+
+
+
+
+
+
+
 <div class="game-page-layout" data-manual-sidebar-layout="true">
   <aside class="manual-ad-sidebar manual-ad-sidebar-left" data-manual-sidebar-ad="left" hidden aria-hidden="true"></aside>
   <main class="game-main-column">
@@ -224,7 +218,7 @@ function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
 <style>
 @media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
 </style>
-<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 2000;" title="Toggle Audio">🔊</button>
+<button aria-label="Toggle audio" id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 2000;" title="Toggle Audio">🔊</button>
 
 
     <div class="game-header w-full max-w-3xl flex justify-between items-center bg-white rounded-xl p-3 mb-4 shadow-sm border border-gray-200">
@@ -261,6 +255,20 @@ function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
   </main>
   <aside class="manual-ad-sidebar manual-ad-sidebar-right" data-manual-sidebar-ad="right" hidden aria-hidden="true"></aside>
 </div>
+
+
+
+
+
+
+          <section class="game-guidance mt-8 text-left" data-game-guidance="true">
+          <h2 class="text-2xl font-bold mb-3">How to Play Draggable Puzzle</h2>
+          <p><strong>Objective:</strong> Solve the board in Draggable Puzzle by planning each move instead of rushing.</p>
+          <p><strong>Controls:</strong> Use mouse clicks, taps, drags, or keyboard input where the board asks for it.</p>
+          <p><strong>Scoring:</strong> Progress comes from completed matches, cleared spaces, solved words, or finished patterns.</p>
+          <p><strong>Tip:</strong> Look for forced moves first, then use the open spaces to set up the next chain.</p>
+        </section>
+
 
 
 

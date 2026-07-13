@@ -160,10 +160,10 @@
                 <div class="ff-hud-bottom">
                     <div class="ff-timer" id="ff-ui-timer">⏱ Next: --:--</div>
                     <div class="ff-hud-controls">
-                        <button id="ff-btn-shop" title="Coin Shop">🛒</button>
-                        <button id="ff-btn-info" title="Rewards Info">❓</button>
-                        <button id="ff-btn-mute" title="Toggle Sound">${state.muted ? '🔇' : '🔊'}</button>
-                        <button id="ff-btn-min" title="Minimize">—</button>
+                        <button id="ff-btn-shop" title="Coin Shop" aria-label="Coin Shop">🛒</button>
+                        <button id="ff-btn-info" title="Rewards Info" aria-label="Rewards Info">❓</button>
+                        <button id="ff-btn-mute" title="Toggle Sound" aria-label="Toggle Sound">${state.muted ? '🔇' : '🔊'}</button>
+                        <button id="ff-btn-min" title="Minimize" aria-label="Minimize rewards">—</button>
                     </div>
                 </div>
             </div>
@@ -186,7 +186,7 @@
                 <div class="ff-modal-content">
                     <div class="ff-modal-header">
                         <h2>Rewards & Coins</h2>
-                        <button class="ff-modal-close">✕</button>
+                        <button class="ff-modal-close" aria-label="Close rewards information">✕</button>
                     </div>
                     <div class="ff-modal-body">
                         <ul>
@@ -217,7 +217,7 @@
                 <div class="ff-modal-content ff-shop-content">
                     <div class="ff-modal-header">
                         <h2>Coin Shop</h2>
-                        <button class="ff-modal-close">✕</button>
+                        <button class="ff-modal-close" aria-label="Close coin shop">✕</button>
                     </div>
                     <div class="ff-modal-body">
                         <div class="ff-shop-balance">Your Coins: <span id="ff-shop-coin-bal">${state.coins}</span></div>

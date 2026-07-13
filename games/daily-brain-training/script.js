@@ -74,7 +74,7 @@ function setupMath() {
     c.innerHTML = `
         <div class="math-eq">${a} ${op} ${b} = ?</div>
         <div class="math-options">
-            ${options.map(o => `<button class="opt-btn" onclick="checkAnswer(${o === ans})">${o}</button>`).join('')}
+            ${options.map(o => `<button class="opt-btn" aria-label="Answer ${o}" onclick="checkAnswer(${o === ans})">${o}</button>`).join('')}
         </div>
     `;
     startTimer(10);
@@ -98,7 +98,7 @@ function setupOdd() {
     const c = document.getElementById('task-container');
     c.innerHTML = `
         <div class="odd-options">
-            ${set.map(x => `<button class="emoji-btn" onclick="checkAnswer(${x === odd})">${x}</button>`).join('')}
+            ${set.map((x, i) => `<button class="emoji-btn" aria-label="Choose symbol ${i + 1}" onclick="checkAnswer(${x === odd})">${x}</button>`).join('')}
         </div>
     `;
     startTimer(8);
@@ -139,7 +139,7 @@ function setupMemory() {
     document.getElementById('task-title').innerText = "Remember the pattern";
     const c = document.getElementById('task-container');
     c.innerHTML = `<div class="mem-grid" id="mem-grid">
-        ${Array.from({length:9}).map((_,i) => `<button class="mem-cell" id="mc-${i}"></button>`).join('')}
+        ${Array.from({length:9}).map((_,i) => `<button class="mem-cell" id="mc-${i}" aria-label="Memory cell ${i + 1}"></button>`).join('')}
     </div>`;
     
     taskState.seq = [];
