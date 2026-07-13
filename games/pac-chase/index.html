@@ -4,7 +4,7 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="shortcut icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
-                                <!-- Google tag (gtag.js) -->
+                                                                                                  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPMK24W61X"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -107,11 +107,55 @@ function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
   <link rel="stylesheet" href="/css/game-rewards.css">
-  <script
-    async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-PASTE_REAL_PUBLISHER_ID_HERE"
-    crossorigin="anonymous">
-  </script>
+  <style id="manual-sidebar-ad-styles">
+    .game-page-layout {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      max-width: 100%;
+      margin-inline: auto;
+      position: relative;
+    }
+    .game-main-column {
+      width: min(100%, 1100px);
+      margin-inline: auto;
+    }
+    .manual-ad-sidebar,
+    .manual-ad-sidebar[hidden],
+    .manual-ad-sidebar:empty {
+      display: none !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+    .manual-ad-sidebar:has(.adsbygoogle[data-ad-status="unfilled"]) {
+      display: none !important;
+    }
+    @media (min-width: 1500px) {
+      .manual-sidebar-ads-active .manual-ad-sidebar:not([hidden]) {
+        display: block !important;
+        position: absolute;
+        top: 40px;
+        width: 160px;
+        min-height: 600px;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        overflow: hidden;
+      }
+      .manual-sidebar-ads-active .manual-ad-sidebar-left:not([hidden]) {
+        right: calc(100% + 24px);
+      }
+      .manual-sidebar-ads-active .manual-ad-sidebar-right:not([hidden]) {
+        left: calc(100% + 24px);
+      }
+    }
+    @media (max-width: 1499px) {
+      .manual-ad-sidebar {
+        display: none !important;
+      }
+    }
+  </style>
 </head>
 <body class="font-body game-wrapper bg-nexus-dark text-gray-900 min-h-screen flex flex-col" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;" style="background: linear-gradient(135deg, #7361F2 0%, #7C67DD 100%); background-attachment: fixed;">
 
@@ -159,7 +203,20 @@ function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
   </div>
 </nav>
 
-  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
+
+
+
+
+
+
+
+
+
+
+<div class="game-page-layout" data-manual-sidebar-layout="true">
+  <aside class="manual-ad-sidebar manual-ad-sidebar-left" data-manual-sidebar-ad="left" hidden aria-hidden="true"></aside>
+  <main class="game-main-column">
+<div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
 
 
 <div class="game-container flex-1 w-full max-w-[600px] mx-auto px-4 py-6 flex flex-col items-center lg:max-w-[800px]">
@@ -219,6 +276,19 @@ function ffCheckScoreMilestone(scoreValue, milestoneSize = 1000) {
 
 
 </div>
+  </main>
+  <aside class="manual-ad-sidebar manual-ad-sidebar-right" data-manual-sidebar-ad="right" hidden aria-hidden="true"></aside>
+</div>
+
+
+
+
+
+
+
+
+
+
 
 
 

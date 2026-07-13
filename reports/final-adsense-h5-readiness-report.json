@@ -1,0 +1,423 @@
+{
+  "generatedAt": "2026-07-13T06:25:21.097Z",
+  "scores": {
+    "adsense": 72,
+    "h5": 68,
+    "seo": 88,
+    "production": 86,
+    "overall": 79
+  },
+  "statuses": {
+    "adsenseSubmissionReady": false,
+    "h5MonetizationReady": false,
+    "productionDeploymentReady": true
+  },
+  "risk": {
+    "adsenseApprovalRisk": "High",
+    "explanation": "Main risk is missing real AdSense publisher ID. Secondary risks are H5 SDK/account setup not confirmed and content quality still somewhat template-like even though technical SEO checks pass."
+  },
+  "repositoryMetrics": {
+    "totalHtmlPages": 231,
+    "totalIndexablePages": 228,
+    "totalNoindexPages": 3,
+    "totalGamePages": 158,
+    "totalBlogPages": 51,
+    "totalCategoryPages": 13,
+    "totalLegalCompliancePages": 4,
+    "totalPagesInSitemap": 228,
+    "pagesWithGoogleAnalytics": 231,
+    "pagesContainingAdSense": 0,
+    "pagesContainingManualAdUnits": 0,
+    "pagesContainingH5AdIntegration": 0,
+    "h5SourceFiles": [
+      "js/rewarded-ads.js"
+    ]
+  },
+  "adsense": {
+    "adsenseConfigurationStatus": "PENDING_REAL_PUBLISHER_ID",
+    "adsenseSubmissionReady": false,
+    "publisherIdFound": "pending placeholder in scripts/site-config.js",
+    "clientIdFound": "pending until a real publisher ID is configured",
+    "invalidPublisherIds": 0,
+    "invalidClientIds": 0,
+    "placeholderPublisherIds": 1,
+    "placeholderPublisherIdsInProductionHtml": 0,
+    "publisherIdMismatches": 0,
+    "adsTxtPublisherMismatch": 0,
+    "eligiblePagesWithLoader": 0,
+    "eligiblePagesMissingLoader": 0,
+    "duplicateAdSenseLoaders": 0,
+    "manualAdUnits": 0,
+    "adsenseScriptsOnExcludedPages": 0,
+    "invalidAdSlots": [],
+    "blankAdWrappers": [],
+    "adsTxt": "# Google AdSense publisher ID has not been configured yet.\n"
+  },
+  "h5": {
+    "h5SdkStatus": "WRAPPER_PRESENT_SDK_NOT_LOADED_IN_HTML",
+    "h5InitializationCount": 0,
+    "h5NaturalBreakProtection": true,
+    "h5CooldownProtection": true,
+    "h5DuplicateProtection": true,
+    "h5RewardValidation": true,
+    "h5GameplayFallback": true,
+    "h5PolicyRisk": "Medium until official SDK/adConfig/account setup is confirmed"
+  },
+  "blogQuality": {
+    "blogPagesChecked": 51,
+    "affectedBlogPosts": 1,
+    "issues": [
+      {
+        "file": "blog/advanced-diversification-techniques-in-digital-equities-for-the-2026-macro-economy.html",
+        "issues": [
+          "missing article schema"
+        ],
+        "wordCount": 1464
+      }
+    ],
+    "duplicateTemplateFiles": []
+  },
+  "gamePages": {
+    "gamePagesChecked": 158,
+    "gamePagesWithThinContent": [
+      "games/archery-master/index.html",
+      "games/asteroids/index.html",
+      "games/ball-sort-puzzle/index.html",
+      "games/bike-stunt-challenge/index.html",
+      "games/bollywood-quiz-battle/index.html",
+      "games/bus-driver-route/index.html",
+      "games/color-sort-puzzle/index.html",
+      "games/cricket-batting-challenge/index.html",
+      "games/cricket-quiz-league/index.html",
+      "games/crossword-mini/index.html",
+      "games/daily-brain-training/index.html",
+      "games/daily-word-puzzle/index.html",
+      "games/emoji-movie-guess/index.html",
+      "games/english-word-challenge/index.html",
+      "games/escape-room-mini/index.html",
+      "games/find-the-difference/index.html",
+      "games/gk-quiz-india/index.html",
+      "games/guess-the-city/index.html",
+      "games/hexa-block-puzzle/index.html",
+      "games/hidden-object-rooms/index.html",
+      "games/idle-farm-tycoon/index.html",
+      "games/idle-restaurant-tycoon/index.html",
+      "games/idle-shop-manager/index.html",
+      "games/letter-hunt/index.html",
+      "games/logo-guess-game/index.html",
+      "games/match-3-gems/index.html",
+      "games/merge-animals/index.html",
+      "games/merge-cars/index.html",
+      "games/merge-numbers/index.html",
+      "games/nonogram-picture-puzzle/index.html",
+      "games/number-memory-challenge/index.html",
+      "games/parking-master/index.html",
+      "games/penalty-shootout/index.html",
+      "games/reaction-speed-test/index.html",
+      "games/riddle-master/index.html",
+      "games/traffic-control/index.html",
+      "games/water-sort-puzzle/index.html",
+      "games/wood-block-puzzle/index.html",
+      "games/word-connect/index.html"
+    ],
+    "gamePagesWithDuplicateContent": [],
+    "gamePagesWithBrokenPlayLinks": [],
+    "gamePagesWithMetadataMismatch": [],
+    "gamePagesWithAdPlacementRisk": [],
+    "issues": [
+      {
+        "file": "games/archery-master/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 321
+      },
+      {
+        "file": "games/asteroids/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 346
+      },
+      {
+        "file": "games/ball-sort-puzzle/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 335
+      },
+      {
+        "file": "games/bike-stunt-challenge/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 328
+      },
+      {
+        "file": "games/bollywood-quiz-battle/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 327
+      },
+      {
+        "file": "games/bus-driver-route/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 326
+      },
+      {
+        "file": "games/color-sort-puzzle/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 335
+      },
+      {
+        "file": "games/cricket-batting-challenge/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 335
+      },
+      {
+        "file": "games/cricket-quiz-league/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 333
+      },
+      {
+        "file": "games/crossword-mini/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 321
+      },
+      {
+        "file": "games/daily-brain-training/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 323
+      },
+      {
+        "file": "games/daily-word-puzzle/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 323
+      },
+      {
+        "file": "games/emoji-movie-guess/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 327
+      },
+      {
+        "file": "games/english-word-challenge/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 315
+      },
+      {
+        "file": "games/escape-room-mini/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 324
+      },
+      {
+        "file": "games/find-the-difference/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 338
+      },
+      {
+        "file": "games/gk-quiz-india/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 321
+      },
+      {
+        "file": "games/guess-the-city/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 326
+      },
+      {
+        "file": "games/hexa-block-puzzle/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 319
+      },
+      {
+        "file": "games/hidden-object-rooms/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 327
+      },
+      {
+        "file": "games/idle-farm-tycoon/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 320
+      },
+      {
+        "file": "games/idle-restaurant-tycoon/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 322
+      },
+      {
+        "file": "games/idle-shop-manager/index.html",
+        "issues": [
+          "thin page text"
+        ],
+        "wordCount": 324
+      }
+    ],
+    "totalIssueFiles": 39
+  },
+  "seo": {
+    "missingTitles": 0,
+    "duplicateTitles": 0,
+    "duplicateTitleFiles": [],
+    "missingDescriptions": 0,
+    "duplicateDescriptions": 0,
+    "duplicateDescriptionFiles": [],
+    "missingCanonicals": 0,
+    "multipleCanonicals": 0,
+    "canonicalMismatches": 0,
+    "missingH1": 0,
+    "multipleH1": 0,
+    "brokenInternalLinks": 0,
+    "missingLocalAssets": 0,
+    "jsonLdSyntaxErrors": 0,
+    "orphanPages": "not fully verified without crawl graph, sitemap coverage passed",
+    "developmentUrls": 0
+  },
+  "sitemapRobots": {
+    "sitemapUrlCount": 228,
+    "duplicateSitemapUrls": 0,
+    "missingSitemapUrls": 0,
+    "noncanonicalSitemapUrls": 0,
+    "noindexUrlsInSitemap": 0,
+    "brokenSitemapUrls": 0,
+    "redirectingSitemapUrls": 0,
+    "robotsAllowsGeneralCrawling": true,
+    "robotsAllowsMediapartnersGoogle": true,
+    "sitemapDeclared": true
+  },
+  "privacyCompliance": {
+    "compliancePagesChecked": [
+      "compliance/about-us.html",
+      "compliance/contact.html",
+      "compliance/privacy-policy.html",
+      "terms-of-service.html"
+    ],
+    "problems": [
+      {
+        "file": "compliance/contact.html",
+        "problem": "effective/updated date not clearly detected"
+      }
+    ]
+  },
+  "analytics": {
+    "pagesWithAnalytics": 231,
+    "pagesMissingAnalytics": [],
+    "duplicateAnalyticsTags": 0,
+    "invalidAnalyticsIds": []
+  },
+  "performanceUx": {
+    "likelyLargeImages": [
+      {
+        "file": "assets/favicon.png",
+        "bytes": 1673025
+      }
+    ],
+    "missingLocalAssets": 0,
+    "brokenFavicon": false,
+    "notes": [
+      "Static audit only; no browser/Lighthouse run was performed.",
+      "Game mobile overflow and canvas runtime behavior need browser-device validation before final production confidence."
+    ]
+  },
+  "buildCommands": {
+    "npmInstall": "PASS; 0 vulnerabilities; warning: install scripts pending approval for canvas and puppeteer",
+    "npmRunPostbuild": "PASS",
+    "npmRunAuditAdsense": "PASS; pending real publisher ID, submissionReady false",
+    "npmRunAuditAdsenseRelease": "EXPECTED FAIL; real publisher ID required",
+    "npmRunBuild": "PASS",
+    "gitDiffCheck": "PASS; only LF/CRLF warnings"
+  },
+  "criticalBlockers": [
+    {
+      "severity": "Critical",
+      "file": "scripts/site-config.js",
+      "problem": "Real AdSense publisher ID is not configured.",
+      "why": "Google AdSense submission cannot be considered ready without a real pub-xxxxxxxxxxxxxxxx ID.",
+      "requiredFix": "Replace the central placeholder with the real pub- followed by 16 digits, then rebuild and run release audit."
+    },
+    {
+      "severity": "Critical",
+      "file": "ads.txt",
+      "problem": "ads.txt intentionally does not authorize an AdSense seller while ID is pending.",
+      "why": "This is correct for placeholder mode, but live AdSense setup requires a matching seller line.",
+      "requiredFix": "After real ID is added, run npm run postbuild and verify /ads.txt contains the matching google.com seller line."
+    },
+    {
+      "severity": "High",
+      "file": "js/rewarded-ads.js",
+      "problem": "H5 rewarded wrapper exists, but no official SDK/adConfig initialization was found.",
+      "why": "H5 monetization cannot be considered live-ready until the official game ads SDK/account integration is confirmed.",
+      "requiredFix": "Configure the official H5/game ads SDK exactly once after account approval and validate adBreak behavior on real eligible pages."
+    }
+  ],
+  "highPriorityIssues": [
+    {
+      "file": "compliance/privacy-policy.html",
+      "problem": "Privacy/ads disclosures need owner/legal review for AdSense cookies, vendors, consent choices and data use."
+    },
+    {
+      "file": "blog/*.html",
+      "problem": "Blog content is technically aligned, but many posts still read as templated informational content; strengthen originality and first-hand usefulness before submission."
+    },
+    {
+      "file": "games/*/index.html",
+      "problem": "Static checks show 39 game pages below the conservative text-depth threshold; all 158 games still need browser/mobile runtime smoke testing before final production confidence."
+    }
+  ],
+  "mediumPriorityImprovements": [
+    "Run Lighthouse/PageSpeed and a Playwright smoke test on desktop and mobile.",
+    "Add or verify image width/height attributes for layout stability.",
+    "Review generated blog articles for unique examples, screenshots, and author expertise.",
+    "Confirm every game has clear controls/objective text visible to users."
+  ],
+  "goodSignals": [
+    "231 HTML pages scanned with 228 indexable pages and 3 noindex/error/player pages.",
+    "No AdSense placeholder appears in production HTML.",
+    "No fake AdSense requests are made while the publisher ID is pending.",
+    "No manual ad units or duplicate AdSense loaders were found.",
+    "Sitemap, canonical, title, description, H1, JSON-LD, local asset, and internal link checks passed in the automated audit.",
+    "Google Analytics G-PPMK24W61X appears consistently with no duplicate tag failures.",
+    "Build and postbuild commands pass."
+  ],
+  "ownerActionsRequired": [
+    "Add the real AdSense publisher ID in scripts/site-config.js only.",
+    "Run npm run postbuild, npm run audit:adsense:release, and npm run build.",
+    "Review privacy/cookie disclosures before applying.",
+    "Confirm H5 ads account eligibility and official SDK/adConfig setup.",
+    "Manually smoke-test the live site, games, mobile layout, and /ads.txt after deployment."
+  ]
+}

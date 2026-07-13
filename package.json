@@ -8,7 +8,8 @@
     "dev": "serve .",
     "postbuild": "node scripts/hydrate-game-metadata.js && node scripts/verify-game-seo.js",
     "build": "node scripts/verify-game-seo.js",
-    "audit:adsense": "node scripts/audit-adsense-readiness.js"
+    "audit:adsense": "node scripts/audit-adsense-readiness.js",
+    "audit:adsense:release": "node scripts/audit-adsense-readiness.js --require-real-id"
   },
   "dependencies": {
     "canvas": "^3.2.3",
