@@ -725,9 +725,6 @@ window.addEventListener('load', () => {
 
 
 
-
-
-\n
 <!-- Fullscreen logic injected -->
 <style>
 .ff-fullscreen-mode {
@@ -745,56 +742,31 @@ window.addEventListener('load', () => {
   margin: 0 !important;
   padding: 0 !important;
   max-width: none !important;
-  border-radius: 0 !important;
-  border: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 .ff-fullscreen-mode > h1,
-.ff-fullscreen-mode > h2,
-.ff-fullscreen-mode > h3,
 .ff-fullscreen-mode > p,
-.ff-fullscreen-mode > span,
-.ff-fullscreen-mode > div:not(.relative):not(#game-container):not(.w-full):not(.new-game-wrapper),
 .ff-fullscreen-mode > .game-seo-content,
 .ff-fullscreen-mode > .adsense-seo-block,
+.ff-fullscreen-mode > .w-full.mb-8.mt-4,
 .ff-fullscreen-mode > .game-header,
-.ff-fullscreen-mode > .ff-btn-wrapper,
-.ff-fullscreen-mode > .text-center {
+.ff-fullscreen-mode > .ff-btn-wrapper {
   display: none !important;
 }
 
-.ff-fullscreen-mode > .relative,
-.ff-fullscreen-mode > #game-container,
-.ff-fullscreen-mode > .w-full,
-.ff-fullscreen-mode > .new-game-wrapper {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  aspect-ratio: auto !important;
+.ff-fullscreen-mode .w-full.flex.justify-center,
+.ff-fullscreen-mode #game-container,
+.ff-fullscreen-mode canvas {
+  margin: 0 auto !important;
   display: flex !important;
-  flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
-  border-radius: 0 !important;
 }
 
 .ff-fullscreen-mode canvas {
-  width: 100% !important;
-  height: 100% !important;
+  max-height: 80vh !important;
   max-width: 100vw !important;
-  max-height: 100vh !important;
   object-fit: contain !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
 }
 
 body.ff-fullscreen-active #audioToggleBtn,
@@ -831,11 +803,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const fsBtn = document.createElement('button');
   fsBtn.id = 'ff-fullscreen-btn';
-  fsBtn.className = 'bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg font-bold text-sm shadow-md flex items-center gap-2 transition-transform active:scale-95';
-  fsBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg> Fullscreen';
+  // Use a sleek pill design with a subtle gradient and shadow to make it look premium
+  fsBtn.className = 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-lg flex items-center gap-2 transition-all active:scale-95 border border-white/10 hover:shadow-indigo-500/25 hover:shadow-xl';
+  fsBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg> <span class="tracking-wide">Play Fullscreen</span>';
   
   const wrapper = document.createElement('div');
-  wrapper.className = 'ff-btn-wrapper w-full max-w-3xl flex justify-start mb-2 px-2';
+  // Right align it so it sits neatly aligned with the right edge of the game/header
+  wrapper.className = 'ff-btn-wrapper w-full max-w-3xl flex justify-end mb-4 mt-2 px-2';
   wrapper.appendChild(fsBtn);
 
   const header = document.querySelector('.game-header');
@@ -853,14 +827,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const closeBtn = document.createElement('button');
   closeBtn.className = 'ff-close-btn';
-  closeBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
+  closeBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
   closeBtn.style.display = 'none';
   document.body.appendChild(closeBtn);
 
   fsBtn.addEventListener('click', function() {
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
-    }
     gameContainer.classList.add('ff-fullscreen-mode');
     document.body.classList.add('ff-fullscreen-active');
     document.body.style.overflow = 'hidden';
@@ -868,24 +839,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   closeBtn.addEventListener('click', function() {
-    if (document.exitFullscreen) {
-      document.exitFullscreen().catch(function(e) { console.error(e); });
-    }
     gameContainer.classList.remove('ff-fullscreen-mode');
     document.body.classList.remove('ff-fullscreen-active');
     document.body.style.overflow = '';
     closeBtn.style.display = 'none';
   });
-  
-  document.addEventListener('fullscreenchange', function() {
-    if (!document.fullscreenElement) {
-      gameContainer.classList.remove('ff-fullscreen-mode');
-      document.body.classList.remove('ff-fullscreen-active');
-      document.body.style.overflow = '';
-      closeBtn.style.display = 'none';
-    }
-  });
 });
 </script>
 <!-- End Fullscreen logic -->
-\n</html>
+
+</html>
