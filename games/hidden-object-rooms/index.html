@@ -575,11 +575,41 @@ document.addEventListener('DOMContentLoaded', function() {
   closeBtn.style.display = 'none';
   document.body.appendChild(closeBtn);
 
+  let origWidth = '', origHeight = '';
+  
+  function updateCanvasSize() {
+    if (!gameContainer.classList.contains('ff-fullscreen-mode')) return;
+    const canvas = gameContainer.querySelector('canvas');
+    if (!canvas) return;
+    const cw = canvas.width, ch = canvas.height;
+    if (!cw || !ch) return;
+    const ratio = cw / ch;
+    const maxW = window.innerWidth;
+    const maxH = window.innerHeight - 60; 
+    
+    if (maxW / maxH > ratio) {
+      canvas.style.setProperty('width', (maxH * ratio) + 'px', 'important');
+      canvas.style.setProperty('height', maxH + 'px', 'important');
+    } else {
+      canvas.style.setProperty('width', maxW + 'px', 'important');
+      canvas.style.setProperty('height', (maxW / ratio) + 'px', 'important');
+    }
+  }
+
+  window.addEventListener('resize', updateCanvasSize);
+
   fsBtn.addEventListener('click', function() {
     gameContainer.classList.add('ff-fullscreen-mode');
     document.body.classList.add('ff-fullscreen-active');
     document.body.style.overflow = 'hidden';
     closeBtn.style.display = 'flex';
+    
+    const canvas = gameContainer.querySelector('canvas');
+    if (canvas) {
+      origWidth = canvas.style.width;
+      origHeight = canvas.style.height;
+    }
+    updateCanvasSize();
   });
 
   closeBtn.addEventListener('click', function() {
@@ -587,6 +617,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.remove('ff-fullscreen-active');
     document.body.style.overflow = '';
     closeBtn.style.display = 'none';
+    
+    const canvas = gameContainer.querySelector('canvas');
+    if (canvas) {
+      canvas.style.width = origWidth;
+      canvas.style.height = origHeight;
+    }
   });
 });
 </script>
