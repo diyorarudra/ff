@@ -917,6 +917,15 @@ body.ff-fullscreen-active #ff-rewards-widget {
 .ff-close-btn:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
+
+.ff-fullscreen-mode *:has(> canvas) {
+  width: fit-content !important;
+  height: fit-content !important;
+  aspect-ratio: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 auto !important;
+}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
