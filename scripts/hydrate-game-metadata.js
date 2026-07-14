@@ -26,7 +26,7 @@ const PRIMARY_BRAND = 'FFLivePlay';
 const ALTERNATE_BRAND = 'FF Live Play';
 const WEBSITE_ID = `${SITE_ORIGIN}/#website`;
 const ORGANIZATION_ID = `${SITE_ORIGIN}/#organization`;
-const HOMEPAGE_TITLE = 'FFLivePlay (FF Live Play) - Free Online Browser Games';
+const HOMEPAGE_TITLE = 'FFLivePlay - Free Online Browser Games';
 const HOMEPAGE_DESCRIPTION = 'Play free online browser games on FFLivePlay, also known as FF Live Play. Enjoy action, racing, puzzle, arcade and casual games with no download or signup.';
 
 function toTitleCase(str) {
