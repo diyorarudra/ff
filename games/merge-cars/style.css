@@ -86,4 +86,3 @@
 .btn.success { background-color: var(--success); }
 
 .info-text { margin-top: 16px; color: var(--text-muted); font-size: 0.9rem; min-height: 20px; }
-.hidden { display: none !important; }
